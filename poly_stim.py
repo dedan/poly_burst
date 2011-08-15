@@ -38,7 +38,9 @@ class Poly(VisionEgg.Core.Stimulus):
                        "units: eye coordinates"),
         'points' : ([],
                     ve_types.Sequence(ve_types.Sequence2(ve_types.Real)),
-                    'the points which are connected to draw the polygon')
+                    'the points which are connected to draw the polygon'),
+        'line_width' : (1.0,
+                        ve_types.Real)
         }
 
     def __init__(self,**kw):
@@ -65,6 +67,7 @@ class Poly(VisionEgg.Core.Stimulus):
         gl.glEnable(gl.GL_LINE_SMOOTH)            
         gl.glBlendFunc(gl.GL_SRC_ALPHA,gl.GL_ONE_MINUS_SRC_ALPHA)
         gl.glEnable(gl.GL_BLEND)
+        gl.glLineWidth(p.line_width)
 
         # draw the polygon
         gl.glBegin(gl.GL_LINE_STRIP)

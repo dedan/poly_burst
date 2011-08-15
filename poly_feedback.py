@@ -3,7 +3,9 @@ from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly
 import numpy as np
 
-max_points = 4
+max_points = 6
+width = 640
+height = 480
 
 class PolyFeedback(VisionEggFeedback):
     """ This example works the following way:
@@ -20,12 +22,15 @@ class PolyFeedback(VisionEggFeedback):
         VisionEggFeedback.__init__(self)
         # after the super init I can overwrite one of the values set in there
         self.fullscreen = False
+        self.geometry = [0, 0, width, height]
     
     def run(self):
         # Add a text object in about the center
         target = Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
-                      orientation = -45.0,
-                      points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)])        
+                      orientation = 0.0,
+                      points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
+                      position = (width/2, height/2),
+                      line_width = 3)
         self.poly = target
         self.add_stimuli(target)
 
@@ -35,7 +40,7 @@ class PolyFeedback(VisionEggFeedback):
         # Pass the transition function and the per-stimulus display durations
         # to the stimulus sequence factory. As there are three stimuli, the
         # last one is displayed 5 seconds again.
-        s = self.stimulus_sequence(generator, [1., 1., 1., 1.])
+        s = self.stimulus_sequence(generator, [1., 1.])
         # Start the stimulus sequence
         s.run()
 
@@ -46,14 +51,11 @@ class PolyFeedback(VisionEggFeedback):
         is needed, as we only want to prepare the next stimulus and use
         yield to signal that we are finished.
         """
-        for w in ['BBCI', 'Vision', 'Egg']:
+        for w in range(6):
 
-            width = self.geometry[2]
-            height = self.geometry[3]
             p_length = np.random.randint(3, max_points)
-            points = zip(np.random.randint(0, width, p_length),
-                         np.random.randint(0, height, p_length))
-            print points
+            points = zip(np.random.randint(-width/2, width/2, p_length),
+                         np.random.randint(-height/2, height/2, p_length))
             self.poly.set(points = points)
             # and signal that we are done with the next stimulus and
             # that the waiting period can begin
