@@ -1,0 +1,12 @@
+min_poly_points = 4
+add_point_rate = 0.2
+remove_point_rate = 0.2
+move_point_rate = 0.3
+move_point = 40
+color_rate = 0.5
+move_color_std = 1.
+min_polies = 20
+add_poly_rate = 0.2
+remove_poly_rate = 0.2
+move_poly_rate = 0.3
+poly_mutation_rate = 0.3
