@@ -4,6 +4,7 @@ from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
 import numpy as np
 import random as rnd; 
+import helper as h; 
 
 max_points = 6
 width = 640
@@ -27,6 +28,8 @@ class PolyFeedback(VisionEggFeedback):
         self.geometry = [0, 0, width, height]
     
     def run(self):
+        # Read the list of polygons from the pool: 
+        self.listPolygons = h.readPool(); 
         # Add a text object in about the center
         listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
                       orientation = 0.0,
@@ -59,12 +62,11 @@ class PolyFeedback(VisionEggFeedback):
         if random: 
             for w in range(10): 
                 for polygon in self.manyPoly.listPoly: 
-                    p_length = np.random.randint(3, max_points)
-                    points = zip(np.random.randint(-width/2, width/2, p_length),
-                                 np.random.randint(-height/2, height/2, p_length))
-                    color = (rnd.random(), rnd.random(), rnd.random(), rnd.random()); 
-                    polygon.set(color = color); 
-                    polygon.set(points = points)
+                    pol = rnd.choice(self.listPolygons); 
+                    rPol = h.resizePol(pol, h=height, w=width, center=True); 
+                    newColor, newPoints = h.translatePol(pol); 
+                    polygon.set(color = newColor); 
+                    polygon.set(points = newPoints)
                 # and signal that we are done with the next stimulus and
                 # that the waiting period can begin
                 yield
