@@ -4,7 +4,7 @@
 
 """
 
-from poly_feedback import *; 
+from manyPoly_feedback import *; 
 from img_feedback import *; 
 
 

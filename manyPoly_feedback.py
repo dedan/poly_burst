@@ -1,7 +1,7 @@
 
 #from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from poly_stim import Poly
+from poly_stim import Poly, ManyPoly
 import numpy as np
 import random as rnd; 
 
@@ -28,12 +28,14 @@ class PolyFeedback(VisionEggFeedback):
     
     def run(self):
         # Add a text object in about the center
-        target = Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
+        listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
                       orientation = 0.0,
                       points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
                       position = (width/2, height/2),
                       line_width = 3)
-        self.poly = target
+                    for ii in range(3)]; 
+        target = ManyPoly(listPoly); 
+        self.manyPoly = target
         self.add_stimuli(target)
 
         # This feedback uses a generator function for controlling the stimulus
@@ -55,13 +57,14 @@ class PolyFeedback(VisionEggFeedback):
         """
         
         if random: 
-            for w in range(10):
-                p_length = np.random.randint(3, max_points)
-                points = zip(np.random.randint(-width/2, width/2, p_length),
-                             np.random.randint(-height/2, height/2, p_length))
-                color = (rnd.random(), rnd.random(), rnd.random(), rnd.random()); 
-                self.poly.set(color = color); 
-                self.poly.set(points = points)
+            for w in range(10): 
+                for polygon in self.manyPoly.listPoly: 
+                    p_length = np.random.randint(3, max_points)
+                    points = zip(np.random.randint(-width/2, width/2, p_length),
+                                 np.random.randint(-height/2, height/2, p_length))
+                    color = (rnd.random(), rnd.random(), rnd.random(), rnd.random()); 
+                    polygon.set(color = color); 
+                    polygon.set(points = points)
                 # and signal that we are done with the next stimulus and
                 # that the waiting period can begin
                 yield
