@@ -20,9 +20,9 @@ class PolyFeedback(VisionEggFeedback):
         function of the presentation handler returns.
     """
     
-    def __init__(self):
+    def __init__(self, **kw):
         # init the superclass
-        VisionEggFeedback.__init__(self)
+        VisionEggFeedback.__init__(self, **kw)
         # after the super init I can overwrite one of the values set in there
         self.fullscreen = False
         self.geometry = [0, 0, width, height]
@@ -30,7 +30,6 @@ class PolyFeedback(VisionEggFeedback):
     def run(self):
         # Read the list of polygons from the pool: 
         self.listPolygons = h.readPool(); 
-        # Add a text object in about the center
         listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
                       orientation = 0.0,
                       points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],

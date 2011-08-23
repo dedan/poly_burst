@@ -1,6 +1,11 @@
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
 import numpy as np; 
-import random, os; 
+import random as rnd;
+import os; 
+
+# Global variables: 
+width = 640; 
+height = 480; 
 
 class ImgFeedback(VisionEggFeedback):
     """ This example works the following way:
@@ -21,13 +26,10 @@ class ImgFeedback(VisionEggFeedback):
         
         VisionEggFeedback.__init__(self, **kw); 
         self.folderPath = folderPath; 
-        print 'hW'
     
     def run(self):
-        # Add a text object in about the center
-        self.word = self.add_text_stimulus(font_size=72, position=(300, 200))
         # Add a picture above
-        self.image = self.add_image_stimulus(position=(300, 300))
+        self.image = self.add_image_stimulus(position=(width/2, height/2), size=(width,height))
         # This feedback uses a generator function for controlling the stimulus
         # transition. Note that the function has to be called before passing
         generator = self.prepare()
@@ -69,7 +71,7 @@ class ImgFeedback(VisionEggFeedback):
 
         """
         
-        filePath = random.choice(os.listdir(path)); 
+        filePath = rnd.choice(os.listdir(path)); 
         return filePath; 
         
 if __name__ == '__main__': 
