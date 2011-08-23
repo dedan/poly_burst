@@ -70,7 +70,7 @@ class Poly(VisionEgg.Core.Stimulus):
         gl.glLineWidth(p.line_width)
 
         # draw the polygon
-        gl.glBegin(gl.GL_LINE_STRIP)
+        gl.glBegin(gl.GL_POLYGON)
         for point in p.points:
             gl.glVertex3f(point[0], point[1], 0.0)
         gl.glVertex3f(p.points[0][0], p.points[0][1], 0.0)
@@ -134,7 +134,7 @@ class ManyPoly(Poly):
             gl.glLineWidth(p.line_width)
 
             # draw the polygon
-            gl.glBegin(gl.GL_LINE_STRIP)
+            gl.glBegin(gl.GL_POLYGON)
             for point in p.points:
                 gl.glVertex3f(point[0], point[1], 0.0)
             gl.glVertex3f(p.points[0][0], p.points[0][1], 0.0)
