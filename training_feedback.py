@@ -23,6 +23,7 @@ import os;
 max_points = 6; 
 width = 640; 
 height = 480; 
+pTarget = 0.1; 
 
 ## Feedback class: 
 class TrainingFeedback(VisionEggFeedback): 
@@ -41,7 +42,8 @@ class TrainingFeedback(VisionEggFeedback):
         """
         
         VisionEggFeedback.__init__(self, **kw); 
-        self.folderPath = folderPath; 
+        self.picsFolderPath = folderPath; 
+        self.polyFolderPath = self.picsFolderPath+'/../PolygonPool'; 
         
         ## From poly_feedback: 
         # after the super init I can overwrite one of the values set in there
@@ -63,6 +65,17 @@ class TrainingFeedback(VisionEggFeedback):
             # Creating and running a stimulus sequence: 
             s = self.stimulus_sequence(generator, [1., 5., 1.]); 
             s.run(); 
+            
+            ## Loading target and non-target polygon pools: 
+            imageName = self.imgPath.split('/')[-1]; 
+            poolName = imageName[0:len(imageName)-4]+'.out'; 
+            self.listNontargetPolygons = []; 
+            for pFile in os.listdir(self.polyFolderPath): 
+                if pFile == poolName: 
+                    self.listTargetPolygons = h.readPool(folderPath=self.polyFolderPath, fileName=pFile); 
+                else: 
+                    self.listNontargetPolygons += h.readPool(folderPath=self.polyFolderPath, fileName=pFile); 
+                    
         
             ## Presenting the polygons: 
             # Reading from the pool of polygons: 
@@ -96,12 +109,16 @@ class TrainingFeedback(VisionEggFeedback):
         """
         
         if random: 
-            for w in range(30): 
+            for w in range(50): 
                 # We run a loop over the polygons in manyPoly. 
                 # For each of the polygons contained in the stimulus some settings must be provided. If only an amount of polygons were to display anythin (e.g. only 4 out of 10 polygons should be displayed), the last ones can be set to be transparent! 
+                if (w>5) and (rnd.random()<pTarget): 
+                    poolPoly = self.listTargetPolygons; 
+                else: 
+                    poolPoly = self.listNontargetPolygons
                 for polygon in self.manyPoly.listPoly: 
                     # Choosing a random polygon and adapting it to the canvas: 
-                    pol = rnd.choice(self.listPolygons); 
+                    pol = rnd.choice(poolPoly); 
                     rPol = h.resizePol(pol, h=height, w=width, center=True); 
                     # Setting the random polygon: 
                     newColor, newPoints = h.translatePol(pol); 
@@ -118,11 +135,11 @@ class TrainingFeedback(VisionEggFeedback):
         
         """
         
-        folderPath=self.folderPath; 
+        folderPath=self.picsFolderPath; 
         for w in range(3): 
             if w==1: 
-                imgPath = folderPath+'/'+self.getRandomPath(folderPath); 
-                self.image.set_file(imgPath); 
+                self.imgPath = folderPath+'/'+self.getRandomPath(folderPath); 
+                self.image.set_file(self.imgPath); 
             else: 
                 imgPath = folderPath+'/../background.jpg'; 
                 self.image.set_file(imgPath); 
