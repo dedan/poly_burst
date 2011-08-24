@@ -27,6 +27,7 @@
 # Imports: 
 import numpy as np; 
 import random as rnd; 
+import copy; # See comment on resizePol() function. 
 import poly_stim as ps; # This module is imported in case we wanted to generate actual objects of class Poly from here. 
 
 
@@ -74,6 +75,8 @@ def resizePol(pol, h=1., w=1., center=False):
     
         This function resizes a polygon which lives on a 1x1 canvas with the point (0., 0.) at the bottom left into a canvas of arbitrary height and width which might have the point (0., 0.) at the center or not. If called only with the obligatory arguments, this function does not operate any change in the data. 
         
+        It is necessary to operate over copies of the original points! If not, the operations are applied several times to the same polygons and the result does not make any sense. 
+        
     Arguments: 
         >> pol: the info of the polygon on which the function is supposed to operate. 
         >> h=1.: the height of the new canvas. 
@@ -81,29 +84,32 @@ def resizePol(pol, h=1., w=1., center=False):
         >> center=False: flag pointing out whether the point (0., 0.) is to be in the center of the new canvas (center=True) or not (center=False). 
         
     Returns: 
-        << pol: the info transformed in the proper way. 
+        << rPol: the info transformed in the proper way. 
     
     """
     
     # An index to run over the points of 'pol': 
-    pRange = range(pol[0]); 
+    rPol = copy.copy(pol); 
+    pRange = range(rPol[0]); 
     for pp in pRange: 
         # Multiplying by width and height: 
-        pol[2*pp+1] = w*pol[2*pp+1]; 
-        pol[2*pp+2] = h*pol[2*pp+2]; 
+        rPol[2*pp+1] = w*rPol[2*pp+1]; 
+        rPol[2*pp+2] = h*rPol[2*pp+2]; 
         # Centering: 
         if center: 
-            pol[2*pp+1] -= w/2; 
-            pol[2*pp+2] -= h/2; 
+            rPol[2*pp+1] -= w/2; 
+            rPol[2*pp+2] -= h/2; 
            
     # Return the transformed data:  
-    return pol; 
+    return rPol; 
     
     
 def normalizePol(pol, h=1., w=1., center=False): 
     """rnormalizePol function: 
    
         This function resizes a polygon which lives on a wxh canvas into a 1x1 canvas with the point (0., 0.) at the bottom left. 
+        
+        It is necessary to operate over copies of the original points! If not, the operations are applied several times to the same polygons and the result does not make any sense. 
         
     Arguments: 
         >> pol: the info of the polygon on which the function is supposed to operate. 
@@ -112,23 +118,24 @@ def normalizePol(pol, h=1., w=1., center=False):
         >> center=False: flag pointing out whether the point (0., 0.) is in the center of the old canvas (center=True) or not (center=False). 
         
     Returns: 
-        << pol: the info transformed in the proper way. 
+        << rPol: the info transformed in the proper way. 
     
     """
     
     # An index to run over the points of 'pol': 
-    pRange = range(pol[0]); 
+    rPol = copy.copy(rPol); 
+    pRange = range(rPol[0]); 
     for pp in pRange: 
         # Centering: 
         if center: 
-            pol[2*pp+1] += w/2; 
-            pol[2*pp+2] += h/2, 
+            rPol[2*pp+1] += w/2; 
+            rPol[2*pp+2] += h/2, 
         # Dividing by width and height: float is taken to avoid collapsing to 0 and 1: 
-        pol[2*pp+1] = float(pol[2*pp+1])/w; 
-        pol[2*pp+2] = float(pol[2*pp+2])/h; 
+        rPol[2*pp+1] = float(rPol[2*pp+1])/w; 
+        rPol[2*pp+2] = float(rPol[2*pp+2])/h; 
            
     # Return the transformed data:  
-    return pol; 
+    return rPol; 
     
 def readPool(folderPath='./PolygonPool', fileName='pPool.out'): 
     """readPool function: 
