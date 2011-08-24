@@ -16,9 +16,11 @@
             >> TF.__init__(): initializes the feedback. 
             >> TF.run(): the main routine which manages and presents the different stimuli. 
             >> TF.runImg(): a routine called in 'TF.run()' to pick up and display random images. 
-            >> TF.handelDificulty(): modifies the similarity between stimuli and images depending on the last results. 
-            >> TF.preparePoly(): the generator for the polygonal stimuli. 
-            >> TF.prepareImg(): the generator for the image stimuli. 
+            >> TF.generateTarget(): a routine in 'TF.run()' to set up which image decomposition is target and which ones are not. 
+            >> TF.runPoly(): a routine called in 'TF.run()' to generate and display polygonal stimuli. 
+            >> TF.handelDificulty(): a routine called in 'TF.run()' which modifies the similarity between stimuli and images depending on the last results. Decides whether to stop the feedback. 
+            >> TF.preparePoly(): the generator for the polygonal stimuli. Called from 'TF.runPoly()'. 
+            >> TF.prepareImg(): the generator for the image stimuli. Called from 'TF.runImg()'. 
             >> TF.getRandomPath(): a function called by 'TF.prepareImg()' which choses random files from a folder. 
 
 """
@@ -45,14 +47,14 @@ class TrainingFeedback(VisionEggFeedback):
     """TrainingFeedback class inherits VissionEggFeedback:
     
         This feedback class combines the presentation of images and polygons in the fashion described at the beginning of the file. 
-        These feedback is inspired in the VisionEgg1 and poly_feedback, so some settings come directly from there and no further explanation of them is knwon. 
+        This feedback is inspired in the VisionEgg1 and poly_feedback, so some settings come directly from there and no further explanation about them is knwon. When this is the case, it is indicated. 
     
     """
     
     def __init__(self, folderPath='./Pics', **kw): 
         """__init__ function overwrites VisionEggFeedback.__init__: 
         
-                This __init__ function
+                This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen. 
         
         """
         
@@ -68,7 +70,7 @@ class TrainingFeedback(VisionEggFeedback):
     def run(self): 
         """run function: 
         
-                This function implements the run of this feedback. Therefore it consists of two parts: the first one in which an image is presented and a second one in which poylgons are presented. Each of these stimuli must call their respective generators, which will be defined latter on. 
+                This function implements the run of this feedback. It has been further divided in a run function for each of the different stimuli (images or polygones) that are presented and also incorporates a call to a function which handles the difficulty of the recognition task (i.e. the similarity between the original image and the polygonal stimuli). 
         
         """
         
