@@ -1,4 +1,4 @@
-"""TrainingFeedback.py 
+"""training_teedback.py 
 
         This file contains a feedback for a training experiment. The experiment runs as follows: 
                 1) An image is presented to the subject for a while. 
