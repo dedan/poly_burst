@@ -98,13 +98,13 @@ class ConstructiveFeedback(VisionEggFeedback):
         s.run(); 
         return; 
         
-    def runPoly(self): 
+    def runPoly(self, nPoly=None): 
         """runPoly function: 
         
                 This function performs the task of displaying the polygonal stimuli. It displays a combination of polygons with the desired complexity (encoded in 'nPoly'). Target stimuli are displayed with probability 'pTarget', but target are avoided during the first half second to avoid funny effects. 
                 
         Arguments: 
-            >> nPoly: number of polygons of which the stimuli consist. This variable encodes for the how close the target stimuli are to the original image, and thus for the dificulty of the task. 
+            >> nPoly=None: number of polygons of which the stimuli consist. This variable encodes for the how close the target stimuli are to the original image, and thus for the dificulty of the task. Right now, it lacks some implementation. Therefore: 'nPoly=None'. 
         
         """
 
@@ -165,14 +165,16 @@ class ConstructiveFeedback(VisionEggFeedback):
                 # We run a loop over the polygons in manyPoly. 
                 for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
                     if indexPolygon < len(self.polyStack): 
-                        newColor, newPoints = h.translatePol(self.polyStack[indexPolygon]); 
+                        newColor = self.polyStack[indexPolygon]['color']; 
+                        newPoints = self.polyStack[indexPolygon]['points']; 
                     else: 
                         # Creating a random polygon and adapting it to the canvas: 
                         pol = h.newPol(); 
                         rPol = h.resizePol(pol, h=height, w=width, center=True); 
                         self.lastRoundStack += [rPol]; 
                         # Setting the random polygon: 
-                        newColor, newPoints = h.translatePol(rPol); 
+                        newColor = rPol['color']; 
+                        newPoints = rPol['points']; 
                     polygon.set(color = newColor); 
                     polygon.set(points = newPoints); 
                 yield; 

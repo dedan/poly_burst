@@ -114,7 +114,7 @@ class TrainingFeedback(VisionEggFeedback):
         """
         
         imageName = self.imgPath.split('/')[-1]; 
-        poolName = imageName[0:len(imageName)-4]+'.out'; 
+        poolName = imageName[0:len(imageName)-4]+'.json'; 
         self.listNontargetPolygons = []; 
         for pFile in os.listdir(self.polyFolderPath): 
             if pFile == poolName: 
@@ -198,7 +198,8 @@ class TrainingFeedback(VisionEggFeedback):
                     pol = rnd.choice(poolPoly); 
                     rPol = h.resizePol(pol, h=height, w=width, center=True); 
                     # Setting the random polygon: 
-                    newColor, newPoints = h.translatePol(rPol); 
+                    newColor = rPol['color']; 
+                    newPoints = rPol['points']; 
                     polygon.set(color = newColor); 
                     polygon.set(points = newPoints); 
                 yield; 
@@ -210,7 +211,9 @@ class TrainingFeedback(VisionEggFeedback):
                         # Next polygon of the list is resized and added to the stimulus. 
                         pol = self.listTargetPolygons[indexPolygon]; 
                         rPol = h.resizePol(pol, h=height, w=width, center=True); 
-                        newColor, newPoints = h.translatePol(rPol); 
+                        # Setting the target polygon's specifications: 
+                        newColor = rPol['color']; 
+                        newPoints = rPol['points']; 
                         polygon.set(color=newColor); 
                         polygon.set(points=newPoints); 
                 else: 
@@ -219,9 +222,10 @@ class TrainingFeedback(VisionEggFeedback):
                         pol = rnd.choice(self.listNontargetPolygons); 
                         rPol = h.resizePol(pol, h=height, w=width, center=True); 
                         # Setting the random polygon: 
-                        newColor, newPoints = h.translatePol(rPol); 
-                        polygon.set(color = newColor); 
-                        polygon.set(points = newPoints); 
+                        newColor = rPol['color']; 
+                        newPoints = rPol['points']; 
+                        polygon.set(color=newColor); 
+                        polygon.set(points=newPoints); 
                 yield;         
 
     def prepareImg(self):

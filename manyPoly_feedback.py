@@ -10,7 +10,7 @@ max_points = 6
 width = 640
 height = 480
 
-class PolyFeedback(VisionEggFeedback):
+class ManyPolyFeedback(VisionEggFeedback):
     """ This example works the following way:
         The prepare generator function is passed to the framework,
         which starts the stimulus presentation every time a yield
@@ -29,7 +29,7 @@ class PolyFeedback(VisionEggFeedback):
     
     def run(self):
         # Read the list of polygons from the pool: 
-        self.listPolygons = h.readPool(); 
+        self.listPolygons = h.readPool('./', 'data.out'); 
         listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
                       orientation = 0.0,
                       points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
@@ -63,9 +63,8 @@ class PolyFeedback(VisionEggFeedback):
                 for polygon in self.manyPoly.listPoly: 
                     pol = rnd.choice(self.listPolygons); 
                     rPol = h.resizePol(pol, h=height, w=width, center=True); 
-                    newColor, newPoints = h.translatePol(pol); 
-                    polygon.set(color = newColor); 
-                    polygon.set(points = newPoints)
+                    polygon.set(color = rPol['color']); 
+                    polygon.set(points = rPol['points'])
                 # and signal that we are done with the next stimulus and
                 # that the waiting period can begin
                 yield
@@ -75,6 +74,6 @@ class PolyFeedback(VisionEggFeedback):
 
 
 if __name__ == '__main__':
-    b = PolyFeedback()
+    b = ManyPolyFeedback()
     b.on_init()
     b.on_play()
