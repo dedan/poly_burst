@@ -4,6 +4,7 @@ from numpy.random import randint
 from random import choice
 from numpy.random import random
 from numpy.random import normal
+import numpy as np
 
 
 class Polygon(object):
@@ -16,7 +17,7 @@ class Polygon(object):
         for i in range(conf.min_poly_points):
             self.points.append((randint(0, self.width),
                                 randint(0, self.height)))
-        self.color = (random(), random(), random(), random())
+        self.color = (random(), random(), random(), np.random.uniform(0.3,0.6))
     
     def mutate(self):
         """docstring for mutate"""
@@ -26,23 +27,29 @@ class Polygon(object):
             self.points.insert(rand_idx, rand_point)
         
         if random() < conf.remove_point_rate:
-            if len(self.points) > 0:
+            if len(self.points) > 3:
                 self.points.remove(choice(self.points))
         
         # mutate some of the points
-        for point in self.points:
+        for i in range(len(self.points)):
             if random() < conf.move_point_rate:
                 move = randint(-conf.move_point, conf.move_point)
-                x = min(self.width, max(0, point[0] + move))
+                x = min(self.width, max(0, self.points[i][0] + move))
                 move = randint(-conf.move_point, conf.move_point)
-                y = min(self.height, max(0, point[0] + move))
-                point = (x, y)
+                y = min(self.height, max(0, self.points[i][1] + move))
+                self.points[i] = (x, y)
+                
         
         # mutate color of polygon
         if random() < conf.color_rate:
-            for val in self.color:
+            tmp = np.zeros(len(self.color))            
+            for i in range(3):
                 move = normal(0, conf.move_color_std)
-                val = min(1, max(0, val + move))
+                tmp[i] = min(1, max(0, self.color[i] + move))
+
+            move = normal(0, conf.move_alpha_std)
+            tmp[3] = min(0.6, max(0.3, self.color[3] + move))
+            self.color = tuple(tmp)
 
 
 class Drawing(object):
