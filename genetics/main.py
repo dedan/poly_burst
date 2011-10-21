@@ -10,7 +10,12 @@ from PIL import Image
 from numpy.random import randint
 from numpy.random import random
 import pool
+import copy
 
+error_level = sys.maxint
+collect_error = []
+c = 0
+mut = 0
 
 def fitness(im1, im2):
     """docstring for fitness"""
@@ -18,29 +23,41 @@ def fitness(im1, im2):
 
 def DrawStuff():
 
-    global d
-    for i in range(1):
-        glClear(GL_COLOR_BUFFER_BIT)
+    global d, ml, collect_error, error_level, c, mut
 
-        for poly in d.polies:
-            glColor4f(*poly.color)
-            glLineWidth(5.0)
-            glBegin(GL_POLYGON)
-            for point in poly.points:
-                glVertex2f(point[0], point[1])
-            if len(poly.points) > 0:
-                glVertex2f(poly.points[0][0], poly.points[0][1])
-            glEnd() # GL_POLYGON
+    glClear(GL_COLOR_BUFFER_BIT)
 
-        glPixelStorei(GL_PACK_ALIGNMENT, 1)
-        data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
-        # TODO maybe use frombuffer here, check what is faster
-        image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
-        image.show()
-        im_ar = np.asarray(image)
-        d.mutate()
-        glutSwapBuffers()
-        
+    new_d = copy.deepcopy(d)
+    new_d.mutate()
+
+    for poly in new_d.polies:
+        glColor4f(*poly.color)
+        glLineWidth(5.0)
+        glBegin(GL_POLYGON)
+        for point in poly.points:
+            glVertex2f(point[0], point[1])
+        if len(poly.points) > 0:
+            glVertex2f(poly.points[0][0], poly.points[0][1])
+        glEnd() # GL_POLYGON
+
+    glPixelStorei(GL_PACK_ALIGNMENT, 1)
+    data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
+    # TODO maybe use frombuffer here, check what is faster
+    image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
+    im_ar = np.array(image, dtype=np.int32)
+    new_error = fitness(ml_ar, im_ar)
+    if new_error < error_level:
+        collect_error.append(new_error)
+        error_level = new_error
+        print c, mut, new_error
+        d = new_d
+        c += 1
+        if c % 10 == 0:
+            image.save('%d.png' % c, 'PNG')
+
+    mut += 1
+    glutSwapBuffers()
+    glutPostRedisplay()
 
 
 ml = Image.open('ml.bmp')
@@ -49,7 +66,6 @@ width = ml.size[0]
 height = ml.size[1]
 
 d = pool.Drawing(width, height)
-
 
 # glut initialization
 glutInit(sys.argv)
@@ -70,10 +86,6 @@ glLoadIdentity()
 glOrtho(0, width, height, 0, 0, 1)
 glDisable(GL_DEPTH_TEST)
 glMatrixMode(GL_MODELVIEW)
-
-
-
-
 
 # start the mainloop
 glutMainLoop ()
