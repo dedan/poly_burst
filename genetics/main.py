@@ -1,50 +1,51 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+
 import sys
-from OpenGL.GL import *
-from OpenGL.GLE import *
-from OpenGL.GLUT import *
 import numpy as np
-from PIL import Image
-from numpy.random import randint
-from numpy.random import random
+import cairo
 import pool
 import copy
+from PIL import Image
+import time
 
 error_level = sys.maxint
 collect_error = []
 c = 0
 mut = 0
+times = 0
 
 def fitness(im1, im2):
     """docstring for fitness"""
-    return np.sum((im1-im2)**2)
+    return np.sum((im1-im2.astype(np.int32))**2)
 
 def DrawStuff():
 
-    global d, ml, collect_error, error_level, c, mut
+    global d, ml, collect_error, error_level, c, mut, width,height
+    global context, surface, times
+    start = time.time()
 
-    glClear(GL_COLOR_BUFFER_BIT)
+    context.rectangle (0, 0, width, height) # Rectangle(x0, y0, x1, y1)
+    context.set_source_rgb(0,0,0)
+    context.fill()
 
     new_d = copy.deepcopy(d)
     new_d.mutate()
 
     for poly in new_d.polies:
-        glColor4f(*poly.color)
-        glLineWidth(5.0)
-        glBegin(GL_POLYGON)
+        context.new_path()
         for point in poly.points:
-            glVertex2f(point[0], point[1])
+            context.line_to(*point)
         if len(poly.points) > 0:
-            glVertex2f(poly.points[0][0], poly.points[0][1])
-        glEnd() # GL_POLYGON
+            context.line_to(poly.points[0][0], poly.points[0][1])
+        context.set_source_rgba(*poly.color)
+        context.close_path()
+        context.fill()
 
-    glPixelStorei(GL_PACK_ALIGNMENT, 1)
-    data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
-    # TODO maybe use frombuffer here, check what is faster
-    image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
-    im_ar = np.array(image, dtype=np.int32)
+    im = np.frombuffer(surface.get_data(), np.uint8)
+    im_ar = im.reshape((width, height, 4))[:,:,2::-1]
+
     new_error = fitness(ml_ar, im_ar)
     if new_error < error_level:
         collect_error.append(new_error)
@@ -53,11 +54,11 @@ def DrawStuff():
         d = new_d
         c += 1
         if c % 10 == 0:
-            image.save('%d.png' % c, 'PNG')
+            surface.write_to_png('cairo%d.png' % c)
 
+    times += time.time() - start
     mut += 1
-    glutSwapBuffers()
-    glutPostRedisplay()
+    print times/mut
 
 
 ml = Image.open('ml.bmp')
@@ -68,24 +69,8 @@ height = ml.size[1]
 d = pool.Drawing(width, height)
 
 # glut initialization
-glutInit(sys.argv)
-glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA)
-glutInitWindowSize(width, height)
-glutCreateWindow("Draw Polygons")
+surface = cairo.ImageSurface (cairo.FORMAT_RGB24, width, height)
+context = cairo.Context (surface)
 
-# set the function to draw
-glutDisplayFunc(DrawStuff)
-
-# enable the alpha blending
-glEnable(GL_BLEND)
-glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-# prepare for 2D drawing
-glMatrixMode(GL_PROJECTION)
-glLoadIdentity()
-glOrtho(0, width, height, 0, 0, 1)
-glDisable(GL_DEPTH_TEST)
-glMatrixMode(GL_MODELVIEW)
-
-# start the mainloop
-glutMainLoop ()
+for i in range(1000):
+    DrawStuff()
