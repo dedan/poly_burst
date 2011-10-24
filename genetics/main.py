@@ -11,11 +11,13 @@ from numpy.random import randint
 from numpy.random import random
 import pool
 import copy
+import time
 
 error_level = sys.maxint
 collect_error = []
 c = 0
 mut = 0
+times = 0
 
 def fitness(im1, im2):
     """docstring for fitness"""
@@ -23,7 +25,9 @@ def fitness(im1, im2):
 
 def DrawStuff():
 
-    global d, ml, collect_error, error_level, c, mut
+    global d, ml, collect_error, error_level, c, mut, times, time
+
+    start = time.time()
 
     glClear(GL_COLOR_BUFFER_BIT)
 
@@ -55,9 +59,13 @@ def DrawStuff():
         if c % 10 == 0:
             image.save('%d.png' % c, 'PNG')
 
-    mut += 1
     glutSwapBuffers()
     glutPostRedisplay()
+    mut += 1
+    times += time.time() - start
+    if mut%100==0:
+        print times/mut
+
 
 
 ml = Image.open('ml.bmp')
@@ -89,3 +97,4 @@ glMatrixMode(GL_MODELVIEW)
 
 # start the mainloop
 glutMainLoop ()
+
