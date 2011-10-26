@@ -1,0 +1,31 @@
+
+{
+    "n_generations": 500000,
+    
+    "min_poly_points": 5,
+    
+    "add_point_rate": 0.1,
+    
+    "remove_point_rate": 0.1,
+    
+    "move_point_rate": 0.1,
+    
+    "move_point": 20,
+    
+    "color_rate": 0.1,
+    
+    "move_color_std": 0.01,
+    
+    "move_alpha_std": 0.01,
+    
+    "min_polies": 10,
+    
+    "add_poly_rate": 0.1,
+    
+    "remove_poly_rate": 0.1,
+    
+    "move_poly_rate": 0.1,
+    
+    "poly_mutation_rate": 0.1
+
+}

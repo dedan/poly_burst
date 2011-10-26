@@ -1,76 +1,111 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-
+import os
 import sys
+import copy
+import time
+import logging
+import pickle
+import matplotlib
+matplotlib.use("Agg")
 import numpy as np
+import pylab as plt
 import cairo
 import pool
-import copy
-from PIL import Image
-import time
+import json
 
-error_level = sys.maxint
-collect_error = []
-c = 0
-mut = 0
-times = 0
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%m-%d %H:%M')
+logger = logging.getLogger()
+
 
 def fitness(im1, im2):
-    """docstring for fitness"""
+    """sum of square differences as fitness (error) function"""
     return np.sum((im1-im2.astype(np.int32))**2)
 
-def DrawStuff():
+conf = json.load(open('conf.json'))
 
-    global d, ml, collect_error, error_level, c, mut, width,height
-    global context, surface, times
+error = sys.maxint
+res = {"errors": [], "mutations": []}
+c_selections = 0
+c_mutations = 0
+c_time = 0
+timestamp = time.strftime("%d%m%y_%H%M%S", time.gmtime())
+os.mkdir(timestamp)
+
+# load the reference image from disk and make it a numpy array
+ml = cairo.ImageSurface.create_from_png('ml.png')
+width = ml.get_width()
+height = ml.get_height()
+ml_ar = np.frombuffer(ml.get_data(), np.uint8)
+ml_ar = ml_ar.reshape((width, height, 4))[:,:,2::-1]
+
+# load last generation if available
+if os.path.exists('final.pckl'):
+    d = pickle.load(open('final.pckl'))
+    logging.info('loaded old drawing from pickle')
+else:
+    d = pool.Drawing(conf, width, height)
+
+# inititialize cairo drawing
+surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+context = cairo.Context(surface)
+
+for i in range(conf["n_generations"]):
     start = time.time()
 
-    context.rectangle (0, 0, width, height) # Rectangle(x0, y0, x1, y1)
-    context.set_source_rgb(0,0,0)
-    context.fill()
-
+    # copy and mutate the old generation
     new_d = copy.deepcopy(d)
     new_d.mutate()
+    c_mutations += 1
 
+    # set background to black
+    context.set_source_rgb(0,0,0)
+    context.paint()
+
+    # draw the polygons
     for poly in new_d.polies:
         context.new_path()
-        for point in poly.points:
+        for point in poly.points + [poly.points[0]]:
             context.line_to(*point)
-        if len(poly.points) > 0:
-            context.line_to(poly.points[0][0], poly.points[0][1])
         context.set_source_rgba(*poly.color)
         context.close_path()
         context.fill()
 
+    # move drawing for the comparison to numpy array
     im = np.frombuffer(surface.get_data(), np.uint8)
     im_ar = im.reshape((width, height, 4))[:,:,2::-1]
 
-    new_error = fitness(ml_ar, im_ar)
-    if new_error < error_level:
-        collect_error.append(new_error)
-        error_level = new_error
-        print c, mut, new_error
+    tmp_error = fitness(ml_ar, im_ar)
+    if tmp_error < error:
+        error = tmp_error
+        c_selections += 1
+        res['errors'].append(error)
+        res['mutations'].append(c_mutations)
+        logging.info("Mutation: %d, Selection: %d, error: %d"
+                     % (c_mutations, c_selections, error))
         d = new_d
-        c += 1
-        if c % 10 == 0:
-            surface.write_to_png('cairo%d.png' % c)
+        if c_selections % 500 == 0:
+            surface.write_to_png('cairo.png')
+            logging.info(c_time/c_mutations)
+            res['drawing'] = d
+            plt.figure()
+            plt.subplot(2,1,1)
+            plt.plot(res['errors'])
+            plt.subplot(2,1,2)
+            plt.plot(np.diff(res['mutations']))
+            plt.savefig(os.path.join(timestamp, 'plot.png'))
 
-    times += time.time() - start
-    mut += 1
-    print times/mut
+            surface.write_to_png(os.path.join(timestamp, 'output.png'))
+
+            json.dump(conf, open(os.path.join(timestamp, 'conf.json'), 'w'))
+
+            pickle.dump(res, open(os.path.join(timestamp, 'res.pckl'), 'w'))
 
 
-ml = Image.open('ml.bmp')
-ml_ar = np.asarray(ml)
-width = ml.size[0]
-height = ml.size[1]
+    c_time += time.time() - start
 
-d = pool.Drawing(width, height)
 
-# glut initialization
-surface = cairo.ImageSurface (cairo.FORMAT_RGB24, width, height)
-context = cairo.Context (surface)
 
-for i in range(1000):
-    DrawStuff()
