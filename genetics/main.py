@@ -1,100 +1,111 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import os
 import sys
-from OpenGL.GL import *
-from OpenGL.GLE import *
-from OpenGL.GLUT import *
-import numpy as np
-from PIL import Image
-from numpy.random import randint
-from numpy.random import random
-import pool
 import copy
 import time
+import logging
+import pickle
+import matplotlib
+matplotlib.use("Agg")
+import numpy as np
+import pylab as plt
+import cairo
+import pool
+import json
 
-error_level = sys.maxint
-collect_error = []
-c = 0
-mut = 0
-times = 0
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%m-%d %H:%M')
+logger = logging.getLogger()
+
 
 def fitness(im1, im2):
-    """docstring for fitness"""
-    return np.sum((im1-im2)**2)
+    """sum of square differences as fitness (error) function"""
+    return np.sum((im1-im2.astype(np.int32))**2)
 
-def DrawStuff():
+conf = json.load(open('conf.json'))
 
-    global d, ml, collect_error, error_level, c, mut, times, time
+error = sys.maxint
+res = {"errors": [], "mutations": []}
+c_selections = 0
+c_mutations = 0
+c_time = 0
+timestamp = time.strftime("%d%m%y_%H%M%S", time.gmtime())
+os.mkdir(timestamp)
 
+# load the reference image from disk and make it a numpy array
+ml = cairo.ImageSurface.create_from_png('ml.png')
+width = ml.get_width()
+height = ml.get_height()
+ml_ar = np.frombuffer(ml.get_data(), np.uint8)
+ml_ar = ml_ar.reshape((width, height, 4))[:,:,2::-1]
+
+# load last generation if available
+if os.path.exists('final.pckl'):
+    d = pickle.load(open('final.pckl'))
+    logging.info('loaded old drawing from pickle')
+else:
+    d = pool.Drawing(conf, width, height)
+
+# inititialize cairo drawing
+surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+context = cairo.Context(surface)
+
+for i in range(conf["n_generations"]):
     start = time.time()
 
-    glClear(GL_COLOR_BUFFER_BIT)
-
+    # copy and mutate the old generation
     new_d = copy.deepcopy(d)
     new_d.mutate()
+    c_mutations += 1
 
+    # set background to black
+    context.set_source_rgb(0,0,0)
+    context.paint()
+
+    # draw the polygons
     for poly in new_d.polies:
-        glColor4f(*poly.color)
-        glLineWidth(5.0)
-        glBegin(GL_POLYGON)
-        for point in poly.points:
-            glVertex2f(point[0], point[1])
-        if len(poly.points) > 0:
-            glVertex2f(poly.points[0][0], poly.points[0][1])
-        glEnd() # GL_POLYGON
+        context.new_path()
+        for point in poly.points + [poly.points[0]]:
+            context.line_to(*point)
+        context.set_source_rgba(*poly.color)
+        context.close_path()
+        context.fill()
 
-    glPixelStorei(GL_PACK_ALIGNMENT, 1)
-    data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
-    # TODO maybe use frombuffer here, check what is faster
-    image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
-    im_ar = np.array(image, dtype=np.int32)
-    new_error = fitness(ml_ar, im_ar)
-    if new_error < error_level:
-        collect_error.append(new_error)
-        error_level = new_error
-        print c, mut, new_error
+    # move drawing for the comparison to numpy array
+    im = np.frombuffer(surface.get_data(), np.uint8)
+    im_ar = im.reshape((width, height, 4))[:,:,2::-1]
+
+    tmp_error = fitness(ml_ar, im_ar)
+    if tmp_error < error:
+        error = tmp_error
+        c_selections += 1
+        res['errors'].append(error)
+        res['mutations'].append(c_mutations)
+        logging.info("Mutation: %d, Selection: %d, error: %d"
+                     % (c_mutations, c_selections, error))
         d = new_d
-        c += 1
-        if c % 10 == 0:
-            image.save('%d.png' % c, 'PNG')
+        if c_selections % 500 == 0:
+            surface.write_to_png('cairo.png')
+            logging.info(c_time/c_mutations)
+            res['drawing'] = d
+            plt.figure()
+            plt.subplot(2,1,1)
+            plt.plot(res['errors'])
+            plt.subplot(2,1,2)
+            plt.plot(np.diff(res['mutations']))
+            plt.savefig(os.path.join(timestamp, 'plot.png'))
 
-    glutSwapBuffers()
-    glutPostRedisplay()
-    mut += 1
-    times += time.time() - start
-    if mut%100==0:
-        print times/mut
+            surface.write_to_png(os.path.join(timestamp, 'output.png'))
+
+            json.dump(conf, open(os.path.join(timestamp, 'conf.json'), 'w'))
+
+            pickle.dump(res, open(os.path.join(timestamp, 'res.pckl'), 'w'))
 
 
+    c_time += time.time() - start
 
-ml = Image.open('ml.bmp')
-ml_ar = np.asarray(ml)
-width = ml.size[0]
-height = ml.size[1]
 
-d = pool.Drawing(width, height)
-
-# glut initialization
-glutInit(sys.argv)
-glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA)
-glutInitWindowSize(width, height)
-glutCreateWindow("Draw Polygons")
-
-# set the function to draw
-glutDisplayFunc(DrawStuff)
-
-# enable the alpha blending
-glEnable(GL_BLEND)
-glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-# prepare for 2D drawing
-glMatrixMode(GL_PROJECTION)
-glLoadIdentity()
-glOrtho(0, width, height, 0, 0, 1)
-glDisable(GL_DEPTH_TEST)
-glMatrixMode(GL_MODELVIEW)
-
-# start the mainloop
-glutMainLoop ()
 
