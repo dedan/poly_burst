@@ -36,7 +36,8 @@ class Drawing(object):
         self.old_polies = []
         self.conf = conf
         self.generations = 0
-        self.selections = 0
+        self.selections = []
+        self.errors = []
         # inititialize cairo drawing
         self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
         self.context = cairo.Context(self.surface)
@@ -48,7 +49,7 @@ class Drawing(object):
         """mutate the current drawing"""
 
         self.generations += 1
-        self.selections += 1
+        self.selections.append(self.generations)
         self.old_polies = new_d = copy.deepcopy(self.polies)
 
         # insert new polygons
@@ -107,7 +108,7 @@ class Drawing(object):
         """draw the polygons in a numpy array"""
 
         # set background to black
-        self.context.set_source_rgb(0,0,0)
+        self.context.set_source_rgb(0, 0, 0)
         self.context.paint()
 
         # draw the polygons
@@ -123,19 +124,20 @@ class Drawing(object):
         im = np.frombuffer(self.surface.get_data(), np.uint8)
         im_ar = im.reshape((self.w, self.h, 4))[:,:,2::-1]
         # sum of square differences as fitness (error) function
-        return np.sum((other-im_ar.astype(np.int32))**2)
+        error = np.sum((other-im_ar.astype(np.int32))**2)
+        self.errors.append(error)
+        return error
 
     def revert_last_mutation(self):
         """make mutation undone (e.g. in case of worse performance)"""
         if self.old_polies:
             self.polies = self.old_polies
-            self.selections -= 1
+            self.errors.pop()
+            self.selections.pop()
         else:
             raise Exception('nothing to revert')
 
     def print_state(self):
         """print some information on the drawing to the logger"""
-        logging.info('meaningful output will be here')
-        # logging.info("Mutation: %d, Selection: %d, error: %d"
-        #              % (c_mutations, c_selections, error))
-
+        logging.info("Mutation: %d, Selection: %d, error: %d"
+                    % (self.generations, self.selections[-1], self.errors[-1]))

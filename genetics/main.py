@@ -31,36 +31,33 @@ os.mkdir(outfolder)
 
 # load the reference image from disk and make it a numpy array
 ml = cairo.ImageSurface.create_from_png(image_file)
-width = ml.get_width()
-height = ml.get_height()
 ml_ar = np.frombuffer(ml.get_data(), np.uint8)
-ml_ar = ml_ar.reshape((width, height, 4))[:,:,2::-1]
+ml_ar = ml_ar.reshape((ml.get_width(), ml.get_height(), 4))[:,:,2::-1]
 
 # create a random drawing
-drawing = pool.Drawing(conf, width, height)
+drawing = pool.Drawing(conf, ml.get_width(), ml.get_height())
 
 for i in range(conf["n_generations"]):
     start = time.time()
 
-    # copy and mutate the old generation
     drawing.mutate()
-
-    # TODO count mutations and generations in the drawing
     tmp_error = drawing.evaluate(ml_ar)
+
     if tmp_error < error:
         error = tmp_error
+
         drawing.print_state()
-        if drawing.selections % 50 == 0:
+        if drawing.selections[-1] % 50 == 0:
 
             # write plots and files
             logging.info("average time: %f" % (c_time/drawing.generations))
-            # plt.figure()
-            # plt.subplot(2,1,1)
-            # plt.plot(res['errors'])
-            # plt.subplot(2,1,2)
-            # plt.plot(np.diff(res['mutations']))
-            # plt.savefig(path.join(outfolder, 'plot.png'))
-            image_name = 'output%d.png' % drawing.selections
+            plt.figure()
+            plt.subplot(2,1,1)
+            plt.plot(drawing.errors)
+            plt.subplot(2,1,2)
+            plt.plot(np.diff(drawing.selections))
+            plt.savefig(path.join(outfolder, 'plot.png'))
+            image_name = 'output%d.png' % drawing.selections[-1]
             drawing.surface.write_to_png(path.join(outfolder, image_name))
             json.dump(drawing.conf,
                       open(path.join(outfolder, 'conf.json'), 'w'))
