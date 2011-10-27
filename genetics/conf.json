@@ -1,12 +1,13 @@
 
 {
-    "n_generations": 500000,
+    "outfolder": "/Users/dedan/projects/bci/out/",
+    "n_generations": 2000000,
     
     "min_poly_points": 5,
     
     "add_point_rate": 0.1,
     
-    "remove_point_rate": 0.1,
+    "remove_point_rate": 0.01,
     
     "move_point_rate": 0.1,
     

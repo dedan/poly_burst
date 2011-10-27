@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+from os import path
 import sys
 import copy
 import time
@@ -32,8 +33,9 @@ res = {"errors": [], "mutations": []}
 c_selections = 0
 c_mutations = 0
 c_time = 0
-timestamp = time.strftime("%d%m%y_%H%M%S", time.gmtime())
-os.mkdir(timestamp)
+timestamp = time.strftime("%d%m%y_%H%M%S", time.localtime())
+outfolder = path.join(conf['outfolder'], timestamp)
+os.mkdir(outfolder)
 
 # load the reference image from disk and make it a numpy array
 ml = cairo.ImageSurface.create_from_png('ml.png')
@@ -43,7 +45,7 @@ ml_ar = np.frombuffer(ml.get_data(), np.uint8)
 ml_ar = ml_ar.reshape((width, height, 4))[:,:,2::-1]
 
 # load last generation if available
-if os.path.exists('final.pckl'):
+if path.exists('final.pckl'):
     d = pickle.load(open('final.pckl'))
     logging.info('loaded old drawing from pickle')
 else:
@@ -88,21 +90,24 @@ for i in range(conf["n_generations"]):
                      % (c_mutations, c_selections, error))
         d = new_d
         if c_selections % 500 == 0:
-            surface.write_to_png('cairo.png')
-            logging.info(c_time/c_mutations)
+
+            # write plots and files
+            logging.info("average time: %f" % (c_time/c_mutations))
             res['drawing'] = d
             plt.figure()
             plt.subplot(2,1,1)
             plt.plot(res['errors'])
             plt.subplot(2,1,2)
             plt.plot(np.diff(res['mutations']))
-            plt.savefig(os.path.join(timestamp, 'plot.png'))
+            plt.savefig(path.join(outfolder, 'plot.png'))
+            image_name = 'output%d.png' % c_selections
+            surface.write_to_png(path.join(outfolder, image_name))
+            json.dump(conf, open(path.join(outfolder, 'conf.json'), 'w'))
+            pickle.dump(res, open(path.join(outfolder, 'res.pckl'), 'w'))
 
-            surface.write_to_png(os.path.join(timestamp, 'output.png'))
-
-            json.dump(conf, open(os.path.join(timestamp, 'conf.json'), 'w'))
-
-            pickle.dump(res, open(os.path.join(timestamp, 'res.pckl'), 'w'))
+            # update the config dict, maybe it has changed
+            conf = json.load(open('conf.json'))
+            d.update_conf(conf)
 
 
     c_time += time.time() - start

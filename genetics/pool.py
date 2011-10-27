@@ -86,4 +86,10 @@ class Drawing(object):
                 if not poly.points:
                     self.polies.remove(poly)
 
+    def update_conf(self, conf):
+        """update the config dict for the drawing and all its polygons"""
+        self.conf = conf
+        for poly in self.polies:
+            poly.conf = conf
+
 
