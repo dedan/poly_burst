@@ -45,6 +45,18 @@ class Drawing(object):
         for i in range(conf['min_polies']):
             self.polies.append(Polygon(width, height, conf['min_poly_points']))
 
+    def __getstate__(self):
+        result = self.__dict__.copy()
+        del result['context']
+        del result['surface']
+        print result
+        return result
+
+    def __setstate__(self, dict):
+        self.__dict__ = dict
+        self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)
+        self.context = cairo.Context(self.surface)
+
     def mutate(self):
         """mutate the current drawing"""
 
