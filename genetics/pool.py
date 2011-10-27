@@ -2,6 +2,13 @@
 from random import choice
 from numpy.random import random, normal, uniform, randint
 import numpy as np
+import cairo
+import copy
+import logging
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    datefmt='%m-%d %H:%M')
 
 
 class Polygon(object):
@@ -26,12 +33,23 @@ class Drawing(object):
         self.w = width
         self.h = height
         self.polies = []
+        self.old_polies = []
         self.conf = conf
+        self.generations = 0
+        self.selections = 0
+        # inititialize cairo drawing
+        self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+        self.context = cairo.Context(self.surface)
+
         for i in range(conf['min_polies']):
             self.polies.append(Polygon(width, height, conf['min_poly_points']))
 
     def mutate(self):
         """mutate the current drawing"""
+
+        self.generations += 1
+        self.selections += 1
+        self.old_polies = new_d = copy.deepcopy(self.polies)
 
         # insert new polygons
         if random() < self.conf['add_poly_rate']:
@@ -84,3 +102,40 @@ class Drawing(object):
                     move = normal(0, self.conf['move_alpha_std'])
                     tmp[3] = min(0.6, max(0.3, poly.color[3] + move))
                     poly.color = tuple(tmp)
+
+    def evaluate(self, other):
+        """draw the polygons in a numpy array"""
+
+        # set background to black
+        self.context.set_source_rgb(0,0,0)
+        self.context.paint()
+
+        # draw the polygons
+        for poly in self.polies:
+            self.context.new_path()
+            for point in poly.points + [poly.points[0]]:
+                self.context.line_to(*point)
+            self.context.set_source_rgba(*poly.color)
+            self.context.close_path()
+            self.context.fill()
+
+        # move drawing for the comparison to numpy array
+        im = np.frombuffer(self.surface.get_data(), np.uint8)
+        im_ar = im.reshape((self.w, self.h, 4))[:,:,2::-1]
+        # sum of square differences as fitness (error) function
+        return np.sum((other-im_ar.astype(np.int32))**2)
+
+    def revert_last_mutation(self):
+        """make mutation undone (e.g. in case of worse performance)"""
+        if self.old_polies:
+            self.polies = self.old_polies
+            self.selections -= 1
+        else:
+            raise Exception('nothing to revert')
+
+    def print_state(self):
+        """print some information on the drawing to the logger"""
+        logging.info('meaningful output will be here')
+        # logging.info("Mutation: %d, Selection: %d, error: %d"
+        #              % (c_mutations, c_selections, error))
+
