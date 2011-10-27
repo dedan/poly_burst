@@ -106,8 +106,7 @@ for i in range(conf["n_generations"]):
             pickle.dump(res, open(path.join(outfolder, 'res.pckl'), 'w'))
 
             # update the config dict, maybe it has changed
-            conf = json.load(open('conf.json'))
-            d.update_conf(conf)
+            d.conf = json.load(open('conf.json'))
 
 
     c_time += time.time() - start
