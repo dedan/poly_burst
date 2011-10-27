@@ -122,7 +122,7 @@ class Drawing(object):
 
         # move drawing for the comparison to numpy array
         im = np.frombuffer(self.surface.get_data(), np.uint8)
-        im_ar = im.reshape((self.w, self.h, 4))[:,:,2::-1]
+        im_ar = im.reshape((self.w, self.h, 4))[:,:,0:3]
         # sum of square differences as fitness (error) function
         error = np.sum((other-im_ar.astype(np.int32))**2)
         self.errors.append(error)
@@ -140,4 +140,4 @@ class Drawing(object):
     def print_state(self):
         """print some information on the drawing to the logger"""
         logging.info("Mutation: %d, Selection: %d, error: %d"
-                    % (self.generations, self.selections[-1], self.errors[-1]))
+                % (self.generations, len(self.selections), self.errors[-1]))

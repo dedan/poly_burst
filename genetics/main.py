@@ -32,7 +32,7 @@ os.mkdir(outfolder)
 # load the reference image from disk and make it a numpy array
 ml = cairo.ImageSurface.create_from_png(image_file)
 ml_ar = np.frombuffer(ml.get_data(), np.uint8)
-ml_ar = ml_ar.reshape((ml.get_width(), ml.get_height(), 4))[:,:,2::-1]
+ml_ar = ml_ar.reshape((ml.get_width(), ml.get_height(), 4))[:,:,0:3]
 
 # create a random drawing
 drawing = pool.Drawing(conf, ml.get_width(), ml.get_height())
@@ -47,17 +47,17 @@ for i in range(conf["n_generations"]):
         error = tmp_error
 
         drawing.print_state()
-        if drawing.selections[-1] % 50 == 0:
+        if len(drawing.selections) % 50 == 0:
 
             # write plots and files
             logging.info("average time: %f" % (c_time/drawing.generations))
             plt.figure()
-            plt.subplot(2,1,1)
+            plt.subplot(2, 1, 1)
             plt.plot(drawing.errors)
-            plt.subplot(2,1,2)
+            plt.subplot(2, 1, 2)
             plt.plot(np.diff(drawing.selections))
             plt.savefig(path.join(outfolder, 'plot.png'))
-            image_name = 'output%d.png' % drawing.selections[-1]
+            image_name = 'output%d.png' % len(drawing.selections)
             drawing.surface.write_to_png(path.join(outfolder, image_name))
             json.dump(drawing.conf,
                       open(path.join(outfolder, 'conf.json'), 'w'))
@@ -71,6 +71,3 @@ for i in range(conf["n_generations"]):
 
 
     c_time += time.time() - start
-
-
-
