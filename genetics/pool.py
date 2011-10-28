@@ -36,6 +36,24 @@ def create_random_poly(width, height, n_points, local):
     color = (random(), random(), random(), uniform(0.3, 0.6))
     return {"points": points, "color": color}
 
+def to_numpy(surf):
+    """docstring for to_numpy"""
+    res = np.frombuffer(surf.get_data(), np.uint8)
+    return res.reshape((surf.get_width(), surf.get_height(), 4))[:,:,0:3]
+
+def draw_poly(context, poly, on_black=False):
+    """docstring for draw_poly"""
+    if on_black:
+        context.set_source_rgb(0, 0, 0)
+        context.paint()
+    context.new_path()
+    for point in poly['points'] + [poly['points'][0]]:
+        context.line_to(*point)
+    context.set_source_rgba(*poly['color'])
+    context.close_path()
+    context.fill()
+
+
 
 class Drawing(object):
     """a drawing of random polygons
@@ -144,19 +162,11 @@ class Drawing(object):
         # set background to black
         self.context.set_source_rgb(0, 0, 0)
         self.context.paint()
-
         # draw the polygons
         for poly in self.polies:
-            self.context.new_path()
-            for point in poly['points'] + [poly['points'][0]]:
-                self.context.line_to(*point)
-            self.context.set_source_rgba(*poly['color'])
-            self.context.close_path()
-            self.context.fill()
+            draw_poly(self.context, poly)
 
-        # move drawing for the comparison to numpy array
-        im = np.frombuffer(self.surface.get_data(), np.uint8)
-        im_ar = im.reshape((self.w, self.h, 4))[:,:,0:3]
+        im_ar = to_numpy(self.surface)
         # sum of square differences as fitness (error) function
         error = np.sum((self.ref_image-im_ar)**2)
         self.errors.append(error)
