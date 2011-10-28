@@ -29,19 +29,14 @@ timestamp = time.strftime("%d%m%y_%H%M%S", time.localtime())
 outfolder = path.join(conf['outfolder'], timestamp)
 os.mkdir(outfolder)
 
-# load the reference image from disk and make it a numpy array
-ml = cairo.ImageSurface.create_from_png(image_file)
-ml_ar = np.frombuffer(ml.get_data(), np.uint8)
-ml_ar = ml_ar.reshape((ml.get_width(), ml.get_height(), 4))[:,:,0:3]
-
 # create a random drawing
-drawing = pool.Drawing(conf, ml.get_width(), ml.get_height())
+drawing = pool.Drawing(image_file, conf)
 
 for i in range(conf["n_generations"]):
     start = time.time()
 
     drawing.mutate()
-    tmp_error = drawing.evaluate(ml_ar)
+    tmp_error = drawing.evaluate()
 
     if tmp_error < error:
         error = tmp_error

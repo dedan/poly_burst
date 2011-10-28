@@ -6,6 +6,7 @@ import cairo
 import logging
 import json
 import copy
+import pylab as plt
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
@@ -42,22 +43,26 @@ class Drawing(object):
         the method mutate can be used to create a variation of the drawing
     """
 
-    def __init__(self, conf, width, height):
+    def __init__(self, image_file, conf):
         super(Drawing, self).__init__()
-        self.w = width
-        self.h = height
+        # load the reference image from disk and convert it to the proper range
+        tmp = plt.imread(image_file)
+        self.ref_image = (tmp * 255).astype(np.int32)[:,:,::-1]
+        self.w = np.shape(self.ref_image)[0]
+        self.h = np.shape(self.ref_image)[1]
         self.polies = []
         self.old_polies = []
         self.conf = conf
         self.generations = 0
         self.selections = []
         self.errors = []
+
         # inititialize cairo drawing
-        self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+        self.surface = cairo.ImageSurface(cairo.FORMAT_RGB24, self.w, self.h)
         self.context = cairo.Context(self.surface)
         for i in range(conf['min_polies']):
-            self.polies.append(create_random_poly(width,
-                                                  height,
+            self.polies.append(create_random_poly(self.w,
+                                                  self.h,
                                                   conf['min_poly_points'],
                                                   conf['locality']))
 
@@ -133,7 +138,7 @@ class Drawing(object):
                     tmp[3] = min(0.6, max(0.3, poly['color'][3] + move))
                     poly['color'] = tuple(tmp)
 
-    def evaluate(self, other):
+    def evaluate(self):
         """draw the polygons in a numpy array"""
 
         # set background to black
@@ -153,7 +158,7 @@ class Drawing(object):
         im = np.frombuffer(self.surface.get_data(), np.uint8)
         im_ar = im.reshape((self.w, self.h, 4))[:,:,0:3]
         # sum of square differences as fitness (error) function
-        error = np.sum((other-im_ar.astype(np.int32))**2)
+        error = np.sum((self.ref_image-im_ar)**2)
         self.errors.append(error)
         return error
 
