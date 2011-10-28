@@ -172,6 +172,29 @@ class Drawing(object):
         self.errors.append(error)
         return error
 
+    def get_sorted_polies(self, write_to_disk=False):
+        """sort the polygons according to their contribution"""
+        error = self.evaluate()
+        error_diffs = []
+        for i, to_del_poly in enumerate(self.polies):
+            polies_copy = copy.deepcopy(self.polies)
+            polies_copy.remove(to_del_poly)
+            self.context.set_source_rgb(0, 0, 0)
+            self.context.paint()
+            for poly in polies_copy:
+                draw_poly(self.context, poly)
+            im_ar = to_numpy(self.surface)
+            tmp_error = np.sum((self.ref_image-im_ar)**2)
+            error_diffs.append(np.abs(error-tmp_error))
+        idx = np.argsort(error_diffs)
+        if write_to_disk:
+            for i, lala in enumerate(reversed(idx)):
+                self.context.set_source_rgb(0, 0, 0)
+                self.context.paint()
+                draw_poly(self.context, self.polies[lala])
+                self.surface.write_to_png("only%d.png" % i)
+        return np.take(self.polies, idx)
+
     def revert_last_mutation(self):
         """make mutation undone (e.g. in case of worse performance)"""
         if self.old_polies:
