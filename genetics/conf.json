@@ -2,6 +2,7 @@
 {
     "outfolder": "/Users/dedan/projects/bci/out/",
     "n_generations": 2000000,
+    "locality": [],
     
     "min_poly_points": 5,
     

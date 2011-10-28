@@ -12,10 +12,26 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%m-%d %H:%M')
 
 
-def create_random_poly(width, height, n_points):
-    """create a random polygon in the given range"""
-    points = zip(randint(0, width, n_points),
-                 randint(0, height, n_points))
+def create_random_poly(width, height, n_points, local):
+    """create a random polygon in the given range
+
+        width, height -- size of the image in which the polygons reside
+        n_points -- number of points the polygon consists of
+        local -- if local is an empty list (or anything else that evaluates)
+                 to False, the points for the polygons are drawn from the
+                 whole range. If local is between 0 and 1 the points are
+                 drawn from the surrounding of an initial random point.
+    """
+    if not local:
+        points = zip(randint(0, width, n_points),
+                     randint(0, height, n_points))
+    else:
+        first = (randint(0, width), randint(0, height))
+        points = [first]
+        for i in range(1, n_points):
+            x = min(width, max(0, points[0][0] + randint(local*width)))
+            y = min(height, max(0, points[0][1] + randint(local*height)))
+            points.append((x,y))
     color = (random(), random(), random(), uniform(0.3, 0.6))
     return {"points": points, "color": color}
 
@@ -42,7 +58,8 @@ class Drawing(object):
         for i in range(conf['min_polies']):
             self.polies.append(create_random_poly(width,
                                                   height,
-                                                  conf['min_poly_points']))
+                                                  conf['min_poly_points'],
+                                                  conf['locality']))
 
     def __getstate__(self):
         result = self.__dict__.copy()
@@ -67,7 +84,8 @@ class Drawing(object):
             rand_idx = randint(0, len(self.polies))
             poly = create_random_poly(self.w,
                                       self.h,
-                                      self.conf['min_poly_points'])
+                                      self.conf['min_poly_points'],
+                                      self.conf['locality'])
             self.polies.insert(rand_idx, poly)
 
         # remove polygons
