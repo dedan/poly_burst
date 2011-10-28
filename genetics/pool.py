@@ -170,7 +170,3 @@ class Drawing(object):
         """print some information on the drawing to the logger"""
         logging.info("Mutation: %d, Selection: %d, error: %d"
                 % (self.generations, len(self.selections), self.errors[-1]))
-
-    def to_json(self):
-        """json representation of the polygons describing the drawing"""
-        print json.dumps(self.polies)

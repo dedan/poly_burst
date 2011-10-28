@@ -61,6 +61,8 @@ for i in range(conf["n_generations"]):
             drawing.surface.write_to_png(path.join(outfolder, image_name))
             json.dump(drawing.conf,
                       open(path.join(outfolder, 'conf.json'), 'w'))
+            json.dump(drawing.polies,
+                      open(path.join(outfolder, 'polies.json'), 'w'))
             pickle.dump(drawing,
                         open(path.join(outfolder, 'drawing.pckl'), 'w'))
 
