@@ -103,7 +103,7 @@ class Drawing(object):
         self.old_polies = copy.deepcopy(self.polies)
 
         # insert new polygons
-        if random() < self.conf['add_poly_rate']:
+        if random() < self.conf['poly_rate']:
             rand_idx = randint(0, len(self.polies))
             poly = create_random_poly(self.w,
                                       self.h,
@@ -112,7 +112,7 @@ class Drawing(object):
             self.polies.insert(rand_idx, poly)
 
         # remove polygons
-        if random() < self.conf['remove_poly_rate']:
+        if random() < self.conf['poly_rate']:
             self.polies.remove(choice(self.polies))
 
         # move polygons in the order in which they are drawn
@@ -123,16 +123,16 @@ class Drawing(object):
 
         # and now also mutate some of the polygons
         for poly in self.polies:
-            if random() < self.conf['poly_mutation_rate']:
+            if random() < self.conf['mutation_rate']:
 
                 # add points
-                if random() < self.conf['add_point_rate']:
+                if random() < self.conf['point_rate']:
                     rand_idx = randint(0, len(poly['points']))
                     rand_point = (randint(0, self.w), randint(0, self.h))
                     poly['points'].insert(rand_idx, rand_point)
 
                 # remove a point from the polygon
-                if random() < self.conf['remove_point_rate']:
+                if random() < self.conf['point_rate']:
                     if len(poly['points']) > 3:
                         poly['points'].remove(choice(poly['points']))
 
@@ -150,9 +150,9 @@ class Drawing(object):
                 if random() < self.conf['color_rate']:
                     tmp = np.zeros(len(poly['color']))
                     for i in range(3):
-                        move = normal(0, self.conf['move_color_std'])
+                        move = normal(0, self.conf['color_std'])
                         tmp[i] = min(1, max(0, poly['color'][i] + move))
-                    move = normal(0, self.conf['move_alpha_std'])
+                    move = normal(0, self.conf['color_std'])
                     tmp[3] = min(0.6, max(0.3, poly['color'][3] + move))
                     poly['color'] = tuple(tmp)
 
