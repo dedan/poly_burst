@@ -1,4 +1,4 @@
-
+import os
 from random import choice
 from numpy.random import random, normal, uniform, randint
 import numpy as np
@@ -44,7 +44,7 @@ def to_numpy(surf):
 def draw_poly(context, poly, on_black=False):
     """docstring for draw_poly"""
     if on_black:
-        context.set_source_rgb(0, 0, 0)
+        context.set_source_rgb(1, 1, 1)
         context.paint()
     context.new_path()
     for point in poly['points'] + [poly['points'][0]]:
@@ -160,7 +160,7 @@ class Drawing(object):
         """draw the polygons in a numpy array"""
 
         # set background to black
-        self.context.set_source_rgb(0, 0, 0)
+        self.context.set_source_rgb(1, 1, 1)
         self.context.paint()
         # draw the polygons
         for poly in self.polies:
@@ -172,28 +172,35 @@ class Drawing(object):
         self.errors.append(error)
         return error
 
-    def get_sorted_polies(self, write_to_disk=False):
+    def get_sorted_polies(self, write_to_disk=None):
         """sort the polygons according to their contribution"""
         error = self.evaluate()
-        error_diffs = []
-        for i, to_del_poly in enumerate(self.polies):
+        for to_del_poly in self.polies:
             polies_copy = copy.deepcopy(self.polies)
             polies_copy.remove(to_del_poly)
-            self.context.set_source_rgb(0, 0, 0)
+            self.context.set_source_rgb(1, 1, 1)
             self.context.paint()
             for poly in polies_copy:
                 draw_poly(self.context, poly)
             im_ar = to_numpy(self.surface)
             tmp_error = np.sum((self.ref_image-im_ar)**2)
-            error_diffs.append(np.abs(error-tmp_error))
-        idx = np.argsort(error_diffs)
+            to_del_poly['error'] = np.abs(error-tmp_error)
+        idx = np.argsort([p['error'] for p in self.polies])
         if write_to_disk:
-            for i, lala in enumerate(reversed(idx)):
+            ssum = sum([p['error'] for p in self.polies])
+            for i, idex in enumerate(reversed(idx)):
+                draw_poly(self.context, self.polies[idex], on_black=True)
+                val = self.polies[idex]['error'] / float(ssum)
+                self.context.select_font_face("Courier",
+                                              cairo.FONT_SLANT_NORMAL,
+                                              cairo.FONT_WEIGHT_NORMAL)
+                self.context.set_font_size(12)
                 self.context.set_source_rgb(0, 0, 0)
-                self.context.paint()
-                draw_poly(self.context, self.polies[lala])
-                self.surface.write_to_png("only%d.png" % i)
-        return np.take(self.polies, idx)
+                self.context.move_to(5, self.h - 20)
+                self.context.show_text("error: %.3f" % val)
+                self.surface.write_to_png(os.path.join(write_to_disk,
+                                          "only%d.png" % i))
+        return [self.polies[i] for i in idx]
 
     def revert_last_mutation(self):
         """make mutation undone (e.g. in case of worse performance)"""
