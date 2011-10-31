@@ -69,8 +69,6 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
                 plt.savefig(path.join(tmp_out, 'plot.png'))
                 image_name = 'output%d.png' % len(drawing.selections)
                 drawing.surface.write_to_png(path.join(tmp_out, image_name))
-                # update the config dict, maybe it has changed
-                drawing.conf = json.load(open('conf.json'))
         else:
             drawing.revert_last_mutation()
 
