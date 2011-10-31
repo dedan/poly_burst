@@ -1,7 +1,8 @@
 
 {
+    "infolder": "/Users/dedan/projects/bci/data/boss/",
     "outfolder": "/Users/dedan/projects/bci/out/",
-    "n_generations": 100000,
+    "n_generations": 10000,
     "locality": [],
 
     "mutation_rate": 0.1,
