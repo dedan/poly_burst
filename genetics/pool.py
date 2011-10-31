@@ -64,7 +64,7 @@ class Drawing(object):
     def __init__(self, image_file, conf):
         super(Drawing, self).__init__()
         # load the reference image from disk and convert it to the proper range
-        tmp = plt.imread(image_file)
+        tmp = plt.imread(image_file.encode('ascii','ignore'))
         self.ref_image = (tmp * 255).astype(np.int32)[:,:,::-1]
         self.w = np.shape(self.ref_image)[0]
         self.h = np.shape(self.ref_image)[1]

@@ -37,7 +37,7 @@ os.mkdir(outfolder)
 
 for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
 
-    tmp_out = path.join(outfolder, path.basename(image_file)[:-3])
+    tmp_out = path.join(outfolder, path.basename(image_file)[:-4])
     os.mkdir(tmp_out)
     decomp_path = path.join(tmp_out, 'decomp')
     os.mkdir(decomp_path)
