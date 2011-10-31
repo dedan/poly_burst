@@ -14,6 +14,7 @@ import pylab as plt
 import cairo
 import pool
 import json
+import signal
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
@@ -28,6 +29,24 @@ c_time = 0
 timestamp = time.strftime("%d%m%y_%H%M%S", time.localtime())
 outfolder = path.join(conf['outfolder'], timestamp)
 os.mkdir(outfolder)
+decomp_path = path.join(outfolder, 'decomp')
+os.mkdir(decomp_path)
+
+def exit_handler(signum, frame):
+    """write results to disk before closing the program"""
+    logging.info('writing output to: %s' % outfolder)
+    json.dump(drawing.conf,
+              open(path.join(outfolder, 'conf.json'), 'w'),
+              indent=2)
+    pickle.dump(drawing,
+                open(path.join(outfolder, 'drawing.pckl'), 'w'))
+    logging.info('writing single polygons to: %s' % decomp_path)
+    sorted_polies = drawing.get_sorted_polies(write_to_disk=decomp_path)
+    json.dump(sorted_polies,
+              open(path.join(outfolder, 'polies.json'), 'w'))
+    sys.exit(0)
+signal.signal(signal.SIGINT, exit_handler)
+
 
 # create a random drawing
 drawing = pool.Drawing(image_file, conf)
@@ -54,17 +73,9 @@ for i in range(conf["n_generations"]):
             plt.savefig(path.join(outfolder, 'plot.png'))
             image_name = 'output%d.png' % len(drawing.selections)
             drawing.surface.write_to_png(path.join(outfolder, image_name))
-            json.dump(drawing.conf,
-                      open(path.join(outfolder, 'conf.json'), 'w'))
-            json.dump(drawing.polies,
-                      open(path.join(outfolder, 'polies.json'), 'w'))
-            pickle.dump(drawing,
-                        open(path.join(outfolder, 'drawing.pckl'), 'w'))
-
             # update the config dict, maybe it has changed
             drawing.conf = json.load(open('conf.json'))
     else:
         drawing.revert_last_mutation()
-
 
     c_time += time.time() - start
