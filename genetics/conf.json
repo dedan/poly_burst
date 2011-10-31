@@ -17,6 +17,6 @@
     "color_rate": 0.1,
     "color_std": 0.01,
     
-    "poly_rate": 0.01,
+    "poly_rate": 0.1,
     "move_poly_rate": 0.1
 }
