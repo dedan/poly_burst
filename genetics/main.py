@@ -79,3 +79,4 @@ for i in range(conf["n_generations"]):
         drawing.revert_last_mutation()
 
     c_time += time.time() - start
+exit_handler(None, None)
