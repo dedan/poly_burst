@@ -400,6 +400,22 @@ def resizePol_old(pol, h=1., w=1., center=False):
            
     # Return the transformed data:  
     return rPol; 
+    
+def getRandomPath(path): 
+    """ getRandomPath function: 
+
+    This function returns the path of a file chosen by random from the folder 'path'. 
+
+    Attributes: 
+    >> path: string variable with the path of the folder. 
+
+    Returns: 
+        << filePath: string variable with the path of the file chosen by random. 
+
+    """
+    
+    filePath = rnd.choice(os.listdir(path)); 
+    return filePath; 
 
 
     
