@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+"""
+
+this file is only to do experiments with the evolutionary algorithms
+and not thought to be run on the cluster to produce the actual
+polygon decomposition. To do this please use main_batch.py
+
+"""
+
 import os
 from os import path
 import sys
