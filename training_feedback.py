@@ -3,72 +3,78 @@
         This file contains a feedback for a training experiment. The experiment runs as it follows: 
                 1) An image is presented to the subject for a while. 
                 2) Polygon-like stimuli are presented to the subject. Some of them were drawn from the decomposition of the image in polygons made after the evolutive algorithm (these stimuli would be target), others might be just random such stimuli or polygons from the decomposition of other images (non-target). At the beginning, the target stimuli bear a large similarity with the initial image. 
-                3) If the subject successfully identifies the target stimuli the process begins all over again with a new initial image and with the target stimuli bearing less similarity with the initial image. If the subject couldn't identify the target(s), its(their) similarity with the initial images is increased. 
+                3) Based on the performance of the subject, the complexity of the stimuli will be augmented or decreased --i.e. stimuli in the following trials will bear more or less similarity to the target image. 
                 
         The aim of this TrainingFeedback is to find a good working point in which the subject still recognizes a great fraction of the targets, but such that the targets are abstract enough. 
         
-        The 'self.run()' function has been divided into smaller functions to facilitate the manipulation of intermediate steps. 
-        
     This file includes: 
-        classes: 
-            >> TrainingFeedback: the feedback described above. Abreviated TF. 
+        Imports: 
+            >> Standard modules: 
+                > numpy as np; 
+                > random as rnd; 
+                > os; 
+                > datetime; 
+                > logging as l; 
+                    -- l.basicConfig(filename='./doc/log', level=l.DEBUG); 
+            >> Personalized modules, or modules from Pyff: 
+                > from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
+                > from poly_stim import Poly, ManyPoly; 
+                > helper as h: personalized module to handle I/O of pictures and polygon decomposition. 
+
             
-        Functions: 
-            >> TF.__init__(): initializes the feedback. 
-            >> TF.run(): the main routine which manages and presents the different stimuli. This is not done directly, but calling intermediate 'run' functions for more clarity of the code. 
-            >> TF.runImg(): a routine called in 'TF.run()' to pick up and display random images. 
-            >> TF.prepareTarget(): a routine in 'TF.run()' to set up which image decomposition is target and which ones are not. This is straightforward (target is the decomposition corresponding to the initially displayed image), so the aim of this function is just to make TF conscious of which is the target decomposition so that target polygons are not displayed randomly but in a controlled way. 
-            >> TF.runPoly(): a routine called in 'TF.run()' to generate and display polygonal stimuli. 
-            >> TF.handelDificulty(): a routine called in 'TF.run()' which modifies the similarity between stimuli and images depending on the last results (this will be called complexity). I shall also decide whether to stop the feedback. 
-            >> TF.preparePoly(): the generator for the polygonal stimuli. Called from 'TF.runPoly()'. 
-            >> TF.prepareImg(): the generator for the image stimuli. Called from 'TF.runImg()'. 
-            >> OUTDATED: TF.getRandomPath(): a function called by 'TF.prepareImg()' which choses random files from a folder. 
-        
-        Variables: 
-            >> width, height: characteristics of the screen. 
-            >> pTarget: probability of presenting a target within the random stimuli. 
-            >> stimuliPerTrial: number of polygonal stimuli in a single trial. 
-            >> tryRounds: number of rounds before difficulty is changed. 
-            >> nPoly: this variable controls the complexity of the presented polygonal stimulus by means of the number of polygons of which it consists. 
-            >> refTime: this refractory time is added to avoid funny effects. Provided that each stimulus is presented for 0.1 seconds, a refractory time is added such that there won't be any target stimulus very close to another or very close to stimuli onset. 
+        Gobal variables: 
+            >> Variables for the canvas: 
+                > width = 640; 
+                > height = 480; 
+            >> TRIGGERS: 
+                TRIG_RUN_START = 252: to signal the beginning of a run which might be consist of many trials. 
+                TRIG_RUN_END = 253: to signal the end of a run which might be consist of many trials. 
+                TRIG_TRIAL_START = 250: to signal the beginning of a trial. 
+                TRIG_TRIAL_END = 251: to signal the end of a trial. 
+                TRIG_IMG = 0: shift added to the trigger associated to actual images (0=neutral background presented). 
+                TRIG_STIM = 100: shift added to the trigger associated to stimuli consisting on polygonal decompositions. 
+                TRIG_OK = 201: trigger for Normal activity during non-target stimulus. 
+                TRIG_FAKE = 202: trigger for Deviant activity during non-target stimulus. 
+                TRIG_MISS = 203: trigger for Normal activity during target stimulus. 
+                TRIG_HIT = 204: trigger for Deviant activity during target stimulus. 
+            
+        classes: 
+            >> TrainingFeedback: the feedback. Abreviated TF now and on. Functions and variables of the class will be described below. 
 
 """
 
-
 ## Imports: 
-#from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
-from poly_stim import Poly, ManyPoly; 
+# Standard: 
 import numpy as np; 
 import random as rnd; 
-import helper as h; 
 import os; 
-
-## Logging: 
+import datetime; 
+# Logging: 
 import logging as l; 
 l.basicConfig(filename='./doc/log', level=l.DEBUG); 
+
+# From pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
+from poly_stim import Poly, ManyPoly; 
+# Personalized: 
+import helper as h; 
 
 ## Global variables: 
 # Variables for the canvas: 
 width = 640; 
 height = 480; 
 
-# Variables related tot he stimuli: 
-pTarget = 0.1; 
-stimuliPerTrial = 50; 
-tryRounds = 5; 
-nPoly = 100; 
-refTime = 3; 
-
 # Trigger variables: 
 TRIG_RUN_START = 252; 
 TRIG_RUN_END = 253; 
 TRIG_TRIAL_START = 250; 
 TRIG_TRIAL_END = 251; 
-TRIG_NEUTRAL_IMG = 10; 
-TRIG_TARGET_IMG = 20; 
-TRIG_NONTARGET_STIM = 110; 
-TRIG_TARGET_STIM = 120; 
+TRIG_IMG = 0; 
+TRIG_STIM = 100; 
+TRIG_OK = 201; 
+TRIG_FAKE = 202; 
+TRIG_MISS = 203; 
+TRIG_HIT = 204; 
 
 ## Feedback class: 
 class TrainingFeedback(VisionEggFeedback): 
@@ -76,24 +82,63 @@ class TrainingFeedback(VisionEggFeedback):
     
         This feedback class combines the presentation of images and polygons in the fashion described at the beginning of the file. 
         This feedback is inspired in the VisionEgg1 and poly_feedback, so some settings come directly from there and no further explanation about them is knwon. When this is the case, it is indicated. 
-    
+        
+    Super: 
+        >> VisionEggFeedback. 
+        
+    Variables: 
+        >> folderPath, picsFolder, polyFolder: indicate the path to the corresponding folders. 
+        >> pTarget=0.1: probability of displaying target stimuli. 
+        >>stimuliPerTrial=50: number of stimuli present in a single trial. 
+        >> tryRounds=5: number of rounds before updating complexity of the stimuli. This can be set up to be not a number of rounds but a moment at which enough taget stimuli have been presented. 
+        >> nPoly: number of polygons of which the stimuli consist. This encodes for the complexity of the stimuli. 
+        >> refTime=3: refractory time between consecutive target stimuli or between onset of stimuli and target, measured in units with the duration of a single stimulus presentation (in this case: 0.1). 
+        >> numTarget=0: this variable encode which picture has been chosen as target. In the corresponding folder, pictures are numbered and this should be the corresponding number. This allows for funny data analysis like finding out which pictures prompt more (less) deviant (normal) activity, etc... 
+        >> numNonTarget: list where the numbers of the non-target images are stored. 
+        >> bufferTrigger: this funny buffer is included to correct for some delay between the stimulus selection and stimulus onset. The next stimulus to be presented is already chosen before the previous one has been withdrawn from the canvas. Conveying a message in that moment to the parallel port would lead to huge and perhaps varying delays. A function is used which is called just before each stimulus presentation. For this function to be apropiate, it must be very quick and it is handy to have ready all the info which will be conveyed. This is the info stored in bufferTrigger, which is just the ID of the stimulus which will be displayed. 
+        >> activity='Norm': this variable stores the kind of activity ('Norm' or 'Dev') of the subject during the last stimulus presentation. 
+        >> OK, Fake, Miss, Hit: count of the events of each case. 
+        >> polygonPool: list with lists, each one containing the polygonal decomposition of one of the pictures. This is loaded when the object TF is initialized so that the files are not being accesed every trial. 
+        
+        >> flagRun: logical variable to indicate if the loop should run or stop. 
+        >> trialCount: count of trials. 
+        >> recentTargets: number of recent targets (since last update). 
+        
+        >> fullscreen, geometry: variables inherited from poly_feedback (author Stephan). May refer to canvas and have been also inherited from superer classes. 
     """
     
-    def __init__(self, folderPath='./', **kw): 
+    def __init__(self, folderPath='./data/', pTarget=0.1, stimuliPerTrial=50, 
+                 tryRounds=5, nPoly=10, refTime=3, **kw): 
         """__init__ function overwrites VisionEggFeedback.__init__: 
         
-                This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen. 
+                This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen and initializes some internal variables of the object. 
         
         """
         
+        # Super.__init__(): 
         VisionEggFeedback.__init__(self, **kw); 
+        
+        # Setting up folder paths: 
         self.folderPath = folderPath; 
         self.picsFolder = folderPath+'Pics'; 
         self.polyFolder = folderPath+'PolygonPool'; 
         
-        # Initializing target image: 
-        self.numTarget = 0; # numTarget is a number between 0 (no target) and the number of images. 
+        ## Initializing internal variables: 
+        # Variables related tot he stimuli: 
+        self.pTarget = pTarget; 
+        self.stimuliPerTrial = stimuliPerTrial; 
+        self.tryRounds = tryRounds; 
+        self.nPoly = nPoly; 
+        self.refTime = refTime; 
+        
+        self.numTarget = 0; # numTarget is a number between 0 (no target selected) and the number of images. 
         self.bufferTrigger = []; 
+        self.activity = 'Norm'; 
+        self.OK = 0; 
+        self.Fake = 0; 
+        self.Miss = 0; 
+        self.Hit = 0; 
+        self.polygonPool = self.loadPolygonPool(); 
         
         ## Next two lines are from poly_feedback: 
         # after the super init I can overwrite one of the values set in there
@@ -102,60 +147,77 @@ class TrainingFeedback(VisionEggFeedback):
         
         ## Some info for the log: 
         l.debug("Feedback object created and initialized. "); 
+        return; 
+        
+    def loadPolygonPool(self): 
+        """loadPolygonPool function: 
+        
+            This function loads the polygon decompositions stored in the corresponding files. 
+        
+        """
+        
+        polyList = []; 
+        for pic in os.listdir(self.polyFolder): 
+            polyList += [h.readPool(folderPath=self.polyFolder, fileName=pic)]; 
+        return polyList; 
     
     def run(self): 
         """run function: 
         
-                This function implements the run of this feedback. It has been further divided in a run function for each of the different stimuli (images or polygones) that are presented and also incorporates a call to a function which handles the difficulty of the recognition task (i.e. the similarity between the original image and the polygonal stimuli). 
+                This function implements the run of this feedback. It has been further divided in a run function for each of the different stimuli (images or polygones) that are displayed and also incorporates a call to a function which handles the difficulty of the recognition task (i.e. the similarity between the original image and the polygonal stimuli). 
+                
+        Local Variables: 
+            >> trialsSinceUpdate: used to track when the difficulty of the task must be updated. 
         
         """
         
         # Run starts: 
         self.send_parallel(TRIG_RUN_START); 
-        l.debug("Run start. "); 
+        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_RUN_START))); 
         
+        # Initializing some variables before the loop: 
         self.flagRun = True; 
         self.trialCount = 0; 
         self.recentTargets = 0; 
+        trialsSinceUpdate = 0; 
+        # Doing the loop. It's stop is yet to be handled: 
         while self.flagRun: 
-            if self.recentTargets > 10: 
-                self.flagRun = False; 
+            trialsSinceUpdate += 1; 
             
             # Trial starts: 
             self.trialCount += 1; 
             self.send_parallel(TRIG_TRIAL_START); 
-            l.debug("Trial %s started. ", self.trialCount)
+            l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_TRIAL_START))); 
             
             ## Presenting an image: 
             l.debug("Selecting and presenting target image. "); 
             self.runImg(); 
-            
-            ## Preparing target and non-target polygon pools: 
-            l.debug("Preparing lists with target and non-target polygonal decompositions. "); 
-            self.prepareTarget(); 
         
             ## Presenting the polygons: 
             l.debug("Building and presenting polygonal stimuli. "); 
-            self.runPoly(nPoly); 
+            self.runPoly(); 
             
             # Trial ends: 
             self.send_parallel(TRIG_TRIAL_END); 
-            l.debug("End of trial %s summing up to %s target stimuli. ", self.trialCount, self.recentTargets); 
+            l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_TRIAL_END))); 
             
             ## Handle dificulty (considered outside the trial): 
-            l.debug("Evaluating performance and handling difficulty task. "); 
-            self.handleDifficulty(flagEEG=False); 
+            if trialsSinceUpdate == self.tryRounds: 
+                trialsSinceUpdate = 0; 
+                l.debug("Evaluating performance and handling difficulty of task. "); 
+                self.handleDifficulty(); 
             
             
         # Run ends: 
         self.send_parallel(TRIG_RUN_END); 
-        l.debug("Run ends. "); 
+        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_RUN_END))); 
+        return; 
             
     
     def runImg(self): 
         """runImg function: 
         
-                This function performs the task of displaying a random image. This function creates the 'stimulus_sequence' and attaches to it the corresponding generator (which yields a random image with some neutrum grey background before and after it). 
+                This function performs the task of displaying a random image. This function creates the 'stimulus_sequence' and attaches to it the corresponding generator (which yields a random image with some neutrum grey background before and after it). The selection of which image is to be displayed is left to this generator. 
         
         """
         
@@ -167,35 +229,13 @@ class TrainingFeedback(VisionEggFeedback):
         s.run(); 
         return; 
         
-    def prepareTarget(self): 
-        """prepareTarget function: 
-        
-                This function generates two lists of polygons: one with the polygonal decomposition of the picture displayed by 'self.runImg()' and another one with the polygonal decomposition of all the other images. 
-                There is an issue concerning this function and related to the generation of non-target stimuli of a certain difficulty which must be addressed: 
-                    >> As non target shall we use: i) random polygons, ii) reconstruction of non-target image with the same complexity (this is the one implemented by now), or iii) a mixture of polygons from non-target images? 
-                   
-           Important variables:  
-                >> self.listTargetPolygons: this list contains the polygon decomposition of the target image as read from the corresponding file. 
-                >> self.listNonTargetPolygons: this list contains a collection of lists with the polygon decomposition of the non-target images as read from the corresponding file. 
-        
-        """
-        
-        self.listNonTargetPolygons = []; 
-        for ii in range(1,len(os.listdir(self.polyFolder))+1): 
-            if ii == self.numTarget: 
-                self.listTargetPolygons = h.readPool(folderPath=self.polyFolder, fileName='Pic'+str(ii)+'.json'); 
-            else: 
-                self.listNonTargetPolygons += [h.readPool(folderPath=self.polyFolder, fileName='Pic'+str(ii)+'.json')]; 
-        return; 
-        
-    def runPoly(self, nPoly): 
+    def runPoly(self): 
         """runPoly function: 
         
-                This function performs the task of displaying the polygonal stimuli. It displays a combination of polygons with the desired complexity (encoded in 'nPoly'). Target stimuli are displayed with probability 'pTarget', but target are avoided during the first half second to avoid funny effects. 
+                This function performs the task of displaying the polygonal stimuli. This function creates the 'stimulus_sequence' and attaches to it the corresponding generator (which yields successive selections of polygonal decompositioins). The selection of whether the displayed stimuli are target or not is left to this generator. 
                 
-        Arguments: 
-            >> nPoly: number of polygons of which the stimuli consist. This variable encodes for how close the target stimuli are to the original image and thus for the dificulty of the task. 
-        
+                This functions includes a call to the function 'self.evalActivity()'. This function decides whether the subject guessed the target or not based on the kind of activity that the BCI identified in the subject's EEG. The ideal thing would be that this instance is prompted by the BCI itself, but I lack knowledge of how to control this. Therefore, 'self.evalActivity()' is called just before the next stimulus is prepared (it is called from the corresponding generator 'preparePoly()') to make sure that the feedback evaluates the correct event. Because of this, the last element would not be evaluated (since there are not any more instances in the generator and 'self.evalActivity()' is called from there!) unless a last call to this function is included here. 
+             
         """
 
         # Creating ManyPoly objects to load the different polygons to be displayed: 
@@ -204,113 +244,174 @@ class TrainingFeedback(VisionEggFeedback):
                          points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
                          position = (width/2, height/2),
                          line_width = 3)
-                    for ii in range(nPoly)]; 
+                    for ii in range(self.nPoly)]; 
         target = ManyPoly(listPoly); 
         # Setting the polygons as stimuli and adding the corresponding generator: 
         self.manyPoly = target; 
         self.set_stimuli(target); 
-        generator = self.preparePoly(nPoly, flagRandom=False); 
+        generator = self.preparePoly(); 
         # Creating and running a stimulus sequence: 
         s = self.stimulus_sequence(generator, 0.1, pre_stimulus_function=self.triggerOp); 
         # Start the stimulus sequence
         s.run(); 
+        self.evalActivity(); 
         return; 
         
-    def handleDifficulty(self, flagEEG=True): 
-        """handleDifficulty function: 
-        
-                This function is yet to be implemented: I need to gain knowledge of how the comunication between the EEG device and the feedback takes place. 
-        
-                This function handles the difficulty (i.e. the number of polygons of which the stimuli consists) depending on the ratio of identified targets over the last several rounds. 
-                The function should also decide if a satisfactory working point has been reached. In this case, it sets 'self.falgRun=False' and the feedback stops. 
-                 
-        Arguments: 
-            >> flagEEG=True: this boolean tells the routine if it is working connected to an EEG device. 
-        
-        """
-        
-        if flagEEG: 
-            pass; 
-        else: 
-            pass; 
-        return; 
-        
-        
-        
-        
-    def preparePoly(self, nPoly, flagRandom=True):
-        """preparePoly generator: 
-        
-                This generator yields when the desired polygons have been loaded in the ManyPoly stimulus. 
-                
-        Arguments: 
-            >> nPoly: number of polygons of which the stimuli consist. This variable codes for the dificulty of the task. 
-            >> flagRandom=True: intended to point out whether the polygons must be chosen by random or after some criteria (e.g. if a concrete stimulus wanted to be presented among other random stimuli). A rountine has been implemented for non-random stimuli: in this case stimuli are selected after the similitude that they should bear to the original image. 
-        
-        """
-        
-        countSinceTarget = 0; 
-        for ii in range(stimuliPerTrial): 
-            countSinceTarget +=1; 
-            
-            ## Choose a polygon decomposition to build the actual stimulus: 
-            #   If w>5 the polygon decomposition might be the target one. 
-            #   Else, it is chosen randomly between the existing ones. 
-            if (countSinceTarget>refTime) and (rnd.random()<pTarget): 
-                countSinceTarget = 0; 
-                self.recentTargets += 1; 
-                polyDecomp = self.listTargetPolygons; 
-                self.bufferTrigger += [TRIG_TARGET_STIM]; 
-                l.debug("TARGET stimulus selectec for display. "); 
-            else: 
-                polyDecomp = rnd.choice(self.listNonTargetPolygons); 
-                self.bufferTrigger += [TRIG_NONTARGET_STIM]; 
-                l.debug("NONTARGET stimulus selected for display. "); 
-            
-            ## Build the stimulus from the chosen decomposition: 
-            for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
-                # Next polygon of the list is picked up and resized: 
-                pol = polyDecomp[indexPolygon]; 
-                rPol = h.resizePol(pol, h=height, w=width, center=True); 
-                # And its info is added to the stimulus: 
-                newColor = rPol['color']; 
-                newPoints = rPol['points']; 
-                polygon.set(color=newColor); 
-                polygon.set(points=newPoints); 
-            yield; 
 
     def prepareImg(self):
         """prepareImg generator: 
         
-                This generator yields when the setting for a new image to be presented have been prepared. It sets an image chosen by random from the folder at self.folderPath. Before and after the selected image a neutral background is presented as well. 
-                This generator is, therefore, responsible for generating the target image. Now this info is stored in a number which can be later forwarded to the parallel port or stored in the log. 
+                This generator yields when the setting for a new image to be presented have been prepared. It just selects whether to display the target image or a neutrum background. The selection of the target image is left to the function 'self.prepareTarget()', which is called from here. 
         
         """
         
         for w in range(3): 
             if w==1: 
-                self.numTarget = rnd.randint(1,len(os.listdir(self.picsFolder))); 
-                l.debug("Image number %s selected as target. ", self.numTarget); 
-                self.bufferTrigger += [TRIG_TARGET_IMG]; 
+                self.prepareTarget(); 
                 self.imgPath = self.picsFolder+'/Pic'+str(self.numTarget)+'.jpg'; 
                 self.image.set_file(self.imgPath); 
             else: 
-                self.bufferTrigger += [TRIG_NEUTRAL_IMG]; 
+                self.bufferTrigger += [TRIG_IMG]; 
                 imgPath = self.folderPath+'background.jpg'; 
                 self.image.set_file(imgPath); 
             yield; 
+            
+        
+    def prepareTarget(self): 
+        """prepareTarget function: 
+        
+                This function selects a target image. To do this, it uses a simple list with the numbers of the images and draws and removes one of them randomly (this becomes target). This number is stored in 'self.numTarget'. Meanwhile, the other numbers remain stored in the original list (called 'self.numNonTarget'). 
+                This is handy to select later the polygonal non-targets: we just have to choose randomly from this list. Also, this ensures that the polygonal non-targets selected this way still retain some information about the original images from which they were generated. With this, some data can be extracted regarding which pictures prompt more (less) normal (deviant) activity, etc... 
+        
+        """
+        
+        self.numNonTarget = range(1,len(os.listdir(self.picsFolder))+1); 
+        self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1)); 
+        l.debug('Target Image: ' + str(self.numTarget)); 
+        l.debug('NonTarget Images: ' + str(self.numNonTarget)); 
+        l.debug("Image number %s selected as target. ", self.numTarget); 
+        self.bufferTrigger += [TRIG_IMG+self.numTarget]; 
+        
+    def preparePoly(self):
+        """preparePoly generator: 
+        
+                This generator yields when the desired polygons have been loaded in the ManyPoly stimulus. It also controls, by now, the evaluation of the activity during the previous event. It handles the selection of target or non-target stimulus, but loading the desired polygonal decomposition into 'self.manyPoly' (which is the object eventually displayed) is made by the function 'self.preparePolyDecomp()', which is called from here. 
+        
+        """
+        
+        countSinceTarget = 0; 
+        for ii in range(self.stimuliPerTrial): 
+            countSinceTarget +=1; 
+            
+            ## Evaluating activity of previous event: 
+            #   Objects of class 'stimulus_sequence' allow to call a function just before 
+            # the stimulus is presented, but not afterwards. Therefore it's decided to implement 
+            # here the evalutation of the activity of each previous item. 
+            # I guess it could be possible to trigger this process by the BCI. 
+            # Therefore, this will be implemented in a self enclosed function so that when the time
+            # comes that we know how to link BCI to feedback the change will be straightforward. 
+            if (ii != 0): # Because (ii=0) means there isn't any previous event. 
+                self.evalActivity(); 
+            
+            ## Choose a polygon decomposition to build the actual stimulus: 
+            #   If w>refTime the polygon decomposition might be the target one. 
+            #   Else, it is chosen randomly between the existing ones. 
+            if (countSinceTarget>self.refTime) and (rnd.random()<self.pTarget): 
+                self.countSinceTarget = 0; 
+                self.recentTargets += 1; 
+                self.stimNumber = self.numTarget; 
+                l.debug("TARGET %s selected for display. ", self.stimNumber); 
+            else: 
+                self.stimNumber = rnd.choice(self.numNonTarget); 
+                l.debug("NONTARGET %s selected for display. ", self.stimNumber); 
+            polyDecomp = self.preparePolyDecomp(); 
+            self.bufferTrigger += [TRIG_STIM+self.stimNumber]; 
+            yield; 
+            
+    def preparePolyDecomp(self): 
+        """preparePolyDecomp function: 
+        
+            This function loads the information stored in a polygonal decomposition into the object 'self.manyPoly'. This object is the one which is displayed, so this step basically prepares the information which will be drawn into the canvas. 
+        
+        """
+        
+        ## Build the stimulus from the chosen decomposition: 
+        for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
+            # Next polygon of the list is picked up and resized: 
+            pol = self.polygonPool[self.stimNumber-1][indexPolygon]; 
+            rPol = h.resizePol(pol, h=height, w=width, center=True); 
+            # And its info is added to the stimulus: 
+            newColor = rPol['color']; 
+            newPoints = rPol['points']; 
+            polygon.set(color=newColor); 
+            polygon.set(points=newPoints); 
+        return; 
                 
     def triggerOp(self): 
         """triggerOP function: 
         
-            This function controls what signals are sent to the trigger (the OP in the name means Operator). The generators which yield the corresponding images and polygons operate with a lot of delay with respecto to the stimulus presentation., Therefore, the objects 'stimuli_sequence' allow to call a function just before each stimulus is presented. This is the function for this stimuli. 
-            Since this function is called right before the each stimulus is presented, this is used to send the information to the parallel port. The information which is sent depends on each stimulus, which is chosen by the generator (sending to parallel port from generator implies a huge delay). The info which is to be displayed will be stored in a buffer list 'self.bufferTrigger' and the elements will be sent one after the other by this function. 
-            Functions called just before stimulus presentation should take as few time as possible. Therefore only the basic operations should be performed here. 
+            This function controls what signals are sent to the trigger (the OP in the name means Operator). The generators which yield the corresponding images and polygons operate with a lot of delay with respect to the stimulus presentation. Luckily, the objects 'stimuli_sequence' allow to call a function just before each stimulus is presented. This is the function called by the stimuli of this feedback. 
+            Since this function is called right before each stimulus is presented, this is used to send the information to the parallel port. The information which is sent depends on each stimulus, which is chosen by the corresponding generator (sending to parallel port from generator implies a huge delay). The info which is to be displayed will be stored in a buffer list 'self.bufferTrigger' and the elements will be sent one after the other by this function. 
+            Functions called just before stimulus presentation should take as few time as possible. Therefore only the basic operations should be performed here: info has been made ready before (this is why a buffer 'self.bufferTrigger' is used). 
         
         """
         
         newID = self.bufferTrigger.pop(); 
         self.send_parallel(newID); 
+        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(newID))); 
+        
+    def evalActivity(self): 
+        """evalActivity function: 
+        
+            This function performs all the necessary operations to evaluate the most recent event. It classifies the event and the subject's response as 'OK', 'Fake', 'Hit' or 'Miss'; triggers some information to the parallel port and to the log; and modifies whatever quantities needed by the feedback to track the experiment. 
+            
+            This function relays in that the BCI should set the variable 'self.activity' either as 'Norm' or as 'Dev' right after each event. 
+        
+        """
+        
+        if self.activity == 'Norm' : 
+            if self.stimNumber != self.numTarget: # Normal activity with non-target stimulus. OK!! 
+                self.OK += 1; 
+                self.send_parallel(TRIG_OK); 
+                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_OK))); 
+            elif self.stimNumber == self.numTarget: # Normal activity with target stimulus. Miss!! 
+                self.Miss += 1; 
+                self.send_parallel(TRIG_MISS); 
+                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_MISS))); 
+        elif self.activity == 'Dev': 
+            if self.stimNumber != self.numTarget: # Deviant activity with non-target stimulus. Fake!! 
+                self.Fake += 1; 
+                self.send_parallel(TRIG_FAKE); 
+                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_FAKE))); 
+            elif self.stimNumber == self.numTarget: # Deviant activity with target stimulus. Hit!! 
+                self.Hit += 1; 
+                self.send_parallel(TRIG_HIT); 
+                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_HIT))); 
+        return; 
+        
+    def handleDifficulty(self): 
+        """handleDifficulty function: 
+        
+            This function handles the difficulty (i.e. the number of polygons of which the stimuli consists) depending on the ratio of identified targets over the last several rounds (encoded in the local variable 'performance'). 
+            The function should also decide if a satisfactory working point has been reached. In this case, it sets 'self.falgRun=False' and the feedback stops. 
+        
+        """
+        
+        performance = float(self.Hit)/self.recentTargets; 
+        if performance >= 0.5: 
+            self.nPoly -= 2; 
+        else: 
+            self.nPoly += 3; 
+        self.OK = 0; 
+        self.Fake = 0; 
+        self.Miss = 0; 
+        self.Hit = 0; 
+        self.recentTargets = 0; 
+        ## To be implemented: 
+        #   Halting the experiment when the desired performance has been reached. 
+        #   By now it just stops the experiment. 
+        self.flagRun = False; 
+        return; 
         
 if __name__=='__main__': 
     l.debug("Feedback executed as __main__. "); 
