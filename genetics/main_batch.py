@@ -1,10 +1,88 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-main_batch.py
+
+Short description of how to use this script and the output it produces:
+
+The intention of the script is to compute a *polygon decomposition* of an
+image by using a genetic algorithm. We want to use this to create the stimuli
+that we later present the subjects during the experiment. The idea for the
+evolution of a *polygon decomposition* of an image is taken from [1].
+
+To run the script
+-----------------
+
+    python main_batch.py path/to/conf.json
+
+Set the required parameters (where to find the images, etc) in the config file
+
+    infolder: where to find the images
+    outfolder: where to store the output
+    n_generations: how many iterations should be done
+    locality: this is a bit more complicated. At one point a realized that
+              the polygons that the image is composed of in the result do not
+              represent *parts* of the image. They do not represent local
+              aspects of the image, but this is what we wanted. The locality
+              variable is an attempt to overcome this. When it is set to a
+              value between 0 and 1 the points for initial random polygons are
+              not drawn from the whole image canvas but only from and area
+              of `locality * (width, height)` around a random point.
+
+    mutation_rate: probability that a mutation happens to a polygon
+
+    min_polies: number of polygons after initialization
+    min_poly_points: number of points for a random polygon
+
+    point_rate: probability that a point is added or removed during mutation
+    move_point_rate probability that a point is moved during mutation
+    move_point: maximal distance a point is moved during mutation
+
+    color_rate: probability of changing the color during mutation
+    color_std": std of the distribution from which the change in color is drawn
+
+    poly_rate: probability that a polygon is added or removed during mutation
+    move_poly_rate: probability that a polygon is moved in the order in which
+                    the polygons are drawn
+
+
+Output of the script
+--------------------
+
+For each run of the script a new folder is created, named by current time.
+It contains a folder for each processed image, named by the name of the image.
+Those image folders contain:
+
+* README.txt
+    * exactly this text ;-)
+* conf.json
+    * a copy of the config file the script was run with to create the output
+* plot.png
+    * top: is a plot of the error function over selections
+    * bottom: number mutations that took place between two selectios
+* polies.json
+    * the polygon decomposition of the image
+    * polygons are represented by
+        * color: RGBA color valu
+        * points: list of x, y points
+        * error: value by which the error function changes of this polygon
+                 is removed from the polygon decomposition. It can be used
+                 to rank the polygons according to ther *importance*
+* drawing.pckl
+    * a pickle of the drawing object
+    * this also contains the original image, the error values, etc
+    * is just stored in case we need it for later analyses
+* decomp
+    * images of the single polygons that the composition consists of
+    * the images are annotaed with the normalized error values
+    * the images are labeled by the rank according to the polygons error value
+* evol
+    * images from intermediate steps of the evolution
+* final.png
+    * the final result of the evolution
+
+[1]: rogeralsing.com/2008/12/07/genetic-programming-evolution-of-mona-lisa/
 
 Created by Stephan Gabler on 2011-10-31.
-Copyright (c) 2011 __MyCompanyName__. All rights reserved.
 """
 
 import os
