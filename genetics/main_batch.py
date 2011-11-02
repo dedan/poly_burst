@@ -49,11 +49,10 @@ Output of the script
 --------------------
 
 For each run of the script a new folder is created, named by current time.
-It contains a folder for each processed image, named by the name of the image.
+It contains a README.txt (with exactly *this* text) and a folder for each
+processed image, named by the name of the image.
 Those image folders contain:
 
-* README.txt
-    * exactly this text ;-)
 * conf.json
     * a copy of the config file the script was run with to create the output
 * plot.png
@@ -85,15 +84,9 @@ Those image folders contain:
 Created by Stephan Gabler on 2011-10-31.
 """
 
-import os
+import os, sys, glob, time, logging
 from os import path
-import sys
-import signal
-import glob
-import time
-import logging
-import pickle
-import json
+import pickle, json
 import matplotlib
 matplotlib.use("Agg")
 import numpy as np
@@ -105,8 +98,11 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
                     datefmt='%m-%d %H:%M')
 
-# config_file = 'conf.json'
-conf = json.load(open(sys.argv[1]))
+try:
+    conf = json.load(open(sys.argv[1]))
+except Exception, e:
+    print "don't forget the config file"
+    sys.exit()
 
 c_time = 0
 timestamp = time.strftime("%d%m%y_%H%M%S", time.localtime())
@@ -119,6 +115,9 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     os.mkdir(tmp_out)
     decomp_path = path.join(tmp_out, 'decomp')
     os.mkdir(decomp_path)
+    evol_path = path.join(tmp_out, 'evol')
+    os.mkdir(evol_path)
+
     logging.info('working on: %s' % image_file)
 
     # create a random drawing
@@ -139,19 +138,21 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
 
                 # write plots and files
                 logging.info("avg time: %f" % (c_time/drawing.generations))
-                plt.figure()
-                plt.subplot(2, 1, 1)
-                plt.plot(drawing.errors)
-                plt.subplot(2, 1, 2)
-                plt.plot(np.diff(drawing.selections))
-                plt.savefig(path.join(tmp_out, 'plot.png'))
                 image_name = 'output%d.png' % len(drawing.selections)
-                drawing.surface.write_to_png(path.join(tmp_out, image_name))
+                drawing.surface.write_to_png(path.join(evol_path, image_name))
         else:
             drawing.revert_last_mutation()
 
         c_time += time.time() - start
+
+    # write the final output for an image
     logging.info('writing output to: %s' % tmp_out)
+    plt.figure()
+    plt.subplot(2, 1, 1)
+    plt.plot(drawing.errors)
+    plt.subplot(2, 1, 2)
+    plt.plot(np.diff(drawing.selections))
+    plt.savefig(path.join(tmp_out, 'plot.png'))
     json.dump(drawing.conf,
               open(path.join(tmp_out, 'conf.json'), 'w'),
               indent=2)
@@ -160,4 +161,8 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     logging.info('writing single polygons to: %s' % decomp_path)
     sorted_polies = drawing.get_sorted_polies(write_to_disk=decomp_path)
     json.dump(sorted_polies,
-              open(path.join(tmp_out, 'polies.json'), 'w'))
+              open(path.join(tmp_out, 'polies.json'), 'w'),
+              indent=2)
+    drawing.evaluate()
+    drawing.surface.write_to_png(path.join(tmp_out, 'final.png'))
+    open(path.join(outfolder, 'README.txt'), 'w').write(__doc__)
