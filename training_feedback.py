@@ -14,6 +14,7 @@
                 > random as rnd; 
                 > os; 
                 > datetime; 
+                > from time import sleep; 
                 > logging as l; 
                     -- l.basicConfig(filename='./doc/log', level=l.DEBUG); 
             >> Personalized modules, or modules from Pyff: 
@@ -49,6 +50,7 @@ import numpy as np;
 import random as rnd; 
 import os; 
 import datetime; 
+from time import sleep; 
 # Logging: 
 import logging as l; 
 l.basicConfig(filename='./doc/log', level=l.DEBUG); 
@@ -96,7 +98,7 @@ class TrainingFeedback(VisionEggFeedback):
         >> numTarget=0: this variable encode which picture has been chosen as target. In the corresponding folder, pictures are numbered and this should be the corresponding number. This allows for funny data analysis like finding out which pictures prompt more (less) deviant (normal) activity, etc... 
         >> numNonTarget: list where the numbers of the non-target images are stored. 
         >> bufferTrigger: this funny buffer is included to correct for some delay between the stimulus selection and stimulus onset. The next stimulus to be presented is already chosen before the previous one has been withdrawn from the canvas. Conveying a message in that moment to the parallel port would lead to huge and perhaps varying delays. A function is used which is called just before each stimulus presentation. For this function to be apropiate, it must be very quick and it is handy to have ready all the info which will be conveyed. This is the info stored in bufferTrigger, which is just the ID of the stimulus which will be displayed. 
-        >> activity='Norm': this variable stores the kind of activity ('Norm' or 'Dev') of the subject during the last stimulus presentation. 
+        >> stimQueue: this queue stores the ID's of the different stimuli which have been displayed. They are removed from the queue as soon as the BCI returns the outcome of the classification of the subject's brain activity during the presentation of the corresponding stimulus. 
         >> OK, Fake, Miss, Hit: count of the events of each case. 
         >> polygonPool: list with lists, each one containing the polygonal decomposition of one of the pictures. This is loaded when the object TF is initialized so that the files are not being accesed every trial. 
         
@@ -105,7 +107,22 @@ class TrainingFeedback(VisionEggFeedback):
         >> recentTargets: number of recent targets (since last update). 
         
         >> fullscreen, geometry: variables inherited from poly_feedback (author Stephan). May refer to canvas and have been also inherited from superer classes. 
-    """
+        
+    Functions: 
+        >> __init__: init function. 
+        >> loadPolygonPool: loads polygon decomposition from the corresponding files at the beginning of the experiment. 
+        >> run: runs the main loop of the experiment. It is further divided in smaller runs for simplcity. 
+        >> runImg: runs the selection and display of the target image. 
+        >> runPoly: runs the selection and display of the different polygonal stimuli. 
+        >> prepareImg: generator for the target image stimuli. This just sets up the image ready to be displayed. The selection of the target image is left to 'self.prepareTarget()'. 
+        >> prepareTarget: selects the target image and gives the corresponding values to the variables which the feedback uses to track down which stimuli are target and which are not. 
+        >> preparePoly: generator for the polygonal stimulus. This function selects whether the stimulus to be shown will be target or not. 
+        >> preparePolyDecomp: once selected the polygon to be displayed by 'self.preparePoly()', this function sets the information in the corresponding object for later display. 
+        >> triggerOP: function called right before the display of each stimulus to send the triggers to the parallel port and to the log. 
+        >> evalActivity: called by the BCI which must pass as arguments the ID of a stimulus and the outcome of the classification of the subject's brain activity. 
+        >> handleDifficulty: increases or decreases the complexity of the polygonal stimuli based on the performance of the subject. 
+        
+    """ 
     
     def __init__(self, folderPath='./data/', pTarget=0.1, stimuliPerTrial=50, 
                  tryRounds=5, nPoly=10, refTime=3, **kw): 
@@ -179,6 +196,7 @@ class TrainingFeedback(VisionEggFeedback):
         self.flagRun = True; 
         self.trialCount = 0; 
         self.recentTargets = 0; 
+        self.stimQueue = []; 
         trialsSinceUpdate = 0; 
         # Doing the loop. It's stop is yet to be handled: 
         while self.flagRun: 
@@ -196,6 +214,10 @@ class TrainingFeedback(VisionEggFeedback):
             ## Presenting the polygons: 
             l.debug("Building and presenting polygonal stimuli. "); 
             self.runPoly(); 
+            
+            ## Waiting until classifier is done to conclude the trial: 
+            while (len(self.stimQueue)>0): 
+                sleep(0.5); 
             
             # Trial ends: 
             self.send_parallel(TRIG_TRIAL_END); 
@@ -233,8 +255,6 @@ class TrainingFeedback(VisionEggFeedback):
         """runPoly function: 
         
                 This function performs the task of displaying the polygonal stimuli. This function creates the 'stimulus_sequence' and attaches to it the corresponding generator (which yields successive selections of polygonal decompositioins). The selection of whether the displayed stimuli are target or not is left to this generator. 
-                
-                This functions includes a call to the function 'self.evalActivity()'. This function decides whether the subject guessed the target or not based on the kind of activity that the BCI identified in the subject's EEG. The ideal thing would be that this instance is prompted by the BCI itself, but I lack knowledge of how to control this. Therefore, 'self.evalActivity()' is called just before the next stimulus is prepared (it is called from the corresponding generator 'preparePoly()') to make sure that the feedback evaluates the correct event. Because of this, the last element would not be evaluated (since there are not any more instances in the generator and 'self.evalActivity()' is called from there!) unless a last call to this function is included here. 
              
         """
 
@@ -254,7 +274,6 @@ class TrainingFeedback(VisionEggFeedback):
         s = self.stimulus_sequence(generator, 0.1, pre_stimulus_function=self.triggerOp); 
         # Start the stimulus sequence
         s.run(); 
-        self.evalActivity(); 
         return; 
         
 
@@ -295,24 +314,15 @@ class TrainingFeedback(VisionEggFeedback):
     def preparePoly(self):
         """preparePoly generator: 
         
-                This generator yields when the desired polygons have been loaded in the ManyPoly stimulus. It also controls, by now, the evaluation of the activity during the previous event. It handles the selection of target or non-target stimulus, but loading the desired polygonal decomposition into 'self.manyPoly' (which is the object eventually displayed) is made by the function 'self.preparePolyDecomp()', which is called from here. 
+                This generator yields when the desired polygons have been loaded in the ManyPoly stimulus. It handles the selection of target or non-target stimulus, but loading the desired polygonal decomposition into 'self.manyPoly' (which is the object eventually displayed) is made by the function 'self.preparePolyDecomp()', which is called from here. 
+                This function also stores the value of the trigger corresponding to the current stimulus into two different queues: one queue to prepare the trigger which is actually sent just before stimulus presentation by 'self.triggerOP()', and another queue were the values of the successive presented stimuli are stored until the classifier calls the function 'self.evalActivity()'. Further info about 'self.evalActivity' can be found in the corresponding function. 
         
         """
         
         countSinceTarget = 0; 
         for ii in range(self.stimuliPerTrial): 
             countSinceTarget +=1; 
-            
-            ## Evaluating activity of previous event: 
-            #   Objects of class 'stimulus_sequence' allow to call a function just before 
-            # the stimulus is presented, but not afterwards. Therefore it's decided to implement 
-            # here the evalutation of the activity of each previous item. 
-            # I guess it could be possible to trigger this process by the BCI. 
-            # Therefore, this will be implemented in a self enclosed function so that when the time
-            # comes that we know how to link BCI to feedback the change will be straightforward. 
-            if (ii != 0): # Because (ii=0) means there isn't any previous event. 
-                self.evalActivity(); 
-            
+                        
             ## Choose a polygon decomposition to build the actual stimulus: 
             #   If w>refTime the polygon decomposition might be the target one. 
             #   Else, it is chosen randomly between the existing ones. 
@@ -326,6 +336,7 @@ class TrainingFeedback(VisionEggFeedback):
                 l.debug("NONTARGET %s selected for display. ", self.stimNumber); 
             polyDecomp = self.preparePolyDecomp(); 
             self.bufferTrigger += [TRIG_STIM+self.stimNumber]; 
+            self.stimQueue.insert(0,TRIG_STIM+self.stimNumber); 
             yield; 
             
     def preparePolyDecomp(self): 
@@ -360,30 +371,41 @@ class TrainingFeedback(VisionEggFeedback):
         self.send_parallel(newID); 
         l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(newID))); 
         
-    def evalActivity(self): 
+    def evalActivity(self, stim_ID, activity): 
         """evalActivity function: 
         
-            This function performs all the necessary operations to evaluate the most recent event. It classifies the event and the subject's response as 'OK', 'Fake', 'Hit' or 'Miss'; triggers some information to the parallel port and to the log; and modifies whatever quantities needed by the feedback to track the experiment. 
+            This function must be called from the BCI and performs all the necessary operations to evaluate the first event of a queue (i.e. the event at the right of the list 'self.stimQueue'). It classifies the event as 'OK', 'Fake', 'Hit' or 'Miss' based on the subjects activity, which is 'Norm' for normal or 'Dev' for deviant. This function also modifies whatever quantities are needed by the feedback to track the experiment. 
+            Since a delay is expected from the classifier, this function can just be called at any time by the BCI passing as argument 'stim_ID', which must match the stimulus ID in the first position of the queue, and the outcome of the classification task encoded in the argument 'activity'. This is asserted within this function and its failure will prompt an error. 
             
-            This function relays in that the BCI should set the variable 'self.activity' either as 'Norm' or as 'Dev' right after each event. 
+        Arguments: 
+            >> stim_ID: ID of the stimulus classified by the BCI. This must match the first one in the queue. This argument must take as value the different trigger values for each of the stimuli. 
+            >> activity: outcome of the classifier. This argument take as values 'Norm' for normal activity at the subject's brain during processing of the corresponding stimulus, or 'Dev' for deviant activity. 
         
         """
         
+        self.activity = activity; 
+        stimNumber = self.stimQueue.pop(); 
+        try: 
+            assert(stimNumber==stim_ID); 
+        except AssertionError: 
+            l.error('Classifier sent evaluation of wrong stimulus. Function "evalActivity()" in class "TrainingFeedback". '); 
+            raise AssertionError; 
+        
         if self.activity == 'Norm' : 
-            if self.stimNumber != self.numTarget: # Normal activity with non-target stimulus. OK!! 
+            if stimNumber != self.numTarget: # Normal activity with non-target stimulus. OK!! 
                 self.OK += 1; 
                 self.send_parallel(TRIG_OK); 
                 l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_OK))); 
-            elif self.stimNumber == self.numTarget: # Normal activity with target stimulus. Miss!! 
+            elif stimNumber == self.numTarget: # Normal activity with target stimulus. Miss!! 
                 self.Miss += 1; 
                 self.send_parallel(TRIG_MISS); 
                 l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_MISS))); 
         elif self.activity == 'Dev': 
-            if self.stimNumber != self.numTarget: # Deviant activity with non-target stimulus. Fake!! 
+            if stimNumber != self.numTarget: # Deviant activity with non-target stimulus. Fake!! 
                 self.Fake += 1; 
                 self.send_parallel(TRIG_FAKE); 
                 l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_FAKE))); 
-            elif self.stimNumber == self.numTarget: # Deviant activity with target stimulus. Hit!! 
+            elif stimNumber == self.numTarget: # Deviant activity with target stimulus. Hit!! 
                 self.Hit += 1; 
                 self.send_parallel(TRIG_HIT); 
                 l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_HIT))); 
