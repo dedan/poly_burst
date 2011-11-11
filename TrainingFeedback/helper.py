@@ -153,8 +153,13 @@ def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True):
     
     """
     
+    # DEBUG!! 
+    
     # Reading data from the file: 
-    poolPath = folderPath+'/'+fileName; 
+    if loadJson: 
+        poolPath = folderPath+'/decomp.json'; 
+    else: 
+        poolPath = folderPath+'/'+fileName; 
     f = open(poolPath, 'r'); 
     
     if loadJson: 

@@ -126,9 +126,9 @@ class TrainingFeedback(VisionEggFeedback):
         >> handleDifficulty: increases or decreases the complexity of the polygonal stimuli based on the performance of the subject. 
         
     """ 
-    
-    def __init__(self, folderPath='./Feedbacks/TrainingFeedback/data/', pTarget=0.1, stimuliPerTrial=50, 
-                 tryRounds=5, nPoly=10, refTime=3, **kw): 
+    # DEBUG!! Tune pTarget; 
+    def __init__(self, folderPath='./Feedbacks/TrainingFeedback/data/', pTarget=0.1, 
+                 stimuliPerTrial=50, tryRounds=5, nPoly=10, refTime=3, **kw): 
         """__init__ function overwrites VisionEggFeedback.__init__: 
         
                 This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen and initializes some internal variables of the object. 
@@ -252,7 +252,8 @@ class TrainingFeedback(VisionEggFeedback):
         
         polyList = []; 
         for imgName in self.dictImgNames.viewvalues(): 
-            newPolyDecomp = h.readPool(folderPath=self.polyFolder+'/'+imgName, fileName='drawing.pckl', loadJson=False); 
+            newPolyDecomp = h.readPool(folderPath=self.polyFolder+'/'+imgName, fileName='drawing.pckl', loadJson=False); # DEBUG!! 
+#            newPolyDecomp.reverse(); DEBUG!! 
             polyList += [newPolyDecomp]; 
         return polyList; 
     
@@ -282,8 +283,7 @@ class TrainingFeedback(VisionEggFeedback):
         listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
-                         position = (width/2, height/2),
-                         line_width = 3)
+                         position = (width/2, height/2))
                     for ii in range(self.nPoly)]; 
         target = ManyPoly(listPoly); 
         # Setting the polygons as stimuli and adding the corresponding generator: 
@@ -346,6 +346,7 @@ class TrainingFeedback(VisionEggFeedback):
             ## Choose a polygon decomposition to build the actual stimulus: 
             #   If w>refTime the polygon decomposition might be the target one. 
             #   Else, it is chosen randomly between the existing ones. 
+            # DEBUG!! Set the condition of the 'if' to be TRUE and the target stimuli will be repeatedly displayed. 
             if (countSinceTarget>self.refTime) and (rnd.random()<self.pTarget): 
                 self.countSinceTarget = 0; 
                 self.recentTargets += 1; 
@@ -370,7 +371,7 @@ class TrainingFeedback(VisionEggFeedback):
         for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
             # Some images require less polygons than the size of the stimulus in the most complete reconstruction: 
             if (indexPolygon < len(self.polygonPool[self.stimNumber-1])): 
-#                 Next polygon of the list is picked up and resized: 
+                # Next polygon of the list is picked up and resized: 
                 pol = self.polygonPool[self.stimNumber-1][indexPolygon]; 
                 tPol = h.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth); 
                 rPol = h.flipY(tPol); # Decomposition was flipped!! 
