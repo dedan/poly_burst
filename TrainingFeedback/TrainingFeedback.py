@@ -211,9 +211,7 @@ class TrainingFeedback(VisionEggFeedback):
             
             ## Waiting until classifier is done to conclude the trial: 
             while (len(self.stimQueue)>0): 
-                self.evalActivity(self.stimQueue[-1], 'Normal'); 
-                # sleep(0.5); 
-                # DEBUG!! 
+                sleep(0.1); 
             
             # Trial ends: 
             self.send_parallel(TRIG_TRIAL_END); 
