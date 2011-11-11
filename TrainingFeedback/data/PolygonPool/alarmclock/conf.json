@@ -1,0 +1,16 @@
+{
+  "infolder": "/home/StephanGabler/data/boss_selected/", 
+  "move_point": 20, 
+  "color_rate": 0.10000000000000001, 
+  "locality": [], 
+  "poly_rate": 0.10000000000000001, 
+  "color_std": 0.01, 
+  "min_poly_points": 5, 
+  "point_rate": 0.10000000000000001, 
+  "move_point_rate": 0.10000000000000001, 
+  "min_polies": 10, 
+  "outfolder": "/home/StephanGabler/out/", 
+  "n_generations": 1000000, 
+  "move_poly_rate": 0.10000000000000001, 
+  "mutation_rate": 0.10000000000000001
+}
