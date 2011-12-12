@@ -159,7 +159,6 @@ class Drawing(object):
     def evaluate(self):
         """draw the polygons in a numpy array"""
 
-        # set background to black
         self.context.set_source_rgb(1, 1, 1)
         self.context.paint()
         # draw the polygons
@@ -215,3 +214,14 @@ class Drawing(object):
         """print some information on the drawing to the logger"""
         logging.info("Mutation: %d, Selection: %d, error: %d"
                 % (self.generations, len(self.selections), self.errors[-1]))
+
+    def as_array(self):
+        """return a version of the rendered drawing as a numpy array"""
+        # set background to white
+        self.context.set_source_rgb(1, 1, 1)
+        self.context.paint()
+        # draw the polygons
+        for poly in self.polies:
+            draw_poly(self.context, poly)
+        return to_numpy(self.surface)
+
