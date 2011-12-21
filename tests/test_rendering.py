@@ -19,74 +19,46 @@ from OpenGL.GLE import *
 from OpenGL.GLUT import *
 from PIL import Image
 
+# 1 is the polygon we have problems with, 0 should not be a problem
+poly_idx = 0
 
-path = '/Users/dedan/projects/bci/out/121211_155705/alarmclock'
+basepath = os.path.join(os.path.dirname(__file__), 'test_data')
+polies = json.load(open(os.path.join(basepath, 'polies.json')))
+width = height = 200
 
-# this is now commented out, but should give an idea of how the tests should
-# look like in the end. I just did not want to be bothered with test
-# conventions now. I find it difficult to put this opengl stuff into a test.
-
-
-# ref_image_path = os.path.join(path, 'final.png')
-#
-#
-# class test_rendering(unittest.TestCase):
-#
-#     def setUp(self):
-#         self.drawing = pickle.load(open(os.path.join(path, 'drawing.pckl')))
-#         self.final_image = cairo.ImageSurface.create_from_png(ref_image_path)
-#
-#     def test_rendering_correct(self):
-#         """docstring for test_rendering_correct"""
-#         # render the pickled object again
-#         drawing_array = self.drawing.as_array()
-#         # compute difference
-#         final_image_array = pool.to_numpy(self.final_image)
-#         self.assertEqual(np.sum((drawing_array - final_image_array)**2), 0)
-#
-#
-#
-# if __name__ == '__main__':
-#     unittest.main()
+surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
+context = cairo.Context(surface)
+context.set_source_rgb(1, 1, 1)
+context.paint()
+pool.draw_poly(context, polies[poly_idx])
+surface.write_to_png('cairo.png')
+cairo_array = pool.to_numpy(surface)
 
 def DrawStuff():
 
+    global cairo_array
     glClear(GL_COLOR_BUFFER_BIT)
 
-    for poly in drawing.polies:
-        glColor4f(*poly['color'])
-        # glLineWidth(5.0)
-        glBegin(GL_POLYGON)
-        for point in poly['points']:
-            glVertex2f(point[0], point[1])
-        if len(poly['points']) > 0:
-            glVertex2f(poly['points'][0][0], poly['points'][0][1])
-        glEnd() # GL_POLYGON
+    poly = polies[poly_idx]
+    glColor4f(*poly['color'])
+    glBegin(GL_POLYGON)
+    for point in poly['points']:
+        glVertex2f(point[0], point[1])
+    if len(poly['points']) > 0:
+        glVertex2f(poly['points'][0][0], poly['points'][0][1])
+    glEnd() # GL_POLYGON
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1)
     data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
     image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
     im_ar = np.array(image, dtype=np.int32)
-    image.save('test_gl.png', 'PNG')
+    image.save('caopengl.png', 'PNG')
     glutSwapBuffers()
+    print np.sum((cairo_array - im_ar))
     return
 
 
-drawing = pickle.load(open(os.path.join(path, 'drawing.pckl')))
-width = drawing.w
-height = drawing.h
-
-surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
-context = cairo.Context(surface)
-
-context.set_source_rgb(1, 1, 1)
-context.paint()
-# draw the polygons
-for poly in drawing.polies:
-    pool.draw_poly(context, poly)
-surface.write_to_png('cairo.png')
-
-
+##### all the opengl foreplay
 # glut initialization
 glutInit(sys.argv)
 glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA)
