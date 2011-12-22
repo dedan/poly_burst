@@ -53,8 +53,8 @@ def DrawStuff():
     image = Image.fromstring("RGBA", (width, height), data).convert('RGB')
     im_ar = np.array(image, dtype=np.int32)
     image.save('caopengl.png', 'PNG')
+    print np.sum((cairo_array - im_ar[:,:,::-1])**2)
     glutSwapBuffers()
-    print np.sum((cairo_array - im_ar))
     return
 
 
@@ -74,10 +74,10 @@ glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 glClearColor(1.0, 1.0, 1.0, 0.0);
 
 # prepare for 2D drawing
-# glViewport(0, 0, width, height)
 glMatrixMode(GL_PROJECTION)
-glLoadIdentity()
 glOrtho(0, width, height, 0, 0, 1)
+glScalef(1, -1, 1)
+glTranslatef(0, -height, 0)
 glDisable(GL_DEPTH_TEST)
 glMatrixMode(GL_MODELVIEW)
 
