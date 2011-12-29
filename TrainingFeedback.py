@@ -5,7 +5,7 @@
                 2) Polygon-like stimuli are presented to the subject. Some of them were drawn from the decomposition of the image in polygons made after the evolutive algorithm (these stimuli would be target), others might be just random such stimuli or polygons from the decomposition of other images (non-target). At the beginning, the target stimuli bear a large similarity with the initial image. 
                 3) Based on the performance of the subject, the complexity of the stimuli will be augmented or decreased --i.e. stimuli in the following trials will bear more or less similarity to the target image. 
                 
-        The aim of this TrainingFeedback is to find a good working point in which the subject still recognizes a great fraction of the targets, but such that the targets are abstract enough. 
+        The aim of this TrainingFeedback is to find a good working point in which the subject still recognizes a great fraction of the targets, but such that the targets are abstract enougH. 
         
     This file includes: 
         Imports: 
@@ -46,20 +46,22 @@
 
 ## Imports: 
 # Standard: 
-import numpy as np; 
+#import numpy as np; 
 import random as rnd; 
 import os; 
 import datetime; 
 from time import sleep; 
+import OpenGL.GLU as glu; 
+
 # Logging: 
 import logging as l; 
 l.basicConfig(filename='./doc/log', level=l.DEBUG); 
 
-# From pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
+# from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
 from poly_stim import Poly, ManyPoly; 
 # Personalized: 
-import helper as h; 
+import helper as H; 
 
 ## Global variables: 
 # Size of the canvas where the polygonal decomposition was made: 
@@ -128,7 +130,7 @@ class TrainingFeedback(VisionEggFeedback):
     """ 
     # DEBUG!! Tune pTarget; 
     def __init__(self, folderPath='./Feedbacks/TrainingFeedback/data/', pTarget=0.1, 
-                 stimuliPerTrial=50, tryRounds=5, nPoly=10, refTime=3, **kw): 
+                 stimuliPerTrial=50, tryRounds=5, nPoly=100, refTime=3, **kw): #DEBUG!! nPoly=30; 
         """__init__ function overwrites VisionEggFeedback.__init__: 
         
                 This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen and initializes some internal variables of the object. 
@@ -251,9 +253,8 @@ class TrainingFeedback(VisionEggFeedback):
         """
         
         polyList = []; 
-        for imgName in self.dictImgNames.viewvalues(): 
-            newPolyDecomp = h.readPool(folderPath=self.polyFolder+'/'+imgName, fileName='drawing.pckl', loadJson=False); # DEBUG!! 
-#            newPolyDecomp.reverse(); DEBUG!! 
+        for imgName in self.dictImgNames.values(): 
+            newPolyDecomp = H.readPool(folderPath=self.polyFolder+'/'+imgName, fileName='drawing.pckl', loadJson=True, loadTriangle=True); # DEBUG!! 
             polyList += [newPolyDecomp]; 
         return polyList; 
     
@@ -280,11 +281,10 @@ class TrainingFeedback(VisionEggFeedback):
         """
 
         # Creating ManyPoly objects to load the different polygons to be displayed: 
-        listPoly = [Poly(color = (0.0, 0.0, 0.0, 1.0), # Set the target color (RGBA) black
+        listPoly = [Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
-                         points = [(30.0, 10.0), (-20.0, 2.0), (0.0, 50.0)],
-                         position = (width/2, height/2))
-                    for ii in range(self.nPoly)]; 
+                         points = [(-width, -height), (-width, height), (width, height), (width, -height)],
+                         position = (width/2, height/2))]; 
         target = ManyPoly(listPoly); 
         # Setting the polygons as stimuli and adding the corresponding generator: 
         self.manyPoly = target; 
@@ -325,6 +325,8 @@ class TrainingFeedback(VisionEggFeedback):
         """
         
         self.numNonTarget = range(1,len(self.dictImgNames)+1); 
+        print "self.numNonTarget: "; 
+#        self.numTarget = self.numNonTarget.pop(2); # DEBUG!! Sets target to be always the alarmclock. 
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1)); 
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget]); 
         l.debug('NonTarget Images: ' + str(self.numNonTarget)); 
@@ -360,30 +362,64 @@ class TrainingFeedback(VisionEggFeedback):
             self.stimQueue.insert(0,TRIG_STIM+self.stimNumber); 
             yield; 
             
-    def preparePolyDecomp(self): 
+    def preparePolyDecomp(self, loadTriangle=True): 
         """preparePolyDecomp function: 
         
             This function loads the information stored in a polygonal decomposition into the object 'self.manyPoly'. This object is the one which is displayed, so this step basically prepares the information which will be drawn into the canvas. 
+            
+            (26.12.2012 DEBUG!! Triangle) Now a polygon of the decomposition may be composed of smaller subunits and they must be handled. If the flag loadTriangle is True, then this function takes care of loading the many subunits which conform the tiling of the polygons of the decomposition. 
+            
+        Input: 
+            >> loadTriangle=False: flag to indicate if the program is loading polygons which have been preprocessed with the Triangle program. 
         
         """
         
-        ## Build the stimulus from the chosen decomposition: 
-        for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
-            # Some images require less polygons than the size of the stimulus in the most complete reconstruction: 
-            if (indexPolygon < len(self.polygonPool[self.stimNumber-1])): 
-                # Next polygon of the list is picked up and resized: 
-                pol = self.polygonPool[self.stimNumber-1][indexPolygon]; 
-                tPol = h.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth); 
-                rPol = h.flipY(tPol); # Decomposition was flipped!! 
-                # And its info is added to the stimulus: 
-                newColor = rPol['color']; 
-                newPoints = rPol['points']; 
-            else: 
-                # If no more polygons are needed, a void polygon is set up: 
-                newPoints = [[0.,0.], [0.,0.], [0.,0.]]; 
-                newColor = [0., 0., 0., 0.]; 
-            polygon.set(color=newColor); 
-            polygon.set(points=newPoints); 
+        # DEBUG!! 
+        if loadTriangle: 
+            
+            ## Build the stimulus from the chosen decomposition: 
+            newPolyList = [self.manyPoly.listPoly[0]]; 
+            for indPoly in range(self.nPoly): 
+            
+                # The decomposition of some polygons might be shorter than what required for a given complexity: 
+                if indPoly >= len(self.polygonPool[self.stimNumber-1]): 
+                    break; 
+                    
+                # Load the next list with the tiles: 
+                newTilesList = self.polygonPool[self.stimNumber-1][indPoly]; 
+                for pol in newTilesList: 
+                    # Load and resize: 
+                    rPol = H.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth); 
+                    newColor = rPol['color']; 
+                    newPoints = rPol['points']; 
+                    # Make new poly with the given specifications: 
+                    p = Poly(color=newColor, 
+                             orientation = 0.0,
+                             points = newPoints,
+                             position = (width/2, height/2));
+                    # Add to the list of polies to be displayed:  
+                    newPolyList += [p]; 
+            
+            # Set the list of polies into the target object: 
+            self.manyPoly.setListPoly(newPolyList); 
+            
+        else: 
+            ## Build the stimulus from the chosen decomposition: 
+            for indexPolygon, polygon in enumerate(self.manyPoly.listPoly): 
+                # Some images require less polygons than the size of the stimulus in the most complete reconstruction: 
+                if (indexPolygon < len(self.polygonPool[self.stimNumber-1])): 
+                    # Next polygon of the list is picked up and resized: 
+                    pol = self.polygonPool[self.stimNumber-1][indexPolygon]; 
+                    rPol = H.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth); 
+                    # And its info is added to the stimulus: 
+                    newColor = rPol['color']; 
+                    newPoints = rPol['points']; 
+                else: 
+                    # If no more polygons are needed, a void polygon is set up: 
+                    newPoints = [[0.,0.], [0.,0.], [0.,0.]]; 
+                    newColor = [0., 0., 0., 0.]; 
+                polygon.set(color=newColor); 
+                polygon.set(points=newPoints); 
         return; 
                 
     def triggerOp(self): 

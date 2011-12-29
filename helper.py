@@ -138,7 +138,7 @@ def normalizePol(pol, h=1., w=1., center=False):
     # Return the transformed data:  
     return rPol; 
     
-def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True): 
+def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True, loadTriangle=False): 
     """readPool function: 
     
         This functions reads a file in which polygons were stored with the .json format and returns a list of the dictionaries containing the info of these polygons. 
@@ -157,13 +157,16 @@ def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True):
     
     # Reading data from the file: 
     if loadJson: 
-        poolPath = folderPath+'/decomp.json'; 
+        poolPath = folderPath+'/polies.json'; 
+        if loadTriangle: 
+            poolPath = folderPath+'/polies_.json'; 
     else: 
         poolPath = folderPath+'/'+fileName; 
     f = open(poolPath, 'r'); 
     
     if loadJson: 
         # Parsing with json: 
+        data = f.read(); 
         listPolygons = json.loads(data); 
     else: 
         # Loading with pickle: 
@@ -210,6 +213,22 @@ def resizePol(pol, h=1., w=1., pH=1., pW=1.):
            
     # Return the transformed data:  
     return rPol; 
+    
+def slidePoints(pol): 
+    """slidePoints function: 
+    
+        This funtion is implemented to try something out: In the current state of the affairs the polygons seem to fold in when they are concave. Which part they show as a folding might depend on the order in which the points are given, therefore it is tried out to slide the order of the points to test if this solves the problem. 
+    
+    """
+    
+    rPol = copy.copy(pol); 
+    points = rPol['points']; 
+    points_ = [points[-1]]+points[0:len(points)-1]; 
+    rPol['points'] = points_; 
+    
+    # Return the transformed data: 
+    return rPol; 
+    
     
 
 ####################################################################
@@ -304,7 +323,7 @@ def newPoly_old(pol, width, height, flagCenter):
                    line_width = 3); 
 
 def normalizePol_old(pol, h=1., w=1., center=False): 
-    """rnormalizePol function: 
+    """normalizePol_old function: 
    
         This function resizes a polygon which lives on a wxh canvas into a 1x1 canvas with the point (0., 0.) at the bottom left. 
         
@@ -444,7 +463,9 @@ def flipY(pol):
     """
     
     rPol = copy.copy(pol); 
-    points = rPol['points']; 
+    points = []; 
+    for ii in range(len(rPol['points'])): 
+        points += [rPol['points'].pop()]; 
     newPoints = []; 
     for pp in points: 
         # Flip: 
