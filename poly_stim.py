@@ -10,6 +10,8 @@ import VisionEgg
 import VisionEgg.Core
 import VisionEgg.ParameterTypes as ve_types
 import VisionEgg.GL as gl # get all OpenGL stuff in one namespace
+import OpenGL.GLU as glu; 
+
 
 class Poly(VisionEgg.Core.Stimulus):
     """Polygon stimulus.
@@ -46,6 +48,8 @@ class Poly(VisionEgg.Core.Stimulus):
     def __init__(self,**kw):
         VisionEgg.Core.Stimulus.__init__(self,**kw)
         self._gave_alpha_warning = 0
+        
+        return; 
 
     def draw(self):
         p = self.parameters # shorthand
@@ -78,6 +82,8 @@ class Poly(VisionEgg.Core.Stimulus):
         
         gl.glDisable(gl.GL_LINE_SMOOTH)
         gl.glPopMatrix()
+        
+        return; 
 
 class ManyPoly(Poly): 
     """ManyPoly class inherits Poly: 
@@ -101,6 +107,18 @@ class ManyPoly(Poly):
         Poly.__init__(self, **kw); 
         self.listPoly = listPoly; 
         
+    def setListPoly(self, newListPoly): 
+        """setListPoly function: 
+        
+            this funciton permits to set the list of polygons to be a new one. This becomes handy to change the list of polygons on the go. 
+            
+        Input: 
+            >> newListPoly: the new list of Poly objects to be setup. 
+        
+        """
+        
+        self.listPoly = newListPoly; 
+        
     def draw(self): 
         """draw function overwrites Poly.draw(): 
         
@@ -119,6 +137,9 @@ class ManyPoly(Poly):
             gl.glPushMatrix()
             gl.glTranslate(p.position[0], p.position[1], 0.0)
             gl.glRotate(p.orientation,0.0,0.0,1.0)
+            gl.glRotate(180, 1.0, 0.0, 0.0); 
+#            print gl.glPopMatrix(); 
+#            raise Exception; 
 
             if len(p.color)==3:
                 gl.glColor3f(*p.color)
@@ -137,7 +158,7 @@ class ManyPoly(Poly):
             gl.glBegin(gl.GL_POLYGON)
             for point in p.points:
                 gl.glVertex3f(point[0], point[1], 0.0)
-            gl.glVertex3f(p.points[0][0], p.points[0][1], 0.0)
+#            gl.glVertex3f(p.points[0][0], p.points[0][1], 0.0)
             gl.glEnd() # GL_LINE_STRIP
         
             gl.glDisable(gl.GL_LINE_SMOOTH)
