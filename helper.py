@@ -31,7 +31,7 @@
 """
 
 # Imports: 
-import json; 
+import pickle, json; 
 import numpy as np; 
 import random as rnd; 
 import copy; # See comment on resizePol() function. 
@@ -138,10 +138,11 @@ def normalizePol(pol, h=1., w=1., center=False):
     # Return the transformed data:  
     return rPol; 
     
-def readPool(folderPath='./PolygonPool', fileName='pPool.out'): 
+def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True): 
     """readPool function: 
     
         This functions reads a file in which polygons were stored with the .json format and returns a list of the dictionaries containing the info of these polygons. 
+        As implemented by Stephan Gabler, the polygon decomposition is stored in a list, being each element of the list the dictionary which corresponds to each polygon of the decomposition. 
         
     Arguments: 
         folderPath='./PolygonPool': path of the folder where the pool is stored. 
@@ -152,32 +153,39 @@ def readPool(folderPath='./PolygonPool', fileName='pPool.out'):
     
     """
     
+    # DEBUG!! 
+    
     # Reading data from the file: 
-    poolPath = folderPath+'/'+fileName; 
+    if loadJson: 
+        poolPath = folderPath+'/decomp.json'; 
+    else: 
+        poolPath = folderPath+'/'+fileName; 
     f = open(poolPath, 'r'); 
-    pListStrings = f.read().split('\n'); 
-    pListStrings.pop(); 
+    
+    if loadJson: 
+        # Parsing with json: 
+        listPolygons = json.loads(data); 
+    else: 
+        # Loading with pickle: 
+        loadedPickler = pickle.Unpickler(f).load(); 
+        listPolygons = loadedPickler.polies; 
+    
     f.close(); 
     
-    # Transforming strings into dictionaries: 
-    listPolygons = []; 
-    for pString in pListStrings: 
-        listPolygons += [json.loads(pString)]; 
-        
+    # Return: 
     return listPolygons; 
     
-def resizePol(pol, h=1., w=1., center=False): 
+def resizePol(pol, h=1., w=1., pH=1., pW=1.): 
     """resizePol function: 
     
-        This function resizes a polygon which lives on a 1x1 canvas with the point (0., 0.) at the bottom left into a canvas of arbitrary height and width which might have the point (0., 0.) at the center or not. If called only with the obligatory arguments, this function does not operate any change in the data. 
-        
-        It operated over copies following what was necessary in the previous implementation, but I am not sure if this is necessary again. 
+        This function resizes a polygon as given by Stephan Gabler's algorithm into the system of reference of the canvas. Stephan's outcome is a polygon which lives in a 1x1 space. The canvas where stimuli are drawn have size w times h (640x480) and the origin of coordinates is in the center. Therefore, the polygon must be resized and shifted left and down. 
         
     Arguments: 
         >> pol: a dictionary with the info of the polygon. 
         >> h=1.: the height of the new canvas. 
         >> w=1.: the width of the new canvas. 
-        >> center=False: flag pointing out whether the point (0., 0.) is to be in the center of the new canvas (center=True) or not (center=False). 
+        >> pH=1.: the height of the canvas where the polygonal decomposition was made. 
+        >> pH=1.: the width of the canvas where the polygonal decomposition was made. 
         
     Returns: 
         << rPol: the info transformed in the proper way. 
@@ -193,12 +201,10 @@ def resizePol(pol, h=1., w=1., center=False):
         # Multiplying by width and height: 
         point0 = point[0]; 
         point1 = point[1]; 
-        point0 *= w; 
-        point1 *= h; 
-        # Centering: 
-        if center: 
-            point0 -= w/2; 
-            point1 -= h/2; 
+        point0 *= w/pW; 
+        point1 *= h/pH; 
+        point0 -= w/2; 
+        point1 -= h/2; 
         newPoints += [(point0, point1)]; 
     rPol['points'] = newPoints; 
            
@@ -400,6 +406,53 @@ def resizePol_old(pol, h=1., w=1., center=False):
            
     # Return the transformed data:  
     return rPol; 
+    
+def flipX(pol): 
+    """flipX function: 
+    
+        This function flips the polygon over the x axis. 
+        
+    Attributes: 
+        >> pol: the info of the polygon on which the function is supposed to operate. 
+        
+    Returns: 
+        << rPol: the info transformed in the proper way. 
+    
+    """
+    
+    rPol = copy.copy(pol); 
+    points = rPol['points']; 
+    newPoints = []; 
+    for pp in points: 
+        # Flip: 
+        newPoints += [(-pp[0], pp[1])]; 
+    rPol['points'] = newPoints; 
+        
+    return rPol; 
+    
+def flipY(pol): 
+    """flipY function: 
+    
+        This function flips the polygon over the y axis. 
+        
+    Attributes: 
+        >> pol: the info of the polygon on which the function is supposed to operate. 
+        
+    Returns: 
+        << rPol: the info transformed in the proper way. 
+    
+    """
+    
+    rPol = copy.copy(pol); 
+    points = rPol['points']; 
+    newPoints = []; 
+    for pp in points: 
+        # Flip: 
+        newPoints += [(pp[0], -pp[1])]; 
+    rPol['points'] = newPoints; 
+        
+    return rPol; 
+
     
 def getRandomPath(path): 
     """ getRandomPath function: 
