@@ -92,7 +92,7 @@ matplotlib.use("Agg")
 import numpy as np
 import pylab as plt
 import cairo
-import pool
+from poly_burst.genetics import pool
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
