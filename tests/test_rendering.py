@@ -23,14 +23,16 @@ from PIL import Image
 poly_idx = 0
 
 basepath = os.path.join(os.path.dirname(__file__), 'test_data')
-polies = json.load(open(os.path.join(basepath, 'polies.json')))
+polies = json.load(open(os.path.join(basepath, 'polies_.json')))
 width = height = 200
 
 surface = cairo.ImageSurface(cairo.FORMAT_RGB24, width, height)
 context = cairo.Context(surface)
 context.set_source_rgb(1, 1, 1)
 context.paint()
-pool.draw_poly(context, polies[poly_idx])
+for p in polies:
+    for poly in p:
+        pool.draw_poly(context, poly)
 surface.write_to_png('cairo.png')
 cairo_array = pool.to_numpy(surface)
 
@@ -39,14 +41,16 @@ def DrawStuff():
     global cairo_array
     glClear(GL_COLOR_BUFFER_BIT)
 
-    poly = polies[poly_idx]
-    glColor4f(*poly['color'])
-    glBegin(GL_POLYGON)
-    for point in poly['points']:
-        glVertex2f(point[0], point[1])
-    if len(poly['points']) > 0:
-        glVertex2f(poly['points'][0][0], poly['points'][0][1])
-    glEnd() # GL_POLYGON
+    # poly = polies[poly_idx]
+    for p in polies:
+        for poly in p:
+            glColor4f(*poly['color'])
+            glBegin(GL_POLYGON)
+            for point in poly['points']:
+                glVertex2f(point[0], point[1])
+            if len(poly['points']) > 0:
+                glVertex2f(poly['points'][0][0], poly['points'][0][1])
+            glEnd() # GL_POLYGON
 
     glPixelStorei(GL_PACK_ALIGNMENT, 1)
     data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
