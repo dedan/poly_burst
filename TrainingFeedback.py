@@ -57,8 +57,7 @@ import OpenGL.GLU as glu;
 import logging as l; 
 l.basicConfig(filename='./doc/log', level=l.DEBUG); 
 
-# from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from FeedbackBase.VisionEggFeedback import VisionEggFeedback; 
+from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly; 
 # Personalized: 
 import helper as H; 
