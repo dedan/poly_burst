@@ -411,7 +411,7 @@ class TrainingFeedback(VisionEggFeedback):
                     newPolyList += [p]
 
             # Set the list of polies into the target object:
-            self.manyPoly.setListPoly(newPolyList)
+            self.manyPoly.listPoly = newPolyList
 
         else:
             ## Build the stimulus from the chosen decomposition:
