@@ -40,7 +40,9 @@ from time import sleep
 import OpenGL.GLU as glu
 
 import logging as l
-l.basicConfig(filename='./doc/log', level=l.DEBUG);
+l.basicConfig(level=l.DEBUG,
+            format='%(asctime)s %(levelname)s: %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S');
 
 from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
@@ -174,7 +176,7 @@ class TrainingFeedback(VisionEggFeedback):
 
         # Run starts:
         self.send_parallel(TRIG_RUN_START)
-        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_RUN_START)))
+        l.debug("TRIGGER %s" % str(TRIG_RUN_START))
 
         # Load image list and polygon pool:
         self.dictImgNames = self.loadImageList()
@@ -187,21 +189,21 @@ class TrainingFeedback(VisionEggFeedback):
         self.stimQueue = []
         # track when the difficulty of the task must be updated.
         trialsSinceUpdate = 0
-        # Doing the loop. It's stop is yet to be handled:
+        # Doing the loop. TODO: stop is yet to be handled:
         while self.flagRun:
             trialsSinceUpdate += 1
 
             # Trial starts:
             self.trialCount += 1
             self.send_parallel(TRIG_TRIAL_START)
-            l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_TRIAL_START)))
+            l.debug("TRIGGER %s" % str(TRIG_TRIAL_START))
 
             ## Presenting an image:
-            l.debug("Selecting and presenting target image. ")
+            l.debug("Selecting and presenting target image.")
             self.runImg()
 
             ## Presenting the polygons:
-            l.debug("Building and presenting polygonal stimuli. ")
+            l.debug("Building and presenting polygonal stimuli.")
             self.runPoly()
 
             ## Waiting until classifier is done to conclude the trial:
@@ -210,18 +212,18 @@ class TrainingFeedback(VisionEggFeedback):
 
             # Trial ends:
             self.send_parallel(TRIG_TRIAL_END)
-            l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_TRIAL_END)))
+            l.debug("TRIGGER %s" % str(TRIG_TRIAL_END))
 
             ## Handle difficulty (considered outside the trial):
             if trialsSinceUpdate == self.tryRounds:
                 trialsSinceUpdate = 0
-                l.debug("Evaluating performance and handling difficulty of task. ")
+                l.debug("Evaluating performance and handling difficulty of task.")
                 self.handleDifficulty()
 
 
         # Run ends:
         self.send_parallel(TRIG_RUN_END)
-        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_RUN_END)))
+        l.debug("TRIGGER %s" % str(TRIG_RUN_END))
 
 
     def loadImageList(self):
@@ -455,7 +457,7 @@ class TrainingFeedback(VisionEggFeedback):
 
         newID = self.bufferTrigger.pop();
         self.send_parallel(newID);
-        l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(newID)));
+        l.debug("TRIGGER %s" % str(newID));
 
 
     def evalActivity(self, stim_ID, activity):
@@ -495,20 +497,20 @@ class TrainingFeedback(VisionEggFeedback):
             if stimNumber != self.numTarget: # Normal activity with non-target stimulus. OK!!
                 self.OK += 1
                 self.send_parallel(TRIG_OK)
-                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_OK)))
+                l.debug("TRIGGER %s" % str(TRIG_OK))
             elif stimNumber == self.numTarget: # Normal activity with target stimulus. Miss!!
                 self.Miss += 1
                 self.send_parallel(TRIG_MISS)
-                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_MISS)))
+                l.debug("TRIGGER %s" % str(TRIG_MISS))
         elif self.activity == 'Dev':
             if stimNumber != self.numTarget: # Deviant activity with non-target stimulus. Fake!!
                 self.Fake += 1
                 self.send_parallel(TRIG_FAKE)
-                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_FAKE)))
+                l.debug("TRIGGER %s" % str(TRIG_FAKE))
             elif stimNumber == self.numTarget: # Deviant activity with target stimulus. Hit!!
                 self.Hit += 1
                 self.send_parallel(TRIG_HIT)
-                l.debug("TRIGGER %s: %s" % (str(datetime.datetime.now()), str(TRIG_HIT)))
+                l.debug("TRIGGER %s" % str(TRIG_HIT))
 
 
     def handleDifficulty(self):
