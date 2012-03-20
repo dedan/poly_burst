@@ -68,8 +68,8 @@ import helper as H;
 pWidth = 200; 
 pHeight = 200; 
 # Size with the desired canvas for display: 
-width = 600; 
-height = 600; 
+width = 640; 
+height = 480; 
 
 # Trigger variables: 
 TRIG_RUN_START = 252; 
@@ -136,14 +136,14 @@ class TrainingFeedback(VisionEggFeedback):
                 This __init__ function overwrites and calls 'VisionEggFeedback.__init__()'. It sets up the current path from which the feedback operates (this path depends on from where the script is called and must be provided!). It also modifies some settings about the screen and initializes some internal variables of the object. 
         
         """
-        
+        folderPath = os.path.join(os.path.dirname(__file__), 'data')
         # Super.__init__(): 
         VisionEggFeedback.__init__(self, **kw); 
         
         # Setting up folder paths: 
         self.folderPath = folderPath; 
-        self.picsFolder = folderPath+'Pics'; 
-        self.polyFolder = folderPath+'PolygonPool'; 
+        self.picsFolder = os.path.join(folderPath, 'Pics'); 
+        self.polyFolder = os.path.join(folderPath, 'PolygonPool'); 
         
         ## Initializing internal variables: 
         # Variables related tot he stimuli: 
@@ -254,7 +254,7 @@ class TrainingFeedback(VisionEggFeedback):
         
         polyList = []; 
         for imgName in self.dictImgNames.values(): 
-            newPolyDecomp = H.readPool(folderPath=self.polyFolder+'/'+imgName, fileName='drawing.pckl', loadJson=True, loadTriangle=True); # DEBUG!! 
+            newPolyDecomp = H.readPool(folderPath=os.path.join(self.polyFolder, imgName), fileName='drawing.pckl', loadJson=True, loadTriangle=True); # DEBUG!! 
             polyList += [newPolyDecomp]; 
         return polyList; 
     
@@ -307,11 +307,11 @@ class TrainingFeedback(VisionEggFeedback):
         for w in range(3): 
             if w==1: 
                 self.prepareTarget(); 
-                self.imgPath = self.picsFolder+'/'+self.dictImgNames[self.numTarget]+'.png'; 
+                self.imgPath = os.path.join(self.picsFolder, self.dictImgNames[self.numTarget]+'.png'); 
                 self.image.set_file(self.imgPath); 
             else: 
                 self.bufferTrigger += [TRIG_IMG]; 
-                imgPath = self.folderPath+'background.jpg'; 
+                imgPath = os.path.join(self.folderPath, 'background.jpg'); 
                 self.image.set_file(imgPath); 
             yield; 
             
@@ -508,7 +508,7 @@ class TrainingFeedback(VisionEggFeedback):
         
 if __name__=='__main__': 
     l.debug("Feedback executed as __main__. "); 
-    a = TrainingFeedback(folderPath='./data/'); 
+    a = TrainingFeedback(folderPath= os.path.join(__file__, 'data')); 
     a.on_init(); 
     a.on_play(); 
     

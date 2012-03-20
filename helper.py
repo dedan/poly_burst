@@ -31,7 +31,7 @@
 """
 
 # Imports: 
-import pickle, json; 
+import pickle, json, os; 
 import numpy as np; 
 import random as rnd; 
 import copy; # See comment on resizePol() function. 
@@ -157,11 +157,11 @@ def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True, lo
     
     # Reading data from the file: 
     if loadJson: 
-        poolPath = folderPath+'/polies.json'; 
+        poolPath = os.path.join(folderPath, 'polies.json'); 
         if loadTriangle: 
-            poolPath = folderPath+'/polies_.json'; 
+            poolPath = os.path.join(folderPath, 'polies_.json'); 
     else: 
-        poolPath = folderPath+'/'+fileName; 
+        poolPath = os.path.join(folderPath, fileName); 
     f = open(poolPath, 'r'); 
     
     if loadJson: 
@@ -370,7 +370,7 @@ def readPool_old(folderPath='./PolygonPool', fileName='pPool.out'):
     """
     
     # Reading data from the file: 
-    poolPath = folderPath+'/'+fileName; 
+    poolPath = os.path.join(folderPath, fileName); 
     f = open(poolPath, 'r'); 
     pListStrings = f.read().split('\n'); 
     pListStrings.pop(); 
