@@ -54,11 +54,13 @@ class Poly(VisionEgg.Core.Stimulus):
     def draw(self):
         p = self.parameters # shorthand
 
-        # calculate center
+        width, height = 640, 480
+
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glLoadIdentity()
+        gl.glOrtho(-width, width, -height, height, -200, 200)
+        gl.glScalef(2, -2, 2)
         gl.glMatrixMode(gl.GL_MODELVIEW)
-        gl.glPushMatrix()
-        gl.glTranslate(p.position[0], p.position[1], 0.0)
-        gl.glRotate(p.orientation,0.0,0.0,1.0)
 
         if len(p.color)==3:
             gl.glColor3f(*p.color)
@@ -81,7 +83,6 @@ class Poly(VisionEgg.Core.Stimulus):
         gl.glEnd() # GL_LINE_STRIP
         
         gl.glDisable(gl.GL_LINE_SMOOTH)
-        gl.glPopMatrix()
         
         return; 
 
