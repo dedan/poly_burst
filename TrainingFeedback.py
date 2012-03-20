@@ -46,13 +46,13 @@ from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
 import helper as H
 
-## Global variables: 
-# Size of the canvas where the polygonal decomposition was made: 
-pWidth = 200; 
-pHeight = 200; 
-# Size with the desired canvas for display: 
-width = 640; 
-height = 480; 
+## Global variables:
+# Size of the canvas where the polygonal decomposition was made:
+pWidth = 200;
+pHeight = 200;
+# Size with the desired canvas for display:
+width = 640;
+height = 480;
 
 # Trigger variables:
 TRIG_RUN_START = 252
@@ -78,23 +78,44 @@ class TrainingFeedback(VisionEggFeedback):
 
     Variables:
         folderPath, picsFolder, polyFolder: indicate the path to the corresponding folders.
-        pTarget=0.1: probability of displaying target stimuli.
-        stimuliPerTrial=50: number of stimuli present in a single trial.
-        tryRounds=5: number of rounds before updating complexity of the stimuli. This can be set up to be not a number of rounds but a moment at which enough taget stimuli have been presented.
-        nPoly: number of polygons of which the stimuli consist. This encodes for the complexity of the stimuli.
-        refTime=3: refractory time between consecutive target stimuli or between onset of stimuli and target, measured in units with the duration of a single stimulus presentation (in this case: 0.1).
-        numTarget=0: this variable encode which picture has been chosen as target. In the corresponding folder, pictures are numbered and this should be the corresponding number. This allows for funny data analysis like finding out which pictures prompt more (less) deviant (normal) activity, etc...
+        pTarget: probability of displaying target stimuli.
+        stimuliPerTrial: number of stimuli present in a single trial.
+        tryRounds: number of rounds before updating complexity of the stimuli.
+            This can be set up to be not a number of rounds but a moment at which
+            enough taget stimuli have been presented.
+        nPoly: number of polygons of which the stimuli consist. This encodes for
+            the complexity of the stimuli.
+        refTime: refractory time between consecutive target stimuli or between
+            onset of stimuli and target, measured in units with the duration of
+            a single stimulus presentation (in this case: 0.1).
+        numTarget: this variable encode which picture has been chosen as target.
+            In the corresponding folder, pictures are numbered and this should
+            be the corresponding number. This allows for funny data analysis like
+            finding out which pictures prompt more (less) deviant (normal) activity, etc...
         numNonTarget: list where the numbers of the non-target images are stored.
-        bufferTrigger: this funny buffer is included to correct for some delay between the stimulus selection and stimulus onset. The next stimulus to be presented is already chosen before the previous one has been withdrawn from the canvas. Conveying a message in that moment to the parallel port would lead to huge and perhaps varying delays. A function is used which is called just before each stimulus presentation. For this function to be apropiate, it must be very quick and it is handy to have ready all the info which will be conveyed. This is the info stored in bufferTrigger, which is just the ID of the stimulus which will be displayed.
-        stimQueue: this queue stores the ID's of the different stimuli which have been displayed. They are removed from the queue as soon as the BCI returns the outcome of the classification of the subject's brain activity during the presentation of the corresponding stimulus.
-        OK, Fake, Miss, Hit: count of the events of each case.
-        polygonPool: list with lists, each one containing the polygonal decomposition of one of the pictures. This is loaded when the object TF is initialized so that the files are not being accesed every trial.
-
+        bufferTrigger: this funny buffer is included to correct for some delay
+            between the stimulus selection and stimulus onset. The next stimulus
+            to be presented is already chosen before the previous one has been
+            withdrawn from the canvas. Conveying a message in that moment to
+            the parallel port would lead to huge and perhaps varying delays.
+            A function is used which is called just before each stimulus presentation.
+            For this function to be apropiate, it must be very quick and it is
+            handy to have ready all the info which will be conveyed. This is the
+            info stored in bufferTrigger, which is just the ID of the stimulus which
+            will be displayed.
+        stimQueue: this queue stores the ID's of the different stimuli which have
+            been displayed. They are removed from the queue as soon as the BCI
+            returns the outcome of the classification of the subject's brain
+            activity during the presentation of the corresponding stimulus.
+            OK, Fake, Miss, Hit: count of the events of each case.
+        polygonPool: list with lists, each one containing the polygonal decomposition
+            of one of the pictures. This is loaded when the object TF is initialized
+            so that the files are not being accesed every trial.
         flagRun: logical variable to indicate if the loop should run or stop.
         trialCount: count of trials.
         recentTargets: number of recent targets (since last update).
-
-        fullscreen, geometry: variables inherited from poly_feedback (author Stephan). May refer to canvas and have been also inherited from superer classes.
+        fullscreen, geometry: variables inherited from poly_feedback (author Stephan).
+            May refer to canvas and have been also inherited from superer classes.
 
     """
 
@@ -111,6 +132,7 @@ class TrainingFeedback(VisionEggFeedback):
         internal variables of the object.
         """
 
+        folderPath = os.path.join(os.path.dirname(__file__), 'data')
         VisionEggFeedback.__init__(self, **kw)
 
         # Setting up folder paths:
@@ -368,7 +390,8 @@ class TrainingFeedback(VisionEggFeedback):
             newPolyList = [self.manyPoly.listPoly[0]]
             for indPoly in range(self.nPoly):
 
-                # The decomposition of some polygons might be shorter than what required for a given complexity:
+                # The decomposition of some polygons might be shorter than what
+                # required for a given complexity:
                 if indPoly >= len(self.polygonPool[self.stimNumber-1]):
                     break
 
@@ -393,7 +416,8 @@ class TrainingFeedback(VisionEggFeedback):
         else:
             ## Build the stimulus from the chosen decomposition:
             for indexPolygon, polygon in enumerate(self.manyPoly.listPoly):
-                # Some images require less polygons than the size of the stimulus in the most complete reconstruction:
+                # Some images require less polygons than the size of the stimulus in
+                # the most complete reconstruction:
                 if (indexPolygon < len(self.polygonPool[self.stimNumber-1])):
                     # Next polygon of the list is picked up and resized:
                     pol = self.polygonPool[self.stimNumber-1][indexPolygon]
