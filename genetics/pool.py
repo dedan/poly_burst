@@ -39,7 +39,7 @@ def create_random_poly(width, height, n_points, local):
 def to_numpy(surf):
     """docstring for to_numpy"""
     res = np.frombuffer(surf.get_data(), np.uint8)
-    return res.reshape((surf.get_width(), surf.get_height(), 4))[:,:,0:3]
+    return res.reshape((surf.get_height(), surf.get_width(), 4))[:,:,0:3]
 
 def draw_poly(context, poly, on_black=False):
     """docstring for draw_poly"""
@@ -66,8 +66,8 @@ class Drawing(object):
         # load the reference image from disk and convert it to the proper range
         tmp = plt.imread(image_file.encode('ascii','ignore'))
         self.ref_image = (tmp * 255).astype(np.int32)[:,:,::-1]
-        self.w = np.shape(self.ref_image)[0]
-        self.h = np.shape(self.ref_image)[1]
+        self.w = np.shape(self.ref_image)[1]
+        self.h = np.shape(self.ref_image)[0]
         self.polies = []
         self.old_polies = []
         self.conf = conf
