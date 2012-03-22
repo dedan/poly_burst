@@ -130,11 +130,12 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
         drawing.mutate()
         tmp_error = drawing.evaluate()
 
-        if tmp_error < error:
+        if tmp_error <= error:
             error = tmp_error
 
-            drawing.print_state()
-            if len(drawing.selections) % 50 == 0:
+            if len(drawing.selections) % 500 == 0:
+
+                drawing.print_state()
 
                 # write plots and files
                 logging.info("avg time: %f" % (c_time/drawing.generations))
