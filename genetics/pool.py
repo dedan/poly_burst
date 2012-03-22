@@ -127,9 +127,10 @@ class Drawing(object):
 
                 # add points
                 if random() < self.conf['point_rate']:
-                    rand_idx = randint(0, len(poly['points']))
-                    rand_point = (randint(0, self.w), randint(0, self.h))
-                    poly['points'].insert(rand_idx, rand_point)
+                    if len(poly) < self.conf['max_poly_points']:
+                        rand_idx = randint(0, len(poly['points']))
+                        rand_point = (randint(0, self.w), randint(0, self.h))
+                        poly['points'].insert(rand_idx, rand_point)
 
                 # remove a point from the polygon
                 if random() < self.conf['point_rate']:
