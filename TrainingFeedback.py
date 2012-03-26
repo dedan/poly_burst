@@ -35,6 +35,7 @@
 
 import random as rnd
 import os
+import json
 import datetime
 from time import sleep
 import OpenGL.GLU as glu
@@ -164,7 +165,6 @@ class TrainingFeedback(VisionEggFeedback):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
-
         # Run starts:
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
@@ -219,10 +219,8 @@ class TrainingFeedback(VisionEggFeedback):
         """
         polyList = []
         for imgName in self.dictImgNames.values():
-            newPolyDecomp = H.readPool(folderPath=os.path.join(self.polyFolder, imgName),
-                                       fileName='drawing.pckl',
-                                       loadJson=True,
-                                       loadTriangle=True)
+            with open(os.path.join(self.polyFolder, imgName, 'polies_.json'), 'r') as f:
+                newPolyDecomp = json.load(f)
             polyList += [newPolyDecomp]
         return polyList
 

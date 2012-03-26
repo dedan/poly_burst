@@ -122,44 +122,6 @@ def normalizePol(pol, h=1., w=1., center=False):
     return rPol;
 
 
-def readPool(folderPath='./PolygonPool', fileName='pPool.out', loadJson=True, loadTriangle=False):
-    """readPool function:
-
-        This functions reads a file in which polygons were stored with the .json
-        format and returns a list of the dictionaries containing the info of
-        these polygons. As implemented by Stephan Gabler, the polygon decomposition
-        is stored in a list, being each element of the list the dictionary which
-        corresponds to each polygon of the decomposition.
-
-    Arguments:
-        folderPath='./PolygonPool': path of the folder where the pool is stored.
-        fileName='pPool.out': name of the file with the pool of polygons.
-
-    Returns:
-        listPolygons: a list with dictionaries storing the specifications of the polygons.
-
-    """
-
-    # Reading data from the file:
-    if loadJson:
-        poolPath = os.path.join(folderPath, 'polies.json');
-        if loadTriangle:
-            poolPath = os.path.join(folderPath, 'polies_.json');
-    else:
-        poolPath = os.path.join(folderPath, fileName);
-
-    with open(poolPath, 'r') as f:
-        if loadJson:
-            # Parsing with json:
-            listPolygons = json.load(f);
-        else:
-            # Loading with pickle:
-            loadedPickler = pickle.Unpickler(f).load();
-            listPolygons = loadedPickler.polies;
-
-    return listPolygons;
-
-
 def resizePol(pol, h=1., w=1., pH=1., pW=1.):
     """resizePol function:
 
