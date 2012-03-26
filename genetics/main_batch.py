@@ -161,6 +161,20 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
                 open(path.join(tmp_out, 'drawing.pckl'), 'w'))
     logging.info('writing single polygons to: %s' % decomp_path)
     sorted_polies = drawing.get_sorted_polies(write_to_disk=decomp_path)
+
+    for poly in sorted_polies:
+
+        newPoints = [];
+        for point in poly['points']:
+            # Centering:
+            point0 = point[0]
+            point1 = point[1]
+            from ipdb import set_trace; set_trace()
+            point0 /= float(drawing.w)
+            point1 /= float(drawing.h)
+            newPoints += [(point0, point1)]
+        poly['points'] = newPoints
+
     json.dump(sorted_polies,
               open(path.join(tmp_out, 'polies.json'), 'w'),
               indent=2)
