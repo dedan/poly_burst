@@ -56,6 +56,7 @@ class Poly(VisionEgg.Core.Stimulus):
         width, height = 640, 480
 
         gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPushMatrix()
         gl.glLoadIdentity()
         gl.glOrtho(-width, width, -height, height, -200, 200)
         gl.glScalef(2, -2, 2)
@@ -82,7 +83,8 @@ class Poly(VisionEgg.Core.Stimulus):
         gl.glEnd() # GL_LINE_STRIP
 
         gl.glDisable(gl.GL_LINE_SMOOTH)
-        # gl.glPopMatrix()
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPopMatrix()
 
 
 class ManyPoly(Poly):
