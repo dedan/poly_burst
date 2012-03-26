@@ -51,9 +51,6 @@ from poly_stim import Poly, ManyPoly
 import helper as H
 
 ## Global variables:
-# Size of the canvas where the polygonal decomposition was made:
-pWidth = 200;
-pHeight = 200;
 # Size with the desired canvas for display:
 width = 640;
 height = 480;
@@ -250,7 +247,11 @@ class TrainingFeedback(VisionEggFeedback):
         """
 
         # Creating ManyPoly objects to load the different polygons to be displayed:
-        listPoly = [Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
+        listPoly = [Poly(color = (0, 0, 0, 1.0), # Set the target color (RGBA) black
+                         orientation = 0.0,
+                         points = [(10, 10), (20, 10), (20, 20), (10, 20)],
+                         position = (0, 0)),
+                    Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(-width, -height), (-width, height), (width, height), (width, -height)],
                          position = (width/2, height/2))]
@@ -356,28 +357,28 @@ class TrainingFeedback(VisionEggFeedback):
             takes care of loading the many subunits which conform the tiling of
             the polygons of the decomposition.
         """
-        newPolyList = [self.manyPoly.listPoly[0]]
+        newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
         if not blank:
-            for indPoly in range(min(self.nPoly, len(self.polygonPool[self.stimNumber-1]))):
 
-                # Load the next list with the tiles:
-                newTilesList = self.polygonPool[self.stimNumber-1][indPoly]
-                for pol in newTilesList:
-                    # Load and resize:
-                    rPol = H.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth)
-                    p = Poly(color=rPol['color'],
-                             orientation = 0.0,
-                             points = rPol['points'],
-                             position = (width/2, height/2));
-                    # Add to the list of polies to be displayed:
-                    newPolyList += [p]
+            random_poly_index = rnd.randint(0, min(self.n_first_polies,
+                                                   len(self.polygonPool[self.stimNumber-1])))
+
+            for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
+                # Load and resize:
+                rPol = H.resizePol(pol, h=height, w=width)
+                p = Poly(color=rPol['color'],
+                         orientation = 0.0,
+                         points = rPol['points'],
+                         position = (width/2, height/2));
+                # Add to the list of polies to be displayed:
+                newPolyList += [p]
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
 
 
     def triggerOp(self):
-        """ controls what signals are sent to the trigger (the OP in the name means Operator).
+        """ send information via parallel port before stimulus presentation
 
             The generators which yield the corresponding images and polygons
             operate with a lot of delay with respect to the stimulus presentation.
@@ -390,12 +391,8 @@ class TrainingFeedback(VisionEggFeedback):
             from generator implies a huge delay). The info which is to be displayed
             will be stored in a buffer list 'self.bufferTrigger' and the
             evalActivity(self, stim_ID, activity) elements will be sent one after
-            the other by this function. Functions called just before stimulus
-            presentation should take as few time as possible. Therefore only the
-            basic operations should be performed here: info has been made ready
-            before (this is why a buffer 'self.bufferTrigger' is used).
+            the other by this function.
         """
-
         newID = self.bufferTrigger.pop();
         self.send_parallel(newID);
         l.debug("TRIGGER %s" % str(newID));
