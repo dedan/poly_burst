@@ -45,6 +45,7 @@ l.basicConfig(level=l.DEBUG,
             datefmt='%Y-%m-%d %H:%M:%S');
 
 from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
@@ -123,11 +124,7 @@ class TrainingFeedback(VisionEggFeedback):
 
 
     def __init__(self,  folderPath='./Feedbacks/TrainingFeedback/data/',
-                        pTarget=0.1,
-                        stimuliPerTrial=50,
-                        tryRounds=5,
-                        nPoly=100,
-                        refTime=3, **kw):
+                        nPoly=1, **kw):
         """sets up the current path from which the feedback operates
         (this path depends on from where the script is called and must be provided!).
         It also modifies some settings about the screen and initializes some
@@ -143,20 +140,14 @@ class TrainingFeedback(VisionEggFeedback):
         self.polyFolder = os.path.join(folderPath, 'PolygonPool')
 
         # Variables related to the stimuli:
-        self.pTarget = pTarget
-        self.stimuliPerTrial = stimuliPerTrial
-        self.tryRounds = tryRounds
+        self.n_groups = 3
+        self.group_size = 6
         self.nPoly = nPoly
-        self.refTime = refTime
+        self.n_bursts = 10
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
         self.bufferTrigger = []
-        self.activity = 'Norm'
-        self.OK = 0
-        self.Fake = 0
-        self.Miss = 0
-        self.Hit = 0
 
         # after the super init I can overwrite one of the values set in there
         self.fullscreen = False
@@ -175,8 +166,8 @@ class TrainingFeedback(VisionEggFeedback):
         """
 
         # Run starts:
-        self.send_parallel(TRIG_RUN_START)
-        l.debug("TRIGGER %s" % str(TRIG_RUN_START))
+        self.send_parallel(marker.RUN_START)
+        l.debug("TRIGGER %s" % str(marker.RUN_START))
 
         # Load image list and polygon pool:
         self.dictImgNames = self.loadImageList()
@@ -187,43 +178,28 @@ class TrainingFeedback(VisionEggFeedback):
         self.trialCount = 0
         self.recentTargets = 0
         self.stimQueue = []
-        # track when the difficulty of the task must be updated.
-        trialsSinceUpdate = 0
-        # Doing the loop. TODO: stop is yet to be handled:
-        while self.flagRun:
-            trialsSinceUpdate += 1
 
-            # Trial starts:
-            self.trialCount += 1
-            self.send_parallel(TRIG_TRIAL_START)
-            l.debug("TRIGGER %s" % str(TRIG_TRIAL_START))
+        for burst_index in range(self.n_bursts):
 
-            ## Presenting an image:
+            # burst starts:
+            self.send_parallel(marker.TRIAL_START)
+            l.debug("TRIGGER %s" % str(marker.TRIAL_START))
+
             l.debug("Selecting and presenting target image.")
             self.runImg()
 
-            ## Presenting the polygons:
             l.debug("Building and presenting polygonal stimuli.")
             self.runPoly()
 
-            ## Waiting until classifier is done to conclude the trial:
-            while (len(self.stimQueue)>0):
-                sleep(0.1)
 
             # Trial ends:
-            self.send_parallel(TRIG_TRIAL_END)
-            l.debug("TRIGGER %s" % str(TRIG_TRIAL_END))
-
-            ## Handle difficulty (considered outside the trial):
-            if trialsSinceUpdate == self.tryRounds:
-                trialsSinceUpdate = 0
-                l.debug("Evaluating performance and handling difficulty of task.")
-                self.handleDifficulty()
+            self.send_parallel(marker.TRIAL_END)
+            l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
 
         # Run ends:
-        self.send_parallel(TRIG_RUN_END)
-        l.debug("TRIGGER %s" % str(TRIG_RUN_END))
+        self.send_parallel(marker.RUN_END)
+        l.debug("TRIGGER %s" % str(marker.RUN_END))
 
 
     def loadImageList(self):
@@ -287,7 +263,7 @@ class TrainingFeedback(VisionEggFeedback):
         self.set_stimuli(target)
         generator = self.preparePoly()
         # Creating and running a stimulus sequence:
-        s = self.stimulus_sequence(generator, 0.1, pre_stimulus_function=self.triggerOp)
+        s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
         # Start the stimulus sequence
         s.run()
 
@@ -350,89 +326,57 @@ class TrainingFeedback(VisionEggFeedback):
             about 'self.evalActivity' can be found in the corresponding function.
         """
 
-        countSinceTarget = 0
-        for ii in range(self.stimuliPerTrial):
-            countSinceTarget += 1
+        for group_index in range(self.n_groups):
 
-            ## Choose a polygon decomposition to build the actual stimulus:
-            #   If w>refTime the polygon decomposition might be the target one.
-            #   Else, it is chosen randomly between the existing ones.
-            if (countSinceTarget>self.refTime) and (rnd.random()<self.pTarget):
-                self.countSinceTarget = 0
-                self.recentTargets += 1
-                self.stimNumber = self.numTarget
-                l.debug("TARGET %s selected for display. ", self.stimNumber)
-            else:
-                self.stimNumber = rnd.choice(self.numNonTarget)
-                l.debug("NONTARGET %s selected for display. ", self.stimNumber)
-            polyDecomp = self.preparePolyDecomp()
-            self.bufferTrigger += [TRIG_STIM+self.stimNumber]
-            self.stimQueue.insert(0,TRIG_STIM+self.stimNumber)
-            yield
+            target_index = rnd.randint(0, self.group_size-1)
+            for stimulus_index in range(self.group_size):
+
+                if stimulus_index == target_index:
+                    self.stimNumber = self.numTarget
+                    l.debug("TARGET %s selected for display. ", self.stimNumber)
+                else:
+
+                    self.stimNumber = rnd.choice(self.numNonTarget)
+                    l.debug("NONTARGET %s selected for display. ", self.stimNumber)
+                self.preparePolyDecomp()
+                self.bufferTrigger += [TRIG_STIM+self.stimNumber]
+                self.stimQueue.insert(0,TRIG_STIM+self.stimNumber)
+                yield
+
+                self.preparePolyDecomp(blank=True)
+                self.bufferTrigger += [TRIG_STIM]
+                self.stimQueue.insert(0,TRIG_STIM)
+                yield
 
 
-    def preparePolyDecomp(self, loadTriangle=True):
+    def preparePolyDecomp(self, blank=False):
         """ loads the information stored in a polygonal decomposition into the object 'self.manyPoly'.
 
             This object is the one which is displayed, so this step basically
             prepares the information which will be drawn into the canvas.
-
-            (26.12.2012 DEBUG!! Triangle) Now a polygon of the decomposition may
-            be composed of smaller subunits and they must be handled. If the flag
-            loadTriangle is True, then this function takes care of loading the many
-            subunits which conform the tiling of the polygons of the decomposition.
-
-            loadTriangle=False: flag to indicate if the program is loading polygons
-            which have been preprocessed with the Triangle program.
+            a polygon of the decomposition may be composed of smaller subunits
+            (created by the triangle program) and they must be handled. This function
+            takes care of loading the many subunits which conform the tiling of
+            the polygons of the decomposition.
         """
-
-        if loadTriangle:
-
-            ## Build the stimulus from the chosen decomposition:
-            newPolyList = [self.manyPoly.listPoly[0]]
-            for indPoly in range(self.nPoly):
-
-                # The decomposition of some polygons might be shorter than what
-                # required for a given complexity:
-                if indPoly >= len(self.polygonPool[self.stimNumber-1]):
-                    break
+        newPolyList = [self.manyPoly.listPoly[0]]
+        if not blank:
+            for indPoly in range(min(self.nPoly, len(self.polygonPool[self.stimNumber-1]))):
 
                 # Load the next list with the tiles:
                 newTilesList = self.polygonPool[self.stimNumber-1][indPoly]
                 for pol in newTilesList:
                     # Load and resize:
                     rPol = H.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth)
-                    newColor = rPol['color']
-                    newPoints = rPol['points']
-                    # Make new poly with the given specifications:
-                    p = Poly(color=newColor,
+                    p = Poly(color=rPol['color'],
                              orientation = 0.0,
-                             points = newPoints,
+                             points = rPol['points'],
                              position = (width/2, height/2));
                     # Add to the list of polies to be displayed:
                     newPolyList += [p]
 
-            # Set the list of polies into the target object:
-            self.manyPoly.listPoly = newPolyList
-
-        else:
-            ## Build the stimulus from the chosen decomposition:
-            for indexPolygon, polygon in enumerate(self.manyPoly.listPoly):
-                # Some images require less polygons than the size of the stimulus in
-                # the most complete reconstruction:
-                if (indexPolygon < len(self.polygonPool[self.stimNumber-1])):
-                    # Next polygon of the list is picked up and resized:
-                    pol = self.polygonPool[self.stimNumber-1][indexPolygon]
-                    rPol = H.resizePol(pol, h=height, w=width, pH=pHeight, pW=pWidth)
-                    # And its info is added to the stimulus:
-                    newColor = rPol['color']
-                    newPoints = rPol['points']
-                else:
-                    # If no more polygons are needed, a void polygon is set up:
-                    newPoints = [[0.,0.], [0.,0.], [0.,0.]]
-                    newColor = [0., 0., 0., 0.]
-                polygon.set(color=newColor)
-                polygon.set(points=newPoints)
+        # Set the list of polies into the target object:
+        self.manyPoly.listPoly = newPolyList
 
 
     def triggerOp(self):
@@ -460,90 +404,9 @@ class TrainingFeedback(VisionEggFeedback):
         l.debug("TRIGGER %s" % str(newID));
 
 
-    def evalActivity(self, stim_ID, activity):
-        """ must be called from the BCI and performs all the necessary operations
-
-            to evaluate the first event of a queue (i.e. the event at the right
-            of the list 'self.stimQueue'). It classifies the event as
-            'OK', 'Fake', 'Hit' or 'Miss' based on the subjects activity,
-            which is 'Norm' for normal or 'Dev' for deviant. This function also
-            modifies whatever quantities are needed by the feedback to track the experiment.
-            Since a delay is expected from the classifier, this function can
-            just be called at any time by the BCI passing as argument 'stim_ID',
-            which must match the stimulus ID in the first position of the queue,
-            and the outcome of the classification task encoded in the argument
-            'activity'. This is asserted within this function and its failure
-            will prompt an error.
-
-        Arguments:
-            stim_ID: ID of the stimulus classified by the BCI.
-                     This must match the first one in the queue.
-                     This argument must take as value the different trigger
-                     values for each of the stimuli.
-            activity: outcome of the classifier. This argument take as values
-            'Norm' for normal activity at the subject's brain during processing
-            of the corresponding stimulus, or 'Dev' for deviant activity.
-        """
-
-        self.activity = activity
-        stimNumber = self.stimQueue.pop()
-        try:
-            assert(stimNumber==stim_ID)
-        except AssertionError:
-            l.error('Classifier sent evaluation of wrong stimulus. (TrainingFeedback.evalActivity())')
-            raise AssertionError
-
-        if self.activity == 'Norm':
-            if stimNumber != self.numTarget: # Normal activity with non-target stimulus. OK!!
-                self.OK += 1
-                self.send_parallel(TRIG_OK)
-                l.debug("TRIGGER %s" % str(TRIG_OK))
-            elif stimNumber == self.numTarget: # Normal activity with target stimulus. Miss!!
-                self.Miss += 1
-                self.send_parallel(TRIG_MISS)
-                l.debug("TRIGGER %s" % str(TRIG_MISS))
-        elif self.activity == 'Dev':
-            if stimNumber != self.numTarget: # Deviant activity with non-target stimulus. Fake!!
-                self.Fake += 1
-                self.send_parallel(TRIG_FAKE)
-                l.debug("TRIGGER %s" % str(TRIG_FAKE))
-            elif stimNumber == self.numTarget: # Deviant activity with target stimulus. Hit!!
-                self.Hit += 1
-                self.send_parallel(TRIG_HIT)
-                l.debug("TRIGGER %s" % str(TRIG_HIT))
-
-
-    def handleDifficulty(self):
-        """ handles the difficulty (i.e. the number of polygons of which the stimuli consists)
-
-            depending on the ratio of identified targets over the last several
-            rounds (encoded in the local variable 'performance').
-            The function should also decide if a satisfactory working point has
-            been reached. In this case, it sets 'self.falgRun=False' and the feedback stops.
-        """
-
-        performance = float(self.Hit)/self.recentTargets
-        if performance >= 0.5:
-            self.nPoly -= 2
-        else:
-            self.nPoly += 3
-        self.OK = 0
-        self.Fake = 0
-        self.Miss = 0
-        self.Hit = 0
-        self.recentTargets = 0
-        ## To be implemented:
-        #   Halting the experiment when the desired performance has been reached.
-        #   By now it just stops the experiment.
-        self.flagRun = False
-
-    def on_control_event(self, data):
-        stim_ID = data.get('stim_ID')
-        activity = data.get('activity')
-        self.evalActivity(stim_ID, activity)
-
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
     a = TrainingFeedback(folderPath='./data/')
     a.on_init()
     a.on_play()
+
