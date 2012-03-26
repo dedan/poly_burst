@@ -87,8 +87,6 @@ class TrainingFeedback(VisionEggFeedback):
         tryRounds: number of rounds before updating complexity of the stimuli.
             This can be set up to be not a number of rounds but a moment at which
             enough taget stimuli have been presented.
-        nPoly: number of polygons of which the stimuli consist. This encodes for
-            the complexity of the stimuli.
         refTime: refractory time between consecutive target stimuli or between
             onset of stimuli and target, measured in units with the duration of
             a single stimulus presentation (in this case: 0.1).
@@ -124,26 +122,27 @@ class TrainingFeedback(VisionEggFeedback):
     """
 
 
-    def __init__(self,  folderPath='./Feedbacks/TrainingFeedback/data/',
-                        nPoly=1, **kw):
+    def __init__(self, data_path=None, **kw):
         """sets up the current path from which the feedback operates
         (this path depends on from where the script is called and must be provided!).
         It also modifies some settings about the screen and initializes some
         internal variables of the object.
         """
 
-        folderPath = os.path.join(os.path.dirname(__file__), 'data')
         VisionEggFeedback.__init__(self, **kw)
 
         # Setting up folder paths:
-        self.folderPath = folderPath;
-        self.picsFolder = os.path.join(folderPath, 'Pics')
-        self.polyFolder = os.path.join(folderPath, 'PolygonPool')
+        if not data_path:
+            self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
+        else:
+            self.folderPath = data_path
+        self.picsFolder = os.path.join(self.folderPath, 'Pics')
+        self.polyFolder = os.path.join(self.folderPath, 'PolygonPool')
 
         # Variables related to the stimuli:
-        self.n_groups = 3
-        self.group_size = 6
-        self.nPoly = nPoly
+        self.n_groups = 2
+        self.group_size = 2
+        self.n_first_polies = 5
         self.n_bursts = 10
 
         # numTarget is a number between 0 (no target selected) and the number of images.
@@ -404,7 +403,8 @@ class TrainingFeedback(VisionEggFeedback):
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    a = TrainingFeedback(folderPath='./data/')
+    data_path = '/Users/dedan/projects/bci/out1/260312_181734/'
+    a = TrainingFeedback(data_path=data_path)
     a.on_init()
     a.on_play()
 
