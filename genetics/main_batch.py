@@ -84,7 +84,7 @@ Those image folders contain:
 Created by Stephan Gabler on 2011-10-31.
 """
 
-import os, sys, glob, time, logging
+import os, sys, glob, time, logging, shutil
 from os import path
 import pickle, json
 import matplotlib
@@ -154,14 +154,17 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     plt.subplot(2, 1, 2)
     plt.plot(np.diff(drawing.selections))
     plt.savefig(path.join(tmp_out, 'plot.png'))
+    shutil.copyfile(image_file, path.join(tmp_out, os.path.basename(image_file)))
     json.dump(drawing.conf,
               open(path.join(tmp_out, 'conf.json'), 'w'),
               indent=2)
     pickle.dump(drawing,
                 open(path.join(tmp_out, 'drawing.pckl'), 'w'))
+    drawing.evaluate()
+    drawing.surface.write_to_png(path.join(tmp_out, 'final.png'))
+
     logging.info('writing single polygons to: %s' % decomp_path)
     sorted_polies = drawing.get_sorted_polies(write_to_disk=decomp_path)
-
     for poly in sorted_polies:
 
         newPoints = [];
@@ -169,15 +172,11 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
             # Centering:
             point0 = point[0]
             point1 = point[1]
-            from ipdb import set_trace; set_trace()
             point0 /= float(drawing.w)
             point1 /= float(drawing.h)
             newPoints += [(point0, point1)]
         poly['points'] = newPoints
-
     json.dump(sorted_polies,
               open(path.join(tmp_out, 'polies.json'), 'w'),
               indent=2)
-    drawing.evaluate()
-    drawing.surface.write_to_png(path.join(tmp_out, 'final.png'))
     open(path.join(outfolder, 'README.txt'), 'w').write(__doc__)

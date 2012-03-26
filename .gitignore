@@ -4,3 +4,5 @@
 log
 .ropeproject*
 *~
+examples*
+*.png
