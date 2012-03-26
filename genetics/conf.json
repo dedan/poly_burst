@@ -1,13 +1,14 @@
 
 {
-    "infolder": "/Users/dedan/projects/bci/data/boss/",
-    "outfolder": "/Users/dedan/projects/bci/out/",
+    "infolder": "/Users/dedan/projects/bci/data/color_selected/",
+    "outfolder": "/Users/dedan/projects/bci/out1/",
     "n_generations": 10000,
     "locality": [],
 
     "mutation_rate": 0.1,
 
-    "min_polies": 10,
+    "min_polies": 5,
+    "max_polies": 10,
     "min_poly_points": 3,
     "max_poly_points": 7,
 

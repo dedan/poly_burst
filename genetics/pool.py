@@ -104,16 +104,18 @@ class Drawing(object):
 
         # insert new polygons
         if random() < self.conf['poly_rate']:
-            rand_idx = randint(0, len(self.polies))
-            poly = create_random_poly(self.w,
-                                      self.h,
-                                      self.conf['min_poly_points'],
-                                      self.conf['locality'])
-            self.polies.insert(rand_idx, poly)
+            if len(self.polies) < self.conf['max_polies']:
+                rand_idx = randint(0, len(self.polies))
+                poly = create_random_poly(self.w,
+                                          self.h,
+                                          self.conf['min_poly_points'],
+                                          self.conf['locality'])
+                self.polies.insert(rand_idx, poly)
 
         # remove polygons
         if random() < self.conf['poly_rate']:
-            self.polies.remove(choice(self.polies))
+            if len(self.polies) > self.conf['min_polies']:
+                    self.polies.remove(choice(self.polies))
 
         # move polygons in the order in which they are drawn
         if random() < self.conf['move_poly_rate']:
@@ -127,7 +129,7 @@ class Drawing(object):
 
                 # add points
                 if random() < self.conf['point_rate']:
-                    if len(poly) < self.conf['max_poly_points']:
+                    if len(poly['points']) < self.conf['max_poly_points']:
                         rand_idx = randint(0, len(poly['points']))
                         rand_point = (randint(0, self.w), randint(0, self.h))
                         poly['points'].insert(rand_idx, rand_point)
