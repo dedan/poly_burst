@@ -16,16 +16,7 @@
 
 import json, pickle
 import subprocess as sub
-
-expPath = './data/PolygonPool/'
-imgNames = ['alarmclock', 'bubbleblower', 'cooler', 'moccasin', 'pylon', 'apple07',
-            'calculator01', 'doll', 'nailpolish03b', 'radio01', 'axe', 'camera01a',
-            'filmroll', 'pacifier02d', 'babyseat', 'cap01a', 'globe', 'pepper04a',
-            'swimgoggles', 'bikehelmet', 'carkeys', 'hammer01', 'pill', 'tuque03a',
-            'bread', 'champagne', 'highheelshoe01', 'pingpongracket', 'violin',
-            'broccoli01a', 'chessboard', 'lighter01', 'plasticflower01a', 'brooch',
-            'circuitboard', 'log', 'playingcard04', 'broom', 'coffeebeans',
-            'medal02b', 'printer02']
+import os
 
 
 def toTriangle(polygonsList=None, filePath='./', fileName='polies.json', flagJson=True, flagColors=False):
@@ -48,7 +39,7 @@ def toTriangle(polygonsList=None, filePath='./', fileName='polies.json', flagJso
             polygonsList = json.load(open(filePath+fileName, 'r'))
         else:
             fileName = 'drawing.pckl'
-            f = open(filePath+fileName)
+            f = open(os.path.join(filePath, fileName))
             loadedPickler = pickle.Unpickler(f).load()
             polygonsList = loadedPickler.polies
 
@@ -179,7 +170,7 @@ def toFeedbackMany(colorsList, polyPath='./'):
     return listPolies
 
 
-def transDecomp(namesList=None, namesPath=expPath, flagJson=True):
+def transDecomp(namesPath):
     """transDecomp function:
 
         This function runs over the decomposition of the images given which
@@ -193,11 +184,12 @@ def transDecomp(namesList=None, namesPath=expPath, flagJson=True):
             decomposition with its color and outputs the final list of lists of
             polygons into a polies_.json file.
     """
-    if not namesList:
-        namesList = sub.os.listdir(namesPath)
 
-    for imgName in imgNames:
-        imgPath = namesPath+imgName+'/'
+    namesList = sub.os.listdir(namesPath)
+    namesList = [name for name in namesList if name != 'README.txt']
+
+    for imgName in namesList:
+        imgPath = os.path.join(namesPath, imgName)
 
         ## 1: produce the files for Triangle:
         colors = toTriangle(polygonsList=None,
@@ -219,7 +211,7 @@ def transDecomp(namesList=None, namesPath=expPath, flagJson=True):
         ## 3: Back to Feedback Format, which includes a loop over the colors itself:
         newPoliesList = toFeedbackMany(colors, polyPath=imgPath)
         # Writing new polies back into a file:
-        f = open(imgPath+'polies_.json', 'w')
+        f = open(os.path.join(imgPath, 'polies_.json'), 'w')
         json.dump(newPoliesList, f)
         f.close()
 
@@ -231,22 +223,9 @@ def transDecomp(namesList=None, namesPath=expPath, flagJson=True):
             sub.call(["rm", imgPath+'poly'+str(indColor)+'.poly'])
 
 
-def twoTilesMerger(tile1, tile2):
-    """tileMerger function:
-
-        This function merges together two tiles if they share an edge.
-        We don't need the whole tessellation for our task: it suffices with
-        separating into parts which are linked by one single node. So we can
-        merge together the triangles of the tiling which share edges so we
-        handle less polygons and the display is faster.
-
-        This stuff is way more complicated than it seems.... come back later.
-    """
-    pass
-
-
 if __name__ == '__main__':
-    transDecomp();
+    expPath = '/Users/dedan/projects/bci/out1/260312_190049/'
+    transDecomp(expPath);
 
 
 
