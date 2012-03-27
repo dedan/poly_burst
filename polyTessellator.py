@@ -1,7 +1,7 @@
 """polyTessellator.py
 
     This files provides scripts and functions to call the program Triangle to
-    tessellate the polygons from the stimuli. To do so, the polygons must first
+     tessellate the polygons from the stimuli. To do so, the polygons must first
      be written in the appropriate format so that Triangle understand the geometry.
      Here are also provided functions to translate polygons into the this format
      and back to the format that the TrainingFeedback uses.
@@ -19,39 +19,24 @@ import subprocess as sub
 import os
 
 
-def toTriangle(polygonsList=None, filePath='./', fileName='polies.json', flagJson=True, flagColors=False):
+def toTriangle(filePath='./'):
     """toTriangle function:
 
         This function translates a list of polygons written in the TrainingFeedback
         format into the format for Triangle.
 
-    VariableS:
-        >> polygonsList=None: list of polygons to be translated.
-            If not present, then the polies are read from a file.
-        >> filePath='./': path where a file with the list of polygons is stored.
-        >> fileName='polies.json': file where the list of polygons is stored.
-
+        filePath='./': path where a file with the list of polygons is stored.
     """
 
-    # If a list of polygons is not provided, we must read from the corresponding file:
-    if not polygonsList:
-        if flagJson:
-            polygonsList = json.load(open(os.path.join(filePath, fileName), 'r'))
-        else:
-            fileName = 'drawing.pckl'
-            f = open(os.path.join(filePath, fileName))
-            loadedPickler = pickle.Unpickler(f).load()
-            polygonsList = loadedPickler.polies
+    polygonsList = json.load(open(os.path.join(filePath, 'polies.json'), 'r'))
 
-    # If colors are required:
-    if flagColors:
-        colors = []
+    colors, positions = [], []
 
     # Run over the polygons:
     for indPoly, poly in enumerate(polygonsList):
 
-        if flagColors:
-            colors += [poly['color']]
+        colors.append(poly['color'])
+        positions.append(poly['position'])
         points = poly['points']
 
         # Prepare file and write:
@@ -70,8 +55,7 @@ def toTriangle(polygonsList=None, filePath='./', fileName='polies.json', flagJso
         f.close()
 
     # If colors: return them:
-    if flagColors:
-        return colors
+    return colors, positions
 
 
 def toFeedbackSingle(polyName, polyPath='./'):
@@ -143,7 +127,7 @@ def toFeedbackSingle(polyName, polyPath='./'):
     return poliesList;
 
 
-def toFeedbackMany(colorsList, polyPath='./'):
+def toFeedbackMany(colorsList, positions_list, polyPath='./'):
     """toFeedbackMany function:
 
         This function calls exhaustivelly the function toFeedbackSingle() to
@@ -165,8 +149,10 @@ def toFeedbackMany(colorsList, polyPath='./'):
         newPoly = []
         # Run over the tiling:
         for newPoints in toFeedbackSingle('poly'+str(indColor), polyPath=polyPath):
-            newPoly += [{'color':newColor, 'points':newPoints}]
-        listPolies += [newPoly]
+            newPoly.append({'color': newColor,
+                            'points': newPoints,
+                            'position': positions_list[indColor]})
+        listPolies.append(newPoly)
     return listPolies
 
 
@@ -186,16 +172,13 @@ def transDecomp(namesPath):
     """
 
     namesList = sub.os.listdir(namesPath)
-    namesList = [name for name in namesList if name != 'README.txt']
+    namesList = [name for name in namesList if name != 'README.txt' and name != '.DS_Store']
 
     for imgName in namesList:
         imgPath = os.path.join(namesPath, imgName)
 
         ## 1: produce the files for Triangle:
-        colors = toTriangle(polygonsList=None,
-                            filePath=imgPath,
-                            fileName='polies.json',
-                            flagColors=True, flagJson=True);
+        colors, positions = toTriangle(filePath=imgPath);
 
         ## 2: call Triangle from python:
         # We must call Triangle once for each polygon of the decomposition.
@@ -209,7 +192,7 @@ def transDecomp(namesPath):
             sub.call(["triangle", "-p", imgPath+'poly'+str(indColor)+'.poly'])
 
         ## 3: Back to Feedback Format, which includes a loop over the colors itself:
-        newPoliesList = toFeedbackMany(colors, polyPath=imgPath)
+        newPoliesList = toFeedbackMany(colors, positions, polyPath=imgPath)
         # Writing new polies back into a file:
         f = open(os.path.join(imgPath, 'polies_.json'), 'w')
         json.dump(newPoliesList, f)
@@ -224,18 +207,6 @@ def transDecomp(namesPath):
 
 
 if __name__ == '__main__':
-    expPath = '/Users/dedan/projects/bci/out1/260312_190049/'
+    expPath = '/Users/dedan/projects/bci/out1/270312_133507/'
     transDecomp(expPath);
-
-
-
-
-
-
-
-
-
-
-
-
 

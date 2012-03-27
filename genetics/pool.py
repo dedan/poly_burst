@@ -202,6 +202,8 @@ class Drawing(object):
                 self.context.show_text("error: %.3f" % val)
                 self.surface.write_to_png(os.path.join(write_to_disk,
                                           "only%d.png" % i))
+        for i, poly in enumerate(self.polies):
+            poly['position'] = i
         return [self.polies[i] for i in idx]
 
     def revert_last_mutation(self):
