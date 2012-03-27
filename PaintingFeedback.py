@@ -9,10 +9,10 @@ import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
-from FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from lib import marker
-#from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-#from pyff.lib import marker
+# from FeedbackBase.VisionEggFeedback import VisionEggFeedback
+# from lib import marker
+from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
@@ -82,7 +82,12 @@ class PaintingFeedback(VisionEggFeedback):
         self.dictImgNames = self.loadImageList()
         self.polygonPool = self.loadPolygonPool()
 
-        self.prepareTarget()
+        # prepare the target
+        self.numNonTarget = range(1,len(self.dictImgNames)+1)
+        self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
+        l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
+        l.debug('NonTarget Images: ' + str(self.numNonTarget))
+
         self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
         for burst_index in range(nMaxPolies):
 
@@ -174,27 +179,6 @@ class PaintingFeedback(VisionEggFeedback):
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
-
-
-    def prepareTarget(self):
-        """ select a target image.
-
-            To do this, it uses a simple list with the numbers of the images
-            and draws and removes one of them randomly (this becomes target).
-            This number is stored in 'self.numTarget'. Meanwhile, the other numbers
-            remain stored in the original list (called 'self.numNonTarget').
-            This is handy to select later the polygonal non-targets: we just
-            have to choose randomly from this list. Also, this ensures that the
-            polygonal non-targets selected this way still retain some information
-            about the original images from which they were generated. With this,
-            some data can be extracted regarding which pictures prompt more (less)
-            normal (deviant) activity, etc...
-        """
-        self.numNonTarget = range(1,len(self.dictImgNames)+1)
-        self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
-        l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
-        l.debug('NonTarget Images: ' + str(self.numNonTarget))
-
 
 
     def preparePoly(self, burst_index):
@@ -310,7 +294,7 @@ class PaintingFeedback(VisionEggFeedback):
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = './data/270312_140444/'
+    data_path = '/Users/dedan/projects/bci/out1/270312_140444/'
     a = PaintingFeedback(data_path=data_path)
     a.on_init()
     a.on_play()
