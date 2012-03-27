@@ -80,7 +80,8 @@ class PaintingFeedback(VisionEggFeedback):
         self.trialCount = 0
         self.recentTargets = 0
         self.stimQueue = []
-
+        
+        self.prepareTarget() 
         for burst_index in range(self.n_bursts):
 
             # burst starts:
@@ -161,10 +162,11 @@ class PaintingFeedback(VisionEggFeedback):
                          orientation = 0.0,
                          points = [(-width, -height), (-width, height), (width, height), (width, -height)],
                          position = (width/2, height/2))]
-        target = ManyPoly(listPoly)
+        outPoly = ManyPoly(listPoly)
+        self.listOfPolies = [ManyPoly(listPoly) for ii in range(nMaxPolies)]
         # Setting the polygons as stimuli and adding the corresponding generator:
-        self.manyPoly = target
-        self.set_stimuli(target)
+        self.manyPoly = outPoly
+        self.set_stimuli(outPoly)
         generator = self.preparePoly()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
@@ -252,44 +254,65 @@ class PaintingFeedback(VisionEggFeedback):
                     while tmp == self.stimNumber:
                         tmp = rnd.choice(self.numNonTarget)
                     self.stimNumber = tmp
-                    l.debug("NONTARGET %s selected for display. ", self.stimNumber)
+                    l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp()
+                self.colapsePolies() 
                 yield
 
-                self.preparePolyDecomp(blank=True)
+                self.colapsePolies(blank=True)
                 self.bufferTrigger = 0
                 yield
 
 
-    def preparePolyDecomp(self, blank=False):
-        """ loads the information stored in a polygonal decomposition into the object 'self.manyPoly'.
-
-            This object is the one which is displayed, so this step basically
-            prepares the information which will be drawn into the canvas.
-            a polygon of the decomposition may be composed of smaller subunits
-            (created by the triangle program) and they must be handled. This function
-            takes care of loading the many subunits which conform the tiling of
-            the polygons of the decomposition.
+    def preparePolyDecomp(self, mp, random_poly_index=None):
+        """ modifies the list of polygons saved in the objects of the self.listOfPolies. 
+        
+        self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty 
+        list. When target and non-target polygons are loaded, they are done so in a given 
+        element of listOfPolies, so that later these elements are collapsed into 
+        self.outPoly (wihch if the element which is actually displayed). This way, we 
+        can keep the right superposition of polygons. 
+        
+        As a polygon is fixed in the background, its tesselation remains for ever loaded 
+        in one of the elements of self.listOfPolies. This element is not modified anymore. 
+        
+        mp is the element of self.listOfPolies which is being modified (i.e. where the 
+        currently varying stimulus is loaded). 
         """
+        
+        if not random_poly_index:  
+            random_poly_index = rnd.randint(0, min(self.n_first_polies,
+                                                    len(self.polygonPool[self.stimNumber-1])))
+        self.bufferTrigger += POLYGON_BASE * random_poly_index
+        
+        newPolyList = []; 
+        for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
+            # Load and resize:
+            rPol = H.resizePol(pol, h=height, w=width)
+            p = Poly(color=rPol['color'],
+                     orientation = 0.0,
+                     points = rPol['points'],
+                     position = (width/2, height/2));
+            # Add to the list of polies to be displayed:
+            newPolyList += [p]
+
+        # Set the list of polies into the target object:
+        mp.listPoly = newPolyList
+        
+    def colapsePolies(self, blank=False): 
+        """collapses the polygon decomposition loaded in the list of ManyPoly objects 
+        into the outPoly, which is the object eventually displayed. 
+        """
+        
         newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
         if not blank:
-
-            random_poly_index = rnd.randint(0, min(self.n_first_polies,
-                                                   len(self.polygonPool[self.stimNumber-1])))
-            self.bufferTrigger += POLYGON_BASE * random_poly_index
-            for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
-                # Load and resize:
-                rPol = H.resizePol(pol, h=height, w=width)
-                p = Poly(color=rPol['color'],
-                         orientation = 0.0,
-                         points = rPol['points'],
-                         position = (width/2, height/2));
-                # Add to the list of polies to be displayed:
-                newPolyList += [p]
+            for MP in self.listOfPolis: 
+                newPolyList += MP.polyList
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
+        
 
 
     def triggerOp(self):
