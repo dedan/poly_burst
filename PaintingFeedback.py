@@ -16,6 +16,8 @@ from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
+debug = True
+
 width = 640;
 height = 480;
 
@@ -49,6 +51,7 @@ class PaintingFeedback(VisionEggFeedback):
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
         self.bufferTrigger = 0
+        self.cl_output = None
 
         # add a blank and the synchronization polygon to the list of polygons
         synchronization_poly = Poly(color = (0, 0, 0, 1.0),
@@ -110,6 +113,18 @@ class PaintingFeedback(VisionEggFeedback):
             self.stimNumber = self.numTarget
             self.preparePolyDecomp(burst_index)
 
+            if debug:
+                self.on_control_event({u'cl_output': self.numTarget})
+
+            while not self.cl_output:
+                time.sleep(1)
+
+            self.run_display(burst_index, self.cl_output)
+            self.cl_output = None
+
+
+
+
 
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
@@ -164,6 +179,31 @@ class PaintingFeedback(VisionEggFeedback):
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
         s.run()
+
+    def run_display(self, correct, chosen):
+        self.left_im = self.add_image_stimulus(position=(width/2-width/4, height/2),
+                                               size=(width/2,height/2))
+        self.right_im = self.add_image_stimulus(position=(width/2+width/4, height/2),
+                                                size=(width/2,height/2))
+        generator = self.prepare_display(correct, chosen)
+        # Creating and running a stimulus sequence:
+        s = self.stimulus_sequence(generator, [5.], pre_stimulus_function=self.triggerOp)
+        s.run()
+
+    def prepare_display(self, correct, chosen):
+        correct_folder = self.dictImgNames[self.numTarget]
+        correct_string = 'only' + str(correct) + '.png'
+        self.left_im.set_file(os.path.join(self.folderPath,
+                                           correct_folder,
+                                           'decomp',
+                                           correct_string))
+        chosen_folder = self.dictImgNames[chosen % 10]
+        chosen_string = 'only' + str((chosen % 100) / 10) + '.png'
+        self.right_im.set_file(os.path.join(self.folderPath,
+                                            chosen_folder,
+                                            'decomp',
+                                            chosen_string))
+        yield
 
 
     def prepareImg(self):
@@ -242,8 +282,6 @@ class PaintingFeedback(VisionEggFeedback):
             self.bufferTrigger += POLYGON_BASE * burst_index
         else:
             random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1])-1)
-            print len(self.polygonPool), self.stimNumber-1
-            print len(self.polygonPool[self.stimNumber-1]), random_poly_index
             toDraw = self.polygonPool[self.stimNumber-1][random_poly_index]
             self.bufferTrigger += POLYGON_BASE * random_poly_index
 
@@ -295,6 +333,12 @@ class PaintingFeedback(VisionEggFeedback):
         self.send_parallel(self.bufferTrigger);
         l.debug("TRIGGER %d" % self.bufferTrigger);
 
+    def on_control_event(self, data):
+        """get feedback from the classifier"""
+        self.logger.info("[CONTROL_EVENT] %s" % str(data))
+        if data.has_key(u'cl_output'):
+            # classification output was sent:
+            self.cl_output = data[u'cl_output']
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
