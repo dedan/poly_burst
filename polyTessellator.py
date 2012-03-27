@@ -36,7 +36,7 @@ def toTriangle(polygonsList=None, filePath='./', fileName='polies.json', flagJso
     # If a list of polygons is not provided, we must read from the corresponding file:
     if not polygonsList:
         if flagJson:
-            polygonsList = json.load(open(filePath+fileName, 'r'))
+            polygonsList = json.load(open(os.path.join(filePath, fileName), 'r'))
         else:
             fileName = 'drawing.pckl'
             f = open(os.path.join(filePath, fileName))
@@ -195,7 +195,7 @@ def transDecomp(namesPath):
         colors = toTriangle(polygonsList=None,
                             filePath=imgPath,
                             fileName='polies.json',
-                            flagColors=True, flagJson=False);
+                            flagColors=True, flagJson=True);
 
         ## 2: call Triangle from python:
         # We must call Triangle once for each polygon of the decomposition.
