@@ -3,21 +3,11 @@
     This files provides scripts and functions to call the program Triangle to
      tessellate the polygons from the stimuli. To do so, the polygons must first
      be written in the appropriate format so that Triangle understand the geometry.
-     Here are also provided functions to translate polygons into the this format
-     and back to the format that the TrainingFeedback uses.
-
-    Functions:
-        toTriangle(): function to translate the polygons from the TrainingFeedback
-            format into the Triangle format. This function translates all the
-            polygons in the file 'polies.json'.
-        toFeedbackSingle(): function to translate the tiling of one single polygon
-            into the format of the TrainingFeedback.
 """
 
-import json, pickle
+import json
 import subprocess as sub
 import os
-
 
 def toTriangle(filePath='./'):
     """toTriangle function:
@@ -27,12 +17,10 @@ def toTriangle(filePath='./'):
 
         filePath='./': path where a file with the list of polygons is stored.
     """
-
-    polygonsList = json.load(open(os.path.join(filePath, 'polies.json'), 'r'))
+    with open(os.path.join(filePath, 'polies.json')) as f:
+        polygonsList = json.load(f)
 
     colors, positions = [], []
-
-    # Run over the polygons:
     for indPoly, poly in enumerate(polygonsList):
 
         colors.append(poly['color'])
@@ -40,21 +28,18 @@ def toTriangle(filePath='./'):
         points = poly['points']
 
         # Prepare file and write:
-        f = open(filePath+'poly'+str(indPoly)+'.poly', 'w')
-        f.write(str(len(points))+' 2 0 1\n')            # First line!
-        for indPoint, point in enumerate(points):       # Points!
-            f.write(str(indPoint+1)+' '+str(point[0])+' '+str(point[1])+' 1\n')
-        f.write(str(len(points))+' 1\n')                # Line preceeding the segments!
-        for indPoint, point in enumerate(points):       # Segments!
-            a = indPoint
-            b = indPoint+1
-            if (a==0):
-                a = len(points)
-            f.write(str(indPoint+1)+' '+str(a)+' '+str(b)+'\n')
-        f.write('0\n')                                  # Number of holes (always 0)!
-        f.close()
-
-    # If colors: return them:
+        with open(filePath+'poly'+str(indPoly)+'.poly', 'w') as f:
+            f.write(str(len(points))+' 2 0 1\n')            # First line!
+            for indPoint, point in enumerate(points):       # Points!
+                f.write(str(indPoint+1)+' '+str(point[0])+' '+str(point[1])+' 1\n')
+            f.write(str(len(points))+' 1\n')                # Line preceeding the segments!
+            for indPoint, point in enumerate(points):       # Segments!
+                a = indPoint
+                b = indPoint+1
+                if (a==0):
+                    a = len(points)
+                f.write(str(indPoint+1)+' '+str(a)+' '+str(b)+'\n')
+            f.write('0\n')                                  # Number of holes (always 0)!
     return colors, positions
 
 
@@ -62,13 +47,10 @@ def toFeedbackSingle(polyName, polyPath='./'):
     """toFeedbackSingle function:
 
         This function translates one single polygon written in Triangle format
-        into a polygon written for feedback format. It was chosen to write a
-        function to solve one single polygon, so solving the many polygons and
-        arranging them into a list to json-ize should be done by calling this
-        function many times. Polies written in Triangle format make usage of
-        three folders: one contains the elements of the tessellation, one
-        contains the vertices and the last one contains the info of the edges
-        which shape the outer boundary of the polygon. This routine reads the
+        into a polygon written for feedback format. Polies written in Triangle
+        format make usage of three folders: one contains the elements of the
+        tessellation, one contains the vertices and the last one contains the
+        info of the edges shaping the outer boundary of the polygon. It reads the
         vertices and the elements of the tessellation from the corresponding
         files. It doesn't care about the edges which shape the outer side because
         the polygons will be solid when displayed and the edges won't be highlighted.
@@ -85,12 +67,10 @@ def toFeedbackSingle(polyName, polyPath='./'):
     """
 
     # Reading the info from the files:
-    fNodes = open(polyPath+polyName+'.1.node', 'r')
-    fElems = open(polyPath+polyName+'.1.ele', 'r')
-    dataNodes = fNodes.read()
-    dataElems = fElems.read()
-    fNodes.close()
-    fElems.read()
+    with open(polyPath+polyName+'.1.node', 'r') as f:
+        dataNodes = f.read()
+    with open(polyPath+polyName+'.1.ele', 'r') as f:
+        dataElems = f.read()
 
     # Popping out the final lines:
     listNodes = dataNodes.split('\n')
@@ -130,24 +110,18 @@ def toFeedbackSingle(polyName, polyPath='./'):
 def toFeedbackMany(colorsList, positions_list, polyPath='./'):
     """toFeedbackMany function:
 
-        This function calls exhaustivelly the function toFeedbackSingle() to
+        This function calls toFeedbackSingle() to
         convert back into the Feedback format the many polygons which constitute
         the tilings of the polygons of the decomposition. It supposses that the
         polygons are enumerated beginning with 0 and that the corresponding
         files '.#.ele' and '.#.node' (where # represent an index) exist.
-        It also makes use of a colorsList which must be provided. This list says
-        the color of the corresponding polies and also says how many polygons there must be.
-
-    Input:
-        colorsList: list with the colors that each tiling will take in the final display.
-        polyPath = './': path to the folder where the different polies are stored.
+        The color and position list contain information from the original files.
     """
 
     listPolies = []
     for indColor, newColor in enumerate(colorsList):
 
         newPoly = []
-        # Run over the tiling:
         for newPoints in toFeedbackSingle('poly'+str(indColor), polyPath=polyPath):
             newPoly.append({'color': newColor,
                             'points': newPoints,
@@ -159,8 +133,6 @@ def toFeedbackMany(colorsList, positions_list, polyPath='./'):
 def transDecomp(namesPath):
     """transDecomp function:
 
-        This function runs over the decomposition of the images given which
-        names are given in namesList.
         First: the function reads the corresponding polies.json file to load
             the polygons of each decomposition and translate them into files fit
             for Triangle. This first step is done through the function: toTriangle().
@@ -181,22 +153,13 @@ def transDecomp(namesPath):
         colors, positions = toTriangle(filePath=imgPath);
 
         ## 2: call Triangle from python:
-        # We must call Triangle once for each polygon of the decomposition.
-        # To do this, we must know how many polygons there are in the decomposition.
-        # Also, later on we will need the colors of each polygon so we can colour
-        # the tiling in the right manner. We can solve both problems by reading
-        # the colors straightaway from polies.json. Therefore, a flag colors
-        # has been added to the 'toTriangle()' function such that if this is True
-        # then the colors are returned as well.
         for indColor, color in enumerate(colors):
             sub.call(["triangle", "-p", imgPath+'poly'+str(indColor)+'.poly'])
 
         ## 3: Back to Feedback Format, which includes a loop over the colors itself:
         newPoliesList = toFeedbackMany(colors, positions, polyPath=imgPath)
-        # Writing new polies back into a file:
-        f = open(os.path.join(imgPath, 'polies_.json'), 'w')
-        json.dump(newPoliesList, f)
-        f.close()
+        with open(os.path.join(imgPath, 'polies_.json'), 'w') as f:
+            json.dump(newPoliesList, f)
 
         ## 4: Removing files which arn't needed anymore!
         for indColor, color in enumerate(colors):
