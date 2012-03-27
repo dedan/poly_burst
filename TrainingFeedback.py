@@ -50,22 +50,13 @@ from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
-## Global variables:
-# Size with the desired canvas for display:
 width = 640;
 height = 480;
 
-# Trigger variables:
-TRIG_RUN_START = 252
-TRIG_RUN_END = 253
-TRIG_TRIAL_START = 250
-TRIG_TRIAL_END = 251
-TRIG_IMG = 0
-TRIG_STIM = 100
-TRIG_OK = 201
-TRIG_FAKE = 202
-TRIG_MISS = 203
-TRIG_HIT = 204
+TRIG_IMG = 200
+TARGET_BASE = 100
+NONTARGET_BASE = 0
+POLYGON_BASE = 10
 
 
 class TrainingFeedback(VisionEggFeedback):
@@ -136,13 +127,13 @@ class TrainingFeedback(VisionEggFeedback):
 
         # Variables related to the stimuli:
         self.n_groups = 2
-        self.group_size = 2
+        self.group_size = 6
         self.n_first_polies = 5
         self.n_bursts = 10
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
-        self.bufferTrigger = []
+        self.bufferTrigger = 0
 
         # after the super init I can overwrite one of the values set in there
         self.fullscreen = False
@@ -278,7 +269,7 @@ class TrainingFeedback(VisionEggFeedback):
                 self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
-                self.bufferTrigger += [TRIG_IMG];
+                self.bufferTrigger = 0
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
@@ -303,7 +294,7 @@ class TrainingFeedback(VisionEggFeedback):
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
-        self.bufferTrigger += [TRIG_IMG+self.numTarget]
+        self.bufferTrigger = TRIG_IMG + self.numTarget
 
 
     def preparePoly(self):
@@ -323,6 +314,7 @@ class TrainingFeedback(VisionEggFeedback):
         """
 
         target_index = 0
+        self.stimNumber = -1
         for group_index in range(self.n_groups):
 
             # make sure target is not presented twice in a row
@@ -336,6 +328,7 @@ class TrainingFeedback(VisionEggFeedback):
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
+                    self.bufferTrigger = TARGET_BASE + self.stimNumber
                 else:
                     # don't present the same non-target twice in a row
                     tmp = rnd.choice(self.numNonTarget)
@@ -343,14 +336,12 @@ class TrainingFeedback(VisionEggFeedback):
                         tmp = rnd.choice(self.numNonTarget)
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s selected for display. ", self.stimNumber)
+                    self.bufferTrigger = NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp()
-                self.bufferTrigger += [TRIG_STIM+self.stimNumber]
-                self.stimQueue.insert(0,TRIG_STIM+self.stimNumber)
                 yield
 
                 self.preparePolyDecomp(blank=True)
-                self.bufferTrigger += [TRIG_STIM]
-                self.stimQueue.insert(0,TRIG_STIM)
+                self.bufferTrigger = 0
                 yield
 
 
@@ -369,7 +360,7 @@ class TrainingFeedback(VisionEggFeedback):
 
             random_poly_index = rnd.randint(0, min(self.n_first_polies,
                                                    len(self.polygonPool[self.stimNumber-1])))
-
+            self.bufferTrigger += POLYGON_BASE * random_poly_index
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
                 rPol = H.resizePol(pol, h=height, w=width)
@@ -400,14 +391,13 @@ class TrainingFeedback(VisionEggFeedback):
             evalActivity(self, stim_ID, activity) elements will be sent one after
             the other by this function.
         """
-        newID = self.bufferTrigger.pop();
-        self.send_parallel(newID);
-        l.debug("TRIGGER %s" % str(newID));
+        self.send_parallel(self.bufferTrigger);
+        l.debug("TRIGGER %d" % self.bufferTrigger);
 
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = '/Users/dedan/projects/bci/out1/260312_181734/'
+    data_path = '/Users/dedan/projects/bci/out1/260312_225755/'
     a = TrainingFeedback(data_path=data_path)
     a.on_init()
     a.on_play()
