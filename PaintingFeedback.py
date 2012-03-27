@@ -38,7 +38,7 @@ class PaintingFeedback(VisionEggFeedback):
         """
 
         VisionEggFeedback.__init__(self, **kw)
-        self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
+        self.folderPath = data_path
 
         # Variables related to the stimuli:
         self.n_groups = 2
@@ -50,7 +50,16 @@ class PaintingFeedback(VisionEggFeedback):
         self.numTarget = 0
         self.bufferTrigger = 0
 
-        # after the super init I can overwrite one of the values set in there
+        # add a blank and the synchronization polygon to the list of polygons
+        synchronization_poly = Poly(color = (0, 0, 0, 1.0),
+                                    points = [(10, 10), (20, 10), (20, 20), (10, 20)],
+                                    position = (0, 0))
+        blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
+                          points = [(-width, -height), (-width, height),
+                                    (width, height), (width, -height)],
+                          position = (width/2, height/2))
+        self.manyPoly = ManyPoly([synchronization_poly, blank_poly])
+
         self.fullscreen = False
         self.geometry = [0, 0, width, height]
         l.debug("Feedback object created and initialized. ")
@@ -118,6 +127,7 @@ class PaintingFeedback(VisionEggFeedback):
                 polyList.append(json.load(f))
         return polyList
 
+
     def runImg(self):
         """performs the task of displaying a random image.
 
@@ -126,8 +136,6 @@ class PaintingFeedback(VisionEggFeedback):
             neutrum grey background before and after it). The selection of which
             image is to be displayed is left to this generator.
         """
-
-        # Adding an image and the generator:
         self.image = self.add_image_stimulus(position=(width/2, height/2), size=(width,height))
         generator = self.prepareImg()
         # Creating and running a stimulus sequence:
@@ -142,24 +150,10 @@ class PaintingFeedback(VisionEggFeedback):
             polygonal decompositioins). The selection of whether the displayed
             stimuli are target or not is left to this generator.
         """
-
-        # Creating ManyPoly objects to load the different polygons to be displayed:
-        synchronization_poly = Poly(color = (0, 0, 0, 1.0),
-                                    points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                                    position = (0, 0))
-        blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
-                          points = [(-width, -height), (-width, height),
-                                    (width, height), (width, -height)],
-                          position = (width/2, height/2))
-        listPoly = [synchronization_poly, blank_poly]
-        outPoly = ManyPoly(listPoly)
-        # Setting the polygons as stimuli and adding the corresponding generator:
-        self.manyPoly = outPoly
-        self.set_stimuli(outPoly)
+        self.set_stimuli(self.manyPoly)
         generator = self.preparePoly(currentTargetPoly)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
-        # Start the stimulus sequence
         s.run()
 
 
@@ -170,7 +164,6 @@ class PaintingFeedback(VisionEggFeedback):
             background. The selection of the target image is left to the
             function 'self.prepareTarget()', which is called from here.
         """
-
         for w in range(3):
             if w==1:
                 self.bufferTrigger = TRIG_IMG + self.numTarget
@@ -197,7 +190,6 @@ class PaintingFeedback(VisionEggFeedback):
             some data can be extracted regarding which pictures prompt more (less)
             normal (deviant) activity, etc...
         """
-
         self.numNonTarget = range(1,len(self.dictImgNames)+1)
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
@@ -208,7 +200,6 @@ class PaintingFeedback(VisionEggFeedback):
     def preparePoly(self, currentTargetPoly):
         """ generator for the polies stimulus
         """
-
         target_index = 0
         self.stimNumber = -1
         for group_index in range(self.n_groups):
@@ -257,7 +248,6 @@ class PaintingFeedback(VisionEggFeedback):
         mp is the element of self.listOfPolies which is being modified (i.e. where the
         currently varying stimulus is loaded).
         """
-
         if self.stimNumber == self.numTarget:
             toDraw = currentTargetPoly
             target_decomposition = self.polygonPool[self.stimNumber-1]
