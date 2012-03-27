@@ -9,8 +9,10 @@ import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
-from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from pyff.lib import marker
+from FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from lib import marker
+#from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
+#from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
@@ -22,6 +24,7 @@ TARGET_BASE = 100
 NONTARGET_BASE = 0
 POLYGON_BASE = 10
 
+nMaxPolies = 10
 
 class PaintingFeedback(VisionEggFeedback):
     """
@@ -82,7 +85,8 @@ class PaintingFeedback(VisionEggFeedback):
         self.stimQueue = []
         
         self.prepareTarget() 
-        for burst_index in range(self.n_bursts):
+        self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
+        for burst_index in range(len(self.polygonPool)):
 
             # burst starts:
             self.send_parallel(marker.TRIAL_START)
@@ -90,9 +94,12 @@ class PaintingFeedback(VisionEggFeedback):
 
             l.debug("Selecting and presenting target image.")
             self.runImg()
-
+            
+            currentTargetPoly = self.polygonPool[self.numTarget][burst_index]
+            self.currentMp = self.listOfPolies[currentTargetPoly['position']]
+            
             l.debug("Building and presenting polygonal stimuli.")
-            self.runPoly()
+            self.runPoly(currentTargetPoly)
 
 
             # Trial ends:
@@ -145,7 +152,7 @@ class PaintingFeedback(VisionEggFeedback):
         s.run()
 
 
-    def runPoly(self):
+    def runPoly(self, currentTargetPoly):
         """ performs the task of displaying the polygonal stimuli.
             This function creates the 'stimulus_sequence' and attaches to it
             the corresponding generator (which yields successive selections of
@@ -163,11 +170,10 @@ class PaintingFeedback(VisionEggFeedback):
                          points = [(-width, -height), (-width, height), (width, height), (width, -height)],
                          position = (width/2, height/2))]
         outPoly = ManyPoly(listPoly)
-        self.listOfPolies = [ManyPoly(listPoly) for ii in range(nMaxPolies)]
         # Setting the polygons as stimuli and adding the corresponding generator:
         self.manyPoly = outPoly
         self.set_stimuli(outPoly)
-        generator = self.preparePoly()
+        generator = self.preparePoly(currentTargetPoly)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
         # Start the stimulus sequence
@@ -184,7 +190,7 @@ class PaintingFeedback(VisionEggFeedback):
 
         for w in range(3):
             if w==1:
-                self.prepareTarget();
+                self.bufferTrigger = TRIG_IMG + self.numTarget
                 self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
@@ -213,23 +219,11 @@ class PaintingFeedback(VisionEggFeedback):
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
-        self.bufferTrigger = TRIG_IMG + self.numTarget
+        
 
 
-    def preparePoly(self):
-        """ generator yields when the desired polygons have been loaded in the ManyPoly stimulus.
-
-            It handles the selection of target or non-target stimulus, but
-            loading the desired polygonal decomposition into 'self.manyPoly'
-            (which is the object eventually displayed) is made by the function
-            'self.preparePolyDecomp()', which is called from here.
-            This function also stores the value of the trigger corresponding
-            to the current stimulus into two different queues: one queue to
-            prepare the trigger which is actually sent just before stimulus
-            presentation by 'self.triggerOP()', and another queue were the
-            values of the successive presented stimuli are stored until the
-            classifier calls the function 'self.evalActivity()'. Further info
-            about 'self.evalActivity' can be found in the corresponding function.
+    def preparePoly(self, currentTargetPoly):
+        """ generator for the polies stimulus
         """
 
         target_index = 0
@@ -243,7 +237,7 @@ class PaintingFeedback(VisionEggFeedback):
                 target_index = rnd.randint(0, self.group_size-1)
 
             for stimulus_index in range(self.group_size):
-
+                
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
@@ -256,7 +250,7 @@ class PaintingFeedback(VisionEggFeedback):
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = NONTARGET_BASE + self.stimNumber
-                self.preparePolyDecomp()
+                self.preparePolyDecomp(currentTargetPoly)
                 self.colapsePolies() 
                 yield
 
@@ -265,7 +259,7 @@ class PaintingFeedback(VisionEggFeedback):
                 yield
 
 
-    def preparePolyDecomp(self, mp, random_poly_index=None):
+    def preparePolyDecomp(self, currentTargetPoly):
         """ modifies the list of polygons saved in the objects of the self.listOfPolies. 
         
         self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty 
@@ -281,13 +275,17 @@ class PaintingFeedback(VisionEggFeedback):
         currently varying stimulus is loaded). 
         """
         
-        if not random_poly_index:  
-            random_poly_index = rnd.randint(0, min(self.n_first_polies,
-                                                    len(self.polygonPool[self.stimNumber-1])))
-        self.bufferTrigger += POLYGON_BASE * random_poly_index
+        if self.stimNumber == self.targetNumber: 
+            toDraw = currentTargetPoly 
+            self.bufferTrigger += POLYGON_BASE *  \
+                                self.polygonPool[self.stimNumber-1].index(currentRandomPoly)
+        else: 
+            random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1]))
+            toDraw = self.polygonPool[self.stimNumber-1][random_poly_index] 
+            self.bufferTrigger += POLYGON_BASE * random_poly_index
         
         newPolyList = []; 
-        for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
+        for pol in toDraw: 
             # Load and resize:
             rPol = H.resizePol(pol, h=height, w=width)
             p = Poly(color=rPol['color'],
@@ -298,7 +296,7 @@ class PaintingFeedback(VisionEggFeedback):
             newPolyList += [p]
 
         # Set the list of polies into the target object:
-        mp.listPoly = newPolyList
+        self.currentMp.listPoly = newPolyList
         
     def colapsePolies(self, blank=False): 
         """collapses the polygon decomposition loaded in the list of ManyPoly objects 
@@ -337,8 +335,8 @@ class PaintingFeedback(VisionEggFeedback):
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = '/Users/dedan/projects/bci/out1/260312_225755/'
-    a = TrainingFeedback(data_path=data_path)
+    data_path = './data/270312_140444/'
+    a = PaintingFeedback(data_path=data_path)
     a.on_init()
     a.on_play()
 
