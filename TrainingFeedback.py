@@ -322,17 +322,26 @@ class TrainingFeedback(VisionEggFeedback):
             about 'self.evalActivity' can be found in the corresponding function.
         """
 
+        target_index = 0
         for group_index in range(self.n_groups):
 
-            target_index = rnd.randint(0, self.group_size-1)
+            # make sure target is not presented twice in a row
+            if target_index == self.group_size-1:
+                target_index = rnd.randint(1, self.group_size-1)
+            else:
+                target_index = rnd.randint(0, self.group_size-1)
+
             for stimulus_index in range(self.group_size):
 
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
                 else:
-
-                    self.stimNumber = rnd.choice(self.numNonTarget)
+                    # don't present the same non-target twice in a row
+                    tmp = rnd.choice(self.numNonTarget)
+                    while tmp == self.stimNumber:
+                        tmp = rnd.choice(self.numNonTarget)
+                    self.stimNumber = tmp
                     l.debug("NONTARGET %s selected for display. ", self.stimNumber)
                 self.preparePolyDecomp()
                 self.bufferTrigger += [TRIG_STIM+self.stimNumber]
