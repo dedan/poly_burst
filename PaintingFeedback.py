@@ -98,7 +98,7 @@ class PaintingFeedback(VisionEggFeedback):
             l.debug("Selecting and presenting target image.")
             self.runImg()
 
-            currentTargetPoly = self.polygonPool[self.numTarget][burst_index]
+            currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
             self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
 
             l.debug("Building and presenting polygonal stimuli.")
