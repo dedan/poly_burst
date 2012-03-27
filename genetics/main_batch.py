@@ -93,6 +93,7 @@ import numpy as np
 import pylab as plt
 import cairo
 from poly_burst.genetics import pool
+import poly_burst.polyTessellator as tessellator
 
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
@@ -180,3 +181,4 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
               open(path.join(tmp_out, 'polies.json'), 'w'),
               indent=2)
     open(path.join(outfolder, 'README.txt'), 'w').write(__doc__)
+tessellator.transDecomp(outfolder)
