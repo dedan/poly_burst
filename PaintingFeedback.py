@@ -107,6 +107,10 @@ class PaintingFeedback(VisionEggFeedback):
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
+            self.stimNumber = self.numTarget
+            self.preparePolyDecomp(burst_index)
+
+
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
 
@@ -117,7 +121,7 @@ class PaintingFeedback(VisionEggFeedback):
             .png files alphabetically into numbers.
         """
         listFiles = os.listdir(self.folderPath)
-        listNames = [f for f in listFiles if f != 'README.txt']
+        listNames = [f for f in listFiles if f != 'README.txt' and f != '.DS_Store']
         nListNames = range(1,len(listNames)+1)
         dictImgNames = dict(zip(nListNames, listNames))
         return dictImgNames
@@ -129,7 +133,7 @@ class PaintingFeedback(VisionEggFeedback):
         polyList = []
         for imgName in self.dictImgNames.values():
             with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
-                polyList.append(json.load(f))
+                polyList.append(list(reversed(json.load(f))))
         return polyList
 
 
