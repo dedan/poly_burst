@@ -38,12 +38,7 @@ class PaintingFeedback(VisionEggFeedback):
         """
 
         VisionEggFeedback.__init__(self, **kw)
-
-        # Setting up folder paths:
-        if not data_path:
-            self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
-        else:
-            self.folderPath = data_path
+        self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
 
         # Variables related to the stimuli:
         self.n_groups = 2
@@ -78,13 +73,7 @@ class PaintingFeedback(VisionEggFeedback):
         self.dictImgNames = self.loadImageList()
         self.polygonPool = self.loadPolygonPool()
 
-        # Initializing some variables before the loop:
-        self.flagRun = True
-        self.trialCount = 0
-        self.recentTargets = 0
-        self.stimQueue = []
-        
-        self.prepareTarget() 
+        self.prepareTarget()
         self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
         for burst_index in range(len(self.polygonPool)):
 
@@ -94,20 +83,16 @@ class PaintingFeedback(VisionEggFeedback):
 
             l.debug("Selecting and presenting target image.")
             self.runImg()
-            
+
             currentTargetPoly = self.polygonPool[self.numTarget][burst_index]
-            self.currentMp = self.listOfPolies[currentTargetPoly['position']]
-            
+            self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
+
             l.debug("Building and presenting polygonal stimuli.")
             self.runPoly(currentTargetPoly)
 
-
-            # Trial ends:
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
-
-        # Run ends:
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
 
@@ -130,10 +115,8 @@ class PaintingFeedback(VisionEggFeedback):
         polyList = []
         for imgName in self.dictImgNames.values():
             with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
-                newPolyDecomp = json.load(f)
-            polyList += [newPolyDecomp]
+                polyList.append(json.load(f))
         return polyList
-
 
     def runImg(self):
         """performs the task of displaying a random image.
@@ -161,14 +144,14 @@ class PaintingFeedback(VisionEggFeedback):
         """
 
         # Creating ManyPoly objects to load the different polygons to be displayed:
-        listPoly = [Poly(color = (0, 0, 0, 1.0), # Set the target color (RGBA) black
-                         orientation = 0.0,
-                         points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                         position = (0, 0)),
-                    Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
-                         orientation = 0.0,
-                         points = [(-width, -height), (-width, height), (width, height), (width, -height)],
-                         position = (width/2, height/2))]
+        synchronization_poly = Poly(color = (0, 0, 0, 1.0),
+                                    points = [(10, 10), (20, 10), (20, 20), (10, 20)],
+                                    position = (0, 0))
+        blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
+                          points = [(-width, -height), (-width, height),
+                                    (width, height), (width, -height)],
+                          position = (width/2, height/2))
+        listPoly = [synchronization_poly, blank_poly]
         outPoly = ManyPoly(listPoly)
         # Setting the polygons as stimuli and adding the corresponding generator:
         self.manyPoly = outPoly
@@ -219,7 +202,7 @@ class PaintingFeedback(VisionEggFeedback):
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
-        
+
 
 
     def preparePoly(self, currentTargetPoly):
@@ -237,7 +220,7 @@ class PaintingFeedback(VisionEggFeedback):
                 target_index = rnd.randint(0, self.group_size-1)
 
             for stimulus_index in range(self.group_size):
-                
+
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
@@ -251,7 +234,7 @@ class PaintingFeedback(VisionEggFeedback):
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp(currentTargetPoly)
-                self.colapsePolies() 
+                self.colapsePolies()
                 yield
 
                 self.colapsePolies(blank=True)
@@ -260,32 +243,32 @@ class PaintingFeedback(VisionEggFeedback):
 
 
     def preparePolyDecomp(self, currentTargetPoly):
-        """ modifies the list of polygons saved in the objects of the self.listOfPolies. 
-        
-        self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty 
-        list. When target and non-target polygons are loaded, they are done so in a given 
-        element of listOfPolies, so that later these elements are collapsed into 
-        self.outPoly (wihch if the element which is actually displayed). This way, we 
-        can keep the right superposition of polygons. 
-        
-        As a polygon is fixed in the background, its tesselation remains for ever loaded 
-        in one of the elements of self.listOfPolies. This element is not modified anymore. 
-        
-        mp is the element of self.listOfPolies which is being modified (i.e. where the 
-        currently varying stimulus is loaded). 
+        """ modifies the list of polygons saved in the objects of the self.listOfPolies.
+
+        self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty
+        list. When target and non-target polygons are loaded, they are done so in a given
+        element of listOfPolies, so that later these elements are collapsed into
+        self.outPoly (wihch if the element which is actually displayed). This way, we
+        can keep the right superposition of polygons.
+
+        As a polygon is fixed in the background, its tesselation remains for ever loaded
+        in one of the elements of self.listOfPolies. This element is not modified anymore.
+
+        mp is the element of self.listOfPolies which is being modified (i.e. where the
+        currently varying stimulus is loaded).
         """
-        
-        if self.stimNumber == self.targetNumber: 
-            toDraw = currentTargetPoly 
-            self.bufferTrigger += POLYGON_BASE *  \
-                                self.polygonPool[self.stimNumber-1].index(currentRandomPoly)
-        else: 
+
+        if self.stimNumber == self.numTarget:
+            toDraw = currentTargetPoly
+            target_decomposition = self.polygonPool[self.stimNumber-1]
+            self.bufferTrigger += POLYGON_BASE * target_decomposition.index(currentTargetPoly)
+        else:
             random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1]))
-            toDraw = self.polygonPool[self.stimNumber-1][random_poly_index] 
+            toDraw = self.polygonPool[self.stimNumber-1][random_poly_index]
             self.bufferTrigger += POLYGON_BASE * random_poly_index
-        
-        newPolyList = []; 
-        for pol in toDraw: 
+
+        newPolyList = [];
+        for pol in toDraw:
             # Load and resize:
             rPol = H.resizePol(pol, h=height, w=width)
             p = Poly(color=rPol['color'],
@@ -297,20 +280,20 @@ class PaintingFeedback(VisionEggFeedback):
 
         # Set the list of polies into the target object:
         self.currentMp.listPoly = newPolyList
-        
-    def colapsePolies(self, blank=False): 
-        """collapses the polygon decomposition loaded in the list of ManyPoly objects 
-        into the outPoly, which is the object eventually displayed. 
+
+    def colapsePolies(self, blank=False):
+        """collapses the polygon decomposition loaded in the list of ManyPoly objects
+        into the outPoly, which is the object eventually displayed.
         """
-        
+
         newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
         if not blank:
-            for MP in self.listOfPolis: 
-                newPolyList += MP.polyList
+            for MP in self.listOfPolies:
+                newPolyList += MP.listPoly
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
-        
+
 
 
     def triggerOp(self):
