@@ -154,7 +154,7 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     plt.subplot(2, 1, 2)
     plt.plot(np.diff(drawing.selections))
     plt.savefig(path.join(tmp_out, 'plot.png'))
-    shutil.copyfile(image_file, path.join(tmp_out, os.path.basename(image_file)))
+    shutil.copyfile(image_file, path.join(tmp_out, 'image.png'))
     json.dump(drawing.conf,
               open(path.join(tmp_out, 'conf.json'), 'w'),
               indent=2)

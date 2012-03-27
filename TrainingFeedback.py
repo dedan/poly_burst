@@ -133,8 +133,6 @@ class TrainingFeedback(VisionEggFeedback):
             self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
         else:
             self.folderPath = data_path
-        self.picsFolder = os.path.join(self.folderPath, 'Pics')
-        self.polyFolder = os.path.join(self.folderPath, 'PolygonPool')
 
         # Variables related to the stimuli:
         self.n_groups = 2
@@ -203,8 +201,8 @@ class TrainingFeedback(VisionEggFeedback):
             pictures into a dictionary which maps the names of the different
             .png files alphabetically into numbers.
         """
-        listFiles = os.listdir(self.picsFolder)
-        listNames = [fileName[0:len(fileName[1])-5] for fileName in listFiles]
+        listFiles = os.listdir(self.folderPath)
+        listNames = [f for f in listFiles if f != 'README.txt']
         nListNames = range(1,len(listNames)+1)
         dictImgNames = dict(zip(nListNames, listNames))
         return dictImgNames
@@ -215,7 +213,7 @@ class TrainingFeedback(VisionEggFeedback):
         """
         polyList = []
         for imgName in self.dictImgNames.values():
-            with open(os.path.join(self.polyFolder, imgName, 'polies_.json'), 'r') as f:
+            with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
                 newPolyDecomp = json.load(f)
             polyList += [newPolyDecomp]
         return polyList
@@ -277,11 +275,11 @@ class TrainingFeedback(VisionEggFeedback):
         for w in range(3):
             if w==1:
                 self.prepareTarget();
-                self.imgPath = os.path.join(self.picsFolder, self.dictImgNames[self.numTarget] + '.png')
+                self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
                 self.bufferTrigger += [TRIG_IMG];
-                imgPath = os.path.join(self.folderPath, 'background.jpg')
+                imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
 
