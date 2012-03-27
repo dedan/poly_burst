@@ -84,7 +84,7 @@ class PaintingFeedback(VisionEggFeedback):
 
         self.prepareTarget()
         self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
-        for burst_index in range(len(self.polygonPool)):
+        for burst_index in range(nMaxPolies):
 
             # burst starts:
             self.send_parallel(marker.TRIAL_START)
@@ -97,7 +97,7 @@ class PaintingFeedback(VisionEggFeedback):
             self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
 
             l.debug("Building and presenting polygonal stimuli.")
-            self.runPoly(currentTargetPoly)
+            self.runPoly(burst_index)
 
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
@@ -143,7 +143,7 @@ class PaintingFeedback(VisionEggFeedback):
         s.run()
 
 
-    def runPoly(self, currentTargetPoly):
+    def runPoly(self, burst_index):
         """ performs the task of displaying the polygonal stimuli.
             This function creates the 'stimulus_sequence' and attaches to it
             the corresponding generator (which yields successive selections of
@@ -151,7 +151,7 @@ class PaintingFeedback(VisionEggFeedback):
             stimuli are target or not is left to this generator.
         """
         self.set_stimuli(self.manyPoly)
-        generator = self.preparePoly(currentTargetPoly)
+        generator = self.preparePoly(burst_index)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
         s.run()
@@ -197,7 +197,7 @@ class PaintingFeedback(VisionEggFeedback):
 
 
 
-    def preparePoly(self, currentTargetPoly):
+    def preparePoly(self, burst_index):
         """ generator for the polies stimulus
         """
         target_index = 0
@@ -224,7 +224,7 @@ class PaintingFeedback(VisionEggFeedback):
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = NONTARGET_BASE + self.stimNumber
-                self.preparePolyDecomp(currentTargetPoly)
+                self.preparePolyDecomp(burst_index)
                 self.colapsePolies()
                 yield
 
@@ -233,7 +233,7 @@ class PaintingFeedback(VisionEggFeedback):
                 yield
 
 
-    def preparePolyDecomp(self, currentTargetPoly):
+    def preparePolyDecomp(self, burst_index):
         """ modifies the list of polygons saved in the objects of the self.listOfPolies.
 
         self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty
@@ -249,11 +249,13 @@ class PaintingFeedback(VisionEggFeedback):
         currently varying stimulus is loaded).
         """
         if self.stimNumber == self.numTarget:
-            toDraw = currentTargetPoly
             target_decomposition = self.polygonPool[self.stimNumber-1]
-            self.bufferTrigger += POLYGON_BASE * target_decomposition.index(currentTargetPoly)
+            toDraw = target_decomposition[burst_index]
+            self.bufferTrigger += POLYGON_BASE * burst_index
         else:
-            random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1]))
+            random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1])-1)
+            print len(self.polygonPool), self.stimNumber-1
+            print len(self.polygonPool[self.stimNumber-1]), random_poly_index
             toDraw = self.polygonPool[self.stimNumber-1][random_poly_index]
             self.bufferTrigger += POLYGON_BASE * random_poly_index
 
