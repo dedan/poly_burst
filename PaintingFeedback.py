@@ -116,6 +116,7 @@ class PaintingFeedback(VisionEggFeedback):
 
             self.stimNumber = self.numTarget
             self.preparePolyDecomp(burst_index)
+            self.bufferTrigger=0
 
             if debug:
                 self.on_control_event({u'cl_output': self.numTarget})
