@@ -9,10 +9,8 @@ import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
-# from FeedbackBase.VisionEggFeedback import VisionEggFeedback
-# from lib import marker
-from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from pyff.lib import marker
+from FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
@@ -54,7 +52,7 @@ class PaintingFeedback(VisionEggFeedback):
         synchronization_poly = Poly(color = (0, 0, 0, 1.0),
                                     points = [(10, 10), (20, 10), (20, 20), (10, 20)],
                                     position = (0, 0),
-                                    size=(width, height))
+                                    size=(self.width, self.height))
         blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
                           points = [(-self.width, -self.height), (-self.width, self.height),
                                     (self.width, self.height), (self.width, -self.height)],
@@ -95,7 +93,7 @@ class PaintingFeedback(VisionEggFeedback):
         self.polygonPool = self.loadPolygonPool()
         self.prepare_target()
 
-        self.listOfPolies = [ManyPoly([], size=(width, height)) for ii in range(nMaxPolies)]
+        self.listOfPolies = [ManyPoly([], size=(self.width, self.height)) for ii in range(nMaxPolies)]
         for burst_index in range(nMaxPolies):
 
             # burst starts:

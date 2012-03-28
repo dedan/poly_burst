@@ -44,8 +44,8 @@ l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
 
-from pyff.FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from pyff.lib import marker
+from FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
@@ -235,7 +235,7 @@ class TrainingFeedback(VisionEggFeedback):
                          orientation = 0.0,
                          points = [(10, 10), (20, 10), (20, 20), (10, 20)],
                          position = (0, 0),
-                         size=(width, height)),
+                         size=(self.width, self.height)),
                     Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(-self.width, -self.height), (-self.width, self.height), (self.width, self.height), (self.width, -self.height)],
