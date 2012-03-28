@@ -39,7 +39,7 @@ import json
 import datetime
 from time import sleep
 import OpenGL.GLU as glu
-
+import pylab as plt
 import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
@@ -158,12 +158,6 @@ class TrainingFeedback(VisionEggFeedback):
         self.dictImgNames = self.loadImageList()
         self.polygonPool = self.loadPolygonPool()
 
-        # Initializing some variables before the loop:
-        self.flagRun = True
-        self.trialCount = 0
-        self.recentTargets = 0
-        self.stimQueue = []
-
         for burst_index in range(self.n_bursts):
 
             # burst starts:
@@ -176,13 +170,9 @@ class TrainingFeedback(VisionEggFeedback):
             l.debug("Building and presenting polygonal stimuli.")
             self.runPoly()
 
-
-            # Trial ends:
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
-
-        # Run ends:
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
 
@@ -220,7 +210,6 @@ class TrainingFeedback(VisionEggFeedback):
         """
 
         # Adding an image and the generator:
-        self.image = self.add_image_stimulus(position=(width/2, height/2), size=(width,height))
         generator = self.prepareImg()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [1., 5., 1.], pre_stimulus_function=self.triggerOp)
@@ -265,11 +254,17 @@ class TrainingFeedback(VisionEggFeedback):
 
         for w in range(3):
             if w==1:
-                self.prepareTarget();
-                self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
+                self.prepareTarget()
+                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                                                     size=(self.pic_w, self.pic_h-1))
+                self.imgPath = os.path.join(self.folderPath,
+                                            self.dictImgNames[self.numTarget],
+                                            'image.png')
                 self.image.set_file(self.imgPath)
             else:
                 self.bufferTrigger = 0
+                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                                                     size=(width,height))
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
@@ -295,6 +290,11 @@ class TrainingFeedback(VisionEggFeedback):
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
         self.bufferTrigger = TRIG_IMG + self.numTarget
+        target_image = plt.imread(os.path.join(self.folderPath,
+                                               self.dictImgNames[self.numTarget],
+                                               'image.png'))
+        self.pic_w = target_image.shape[1]
+        self.pic_h = target_image.shape[0]
 
 
     def preparePoly(self):
@@ -363,7 +363,7 @@ class TrainingFeedback(VisionEggFeedback):
             self.bufferTrigger += POLYGON_BASE * random_poly_index
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
-                rPol = H.resizePol(pol, h=height, w=width)
+                rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
                 p = Poly(color=rPol['color'],
                          orientation = 0.0,
                          points = rPol['points'],

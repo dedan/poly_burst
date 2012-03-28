@@ -5,6 +5,7 @@ import random as rnd
 import os
 import json
 import OpenGL.GLU as glu
+import pylab as plt
 import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
@@ -84,12 +85,7 @@ class PaintingFeedback(VisionEggFeedback):
         # Load image list and polygon pool:
         self.dictImgNames = self.loadImageList()
         self.polygonPool = self.loadPolygonPool()
-
-        # prepare the target
-        self.numNonTarget = range(1,len(self.dictImgNames)+1)
-        self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
-        l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
-        l.debug('NonTarget Images: ' + str(self.numNonTarget))
+        self.prepare_target()
 
         self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
         for burst_index in range(nMaxPolies):
@@ -160,7 +156,6 @@ class PaintingFeedback(VisionEggFeedback):
             neutrum grey background before and after it). The selection of which
             image is to be displayed is left to this generator.
         """
-        self.image = self.add_image_stimulus(position=(width/2, height/2), size=(width,height))
         generator = self.prepareImg()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [1., 5., 1.], pre_stimulus_function=self.triggerOp)
@@ -182,9 +177,9 @@ class PaintingFeedback(VisionEggFeedback):
 
     def run_display(self, correct, chosen):
         self.left_im = self.add_image_stimulus(position=(width/2-width/4, height/2),
-                                               size=(width/2,height/2))
+                                               size=(self.pic_w/2, (self.pic_h/2)-1 ))
         self.right_im = self.add_image_stimulus(position=(width/2+width/4, height/2),
-                                                size=(width/2,height/2))
+                                               size=(self.pic_w/2, (self.pic_h/2)-1 ))
         generator = self.prepare_display(correct, chosen)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [5.], pre_stimulus_function=self.triggerOp)
@@ -215,10 +210,14 @@ class PaintingFeedback(VisionEggFeedback):
         """
         for w in range(3):
             if w==1:
+                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                                                     size=(self.pic_w, self.pic_h-1))
                 self.bufferTrigger = TRIG_IMG + self.numTarget
                 self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
+                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                                                     size=(width, height))
                 self.bufferTrigger = 0
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
@@ -288,7 +287,7 @@ class PaintingFeedback(VisionEggFeedback):
         newPolyList = [];
         for pol in toDraw:
             # Load and resize:
-            rPol = H.resizePol(pol, h=height, w=width)
+            rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
             p = Poly(color=rPol['color'],
                      orientation = 0.0,
                      points = rPol['points'],
@@ -298,6 +297,21 @@ class PaintingFeedback(VisionEggFeedback):
 
         # Set the list of polies into the target object:
         self.currentMp.listPoly = newPolyList
+
+
+    def prepare_target(self):
+        """chose target and non-target stimuli"""
+        self.numNonTarget = range(1,len(self.dictImgNames)+1)
+        self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
+        l.debug('Target Image: ' + str(self.numTarget) +
+                'Name: ' + self.dictImgNames[self.numTarget])
+        l.debug('NonTarget Images: ' + str(self.numNonTarget))
+        target_image = plt.imread(os.path.join(self.folderPath,
+                                               self.dictImgNames[self.numTarget],
+                                               'image.png'))
+        self.pic_w = target_image.shape[1]
+        self.pic_h = target_image.shape[0]
+
 
     def colapsePolies(self, blank=False):
         """collapses the polygon decomposition loaded in the list of ManyPoly objects
