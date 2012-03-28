@@ -227,12 +227,14 @@ class TrainingFeedback(VisionEggFeedback):
         listPoly = [Poly(color = (0, 0, 0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                         position = (0, 0)),
+                         position = (0, 0), 
+                         size=(width, height)),
                     Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(-width, -height), (-width, height), (width, height), (width, -height)],
-                         position = (width/2, height/2))]
-        target = ManyPoly(listPoly)
+                         position = (width/2, height/2), 
+                         size=(width, height))]
+        target = ManyPoly(listPoly, size=(width, height))
         # Setting the polygons as stimuli and adding the corresponding generator:
         self.manyPoly = target
         self.set_stimuli(target)
@@ -366,7 +368,7 @@ class TrainingFeedback(VisionEggFeedback):
                 p = Poly(color=rPol['color'],
                          orientation = 0.0,
                          points = rPol['points'],
-                         position = (width/2, height/2));
+                         position = (width/2, height/2), size=(width, height));
                 # Add to the list of polies to be displayed:
                 newPolyList += [p]
 

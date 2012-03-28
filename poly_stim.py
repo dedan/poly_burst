@@ -45,15 +45,17 @@ class Poly(VisionEgg.Core.Stimulus):
         }
 
 
-    def __init__(self,**kw):
+    def __init__(self, size, **kw):
         VisionEgg.Core.Stimulus.__init__(self,**kw)
         self._gave_alpha_warning = 0
+        self.size = size
 
 
     def draw(self):
         p = self.parameters # shorthand
 
-        width, height = 640, 480
+        width = self.size[0]
+        height = self.size[1]
 
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glPushMatrix()
@@ -95,12 +97,12 @@ class ManyPoly(Poly):
         constitute the image, or if many polygons are presented as a hint for a complex image.
     """
 
-    def __init__(self, listPoly, **kw):
+    def __init__(self, listPoly, size, **kw):
         """__init__ function for class ManyPoly overwrites Poly.__init__():
 
         """
-        Poly.__init__(self, **kw);
-        self.listPoly = listPoly;
+        Poly.__init__(self, size, **kw)
+        self.listPoly = listPoly
 
     def draw(self):
         """draw function overwrites Poly.draw():

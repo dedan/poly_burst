@@ -56,12 +56,14 @@ class PaintingFeedback(VisionEggFeedback):
         # add a blank and the synchronization polygon to the list of polygons
         synchronization_poly = Poly(color = (0, 0, 0, 1.0),
                                     points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                                    position = (0, 0))
+                                    position = (0, 0), 
+                                    size=(width, height))
         blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
                           points = [(-width, -height), (-width, height),
                                     (width, height), (width, -height)],
-                          position = (width/2, height/2))
-        self.manyPoly = ManyPoly([synchronization_poly, blank_poly])
+                          position = (width/2, height/2), 
+                          size=(width, height))
+        self.manyPoly = ManyPoly([synchronization_poly, blank_poly], size=(width, height))
 
         self.fullscreen = False
         self.geometry = [0, 0, width, height]
@@ -86,7 +88,7 @@ class PaintingFeedback(VisionEggFeedback):
         self.polygonPool = self.loadPolygonPool()
         self.prepare_target()
 
-        self.listOfPolies = [ManyPoly([]) for ii in range(nMaxPolies)]
+        self.listOfPolies = [ManyPoly([], size=(width, height)) for ii in range(nMaxPolies)]
         for burst_index in range(nMaxPolies):
 
             # burst starts:
@@ -298,7 +300,8 @@ class PaintingFeedback(VisionEggFeedback):
             p = Poly(color=rPol['color'],
                      orientation = 0.0,
                      points = rPol['points'],
-                     position = (width/2, height/2));
+                     position = (width/2, height/2), 
+                     size=(width, height));
             # Add to the list of polies to be displayed:
             newPolyList += [p]
 
