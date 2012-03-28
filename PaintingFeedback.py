@@ -180,6 +180,14 @@ class PaintingFeedback(VisionEggFeedback):
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
         self.right_im = self.add_image_stimulus(position=(width/2+width/4, height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
+        self.add_text_stimulus('correct stimulus',
+                                position=(width/4, ((height + self.pic_h)/2)+20),
+                                color=(0, 0, 0),
+                                font_size=16)
+        self.add_text_stimulus('chosen by classifier',
+                                position=(3*width/4, ((height + self.pic_h)/2)+20),
+                                color=(0, 0, 0),
+                                font_size=16)
         generator = self.prepare_display(correct, chosen)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [5.], pre_stimulus_function=self.triggerOp)
