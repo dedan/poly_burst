@@ -39,7 +39,6 @@ import json
 import datetime
 from time import sleep
 import OpenGL.GLU as glu
-import pylab as plt
 import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
@@ -290,11 +289,11 @@ class TrainingFeedback(VisionEggFeedback):
         l.debug('Target Image: ' + str(self.numTarget) + 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
         self.bufferTrigger = TRIG_IMG + self.numTarget
-        target_image = plt.imread(os.path.join(self.folderPath,
+        info = json.load(open(os.path.join(self.folderPath,
                                                self.dictImgNames[self.numTarget],
-                                               'image.png'))
-        self.pic_w = target_image.shape[1]
-        self.pic_h = target_image.shape[0]
+                                               'info.json')))
+        self.pic_w = info['size'][0]
+        self.pic_h = info['size'][1]
 
 
     def preparePoly(self):

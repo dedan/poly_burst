@@ -164,6 +164,12 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     drawing.evaluate()
     drawing.surface.write_to_png(path.join(tmp_out, 'final.png'))
 
+    logging.info('write info file to: %s' % decomp_path)
+    info = {"size": (drawing.w, drawing.h)}
+    json.dump(info,
+              open(path.join(tmp_out, 'info.json'), 'w'),
+              indent=2)
+
     logging.info('writing single polygons to: %s' % decomp_path)
     sorted_polies = drawing.get_sorted_polies(write_to_disk=decomp_path)
     for poly in sorted_polies:
