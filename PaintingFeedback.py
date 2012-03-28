@@ -18,9 +18,6 @@ import helper as H
 
 debug = True
 
-width = 640;
-height = 480;
-
 TRIG_IMG = 200
 TARGET_BASE = 100
 NONTARGET_BASE = 0
@@ -56,19 +53,29 @@ class PaintingFeedback(VisionEggFeedback):
         # add a blank and the synchronization polygon to the list of polygons
         synchronization_poly = Poly(color = (0, 0, 0, 1.0),
                                     points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                                    position = (0, 0), 
+                                    position = (0, 0),
                                     size=(width, height))
         blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
-                          points = [(-width, -height), (-width, height),
-                                    (width, height), (width, -height)],
-                          position = (width/2, height/2), 
-                          size=(width, height))
-        self.manyPoly = ManyPoly([synchronization_poly, blank_poly], size=(width, height))
+                          points = [(-self.width, -self.height), (-self.width, self.height),
+                                    (self.width, self.height), (self.width, -self.height)],
+                          position = (self.width/2, self.height/2),
+                          size=(self.width, self.height))
+        self.manyPoly = ManyPoly([synchronization_poly, blank_poly], size=(self.width, self.height))
 
         self.fullscreen = False
-        self.geometry = [0, 0, width, height]
+        self.geometry = [0, 0, 640, 480]
         l.debug("Feedback object created and initialized. ")
 
+    @property
+    def geometry(self):
+        """I'm the 'x' property."""
+        return self._geometry
+
+    @geometry.setter
+    def geometry(self, value):
+        self._geometry = value
+        self.width = value[2]
+        self.height = value[3]
 
     def run(self):
         """ This function implements the mainloop of this feedback.
@@ -177,16 +184,16 @@ class PaintingFeedback(VisionEggFeedback):
         s.run()
 
     def run_display(self, correct, chosen):
-        self.left_im = self.add_image_stimulus(position=(width/2-width/4, height/2),
+        self.left_im = self.add_image_stimulus(position=(self.width/2-self.width/4, self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
-        self.right_im = self.add_image_stimulus(position=(width/2+width/4, height/2),
+        self.right_im = self.add_image_stimulus(position=(self.width/2+self.width/4, self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
         self.add_text_stimulus('correct stimulus',
-                                position=(width/4, ((height + self.pic_h)/2)+20),
+                                position=(self.width/4, ((self.height + self.pic_h)/2)+20),
                                 color=(0, 0, 0),
                                 font_size=16)
         self.add_text_stimulus('chosen by classifier',
-                                position=(3*width/4, ((height + self.pic_h)/2)+20),
+                                position=(3*self.width/4, ((self.height + self.pic_h)/2)+20),
                                 color=(0, 0, 0),
                                 font_size=16)
         generator = self.prepare_display(correct, chosen)
@@ -219,14 +226,14 @@ class PaintingFeedback(VisionEggFeedback):
         """
         for w in range(3):
             if w==1:
-                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                      size=(self.pic_w, self.pic_h-1))
                 self.bufferTrigger = TRIG_IMG + self.numTarget
                 self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
-                self.image = self.add_image_stimulus(position=(width/2, height/2),
-                                                     size=(width, height))
+                self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                                     size=(self.width, self.height))
                 self.bufferTrigger = 0
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
@@ -300,8 +307,8 @@ class PaintingFeedback(VisionEggFeedback):
             p = Poly(color=rPol['color'],
                      orientation = 0.0,
                      points = rPol['points'],
-                     position = (width/2, height/2), 
-                     size=(width, height));
+                     position = (self.width/2, self.height/2),
+                     size=(self.width, self.height))
             # Add to the list of polies to be displayed:
             newPolyList += [p]
 

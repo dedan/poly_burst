@@ -49,9 +49,6 @@ from pyff.lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
-width = 640;
-height = 480;
-
 TRIG_IMG = 200
 TARGET_BASE = 100
 NONTARGET_BASE = 0
@@ -125,7 +122,7 @@ class TrainingFeedback(VisionEggFeedback):
             self.folderPath = data_path
 
         # Variables related to the stimuli:
-        self.n_groups = 2
+        self.n_groups = 10
         self.group_size = 6
         self.n_first_polies = 5
         self.n_bursts = 10
@@ -136,9 +133,19 @@ class TrainingFeedback(VisionEggFeedback):
 
         # after the super init I can overwrite one of the values set in there
         self.fullscreen = False
-        self.geometry = [0, 0, width, height]
+        self.geometry = [0, 0, 640, 480]
         l.debug("Feedback object created and initialized. ")
 
+    @property
+    def geometry(self):
+        """I'm the 'x' property."""
+        return self._geometry
+
+    @geometry.setter
+    def geometry(self, value):
+        self._geometry = value
+        self.width = value[2]
+        self.height = value[3]
 
     def run(self):
         """ This function implements the mainloop of this feedback.
@@ -227,14 +234,14 @@ class TrainingFeedback(VisionEggFeedback):
         listPoly = [Poly(color = (0, 0, 0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
                          points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                         position = (0, 0), 
+                         position = (0, 0),
                          size=(width, height)),
                     Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
                          orientation = 0.0,
-                         points = [(-width, -height), (-width, height), (width, height), (width, -height)],
-                         position = (width/2, height/2), 
-                         size=(width, height))]
-        target = ManyPoly(listPoly, size=(width, height))
+                         points = [(-self.width, -self.height), (-self.width, self.height), (self.width, self.height), (self.width, -self.height)],
+                         position = (self.width/2, self.height/2),
+                         size=(self.width, self.height))]
+        target = ManyPoly(listPoly, size=(self.width, self.height))
         # Setting the polygons as stimuli and adding the corresponding generator:
         self.manyPoly = target
         self.set_stimuli(target)
@@ -256,7 +263,7 @@ class TrainingFeedback(VisionEggFeedback):
         for w in range(3):
             if w==1:
                 self.prepareTarget()
-                self.image = self.add_image_stimulus(position=(width/2, height/2),
+                self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                      size=(self.pic_w, self.pic_h-1))
                 self.imgPath = os.path.join(self.folderPath,
                                             self.dictImgNames[self.numTarget],
@@ -264,8 +271,8 @@ class TrainingFeedback(VisionEggFeedback):
                 self.image.set_file(self.imgPath)
             else:
                 self.bufferTrigger = 0
-                self.image = self.add_image_stimulus(position=(width/2, height/2),
-                                                     size=(width,height))
+                self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                                     size=(self.width,self.height))
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
@@ -368,7 +375,7 @@ class TrainingFeedback(VisionEggFeedback):
                 p = Poly(color=rPol['color'],
                          orientation = 0.0,
                          points = rPol['points'],
-                         position = (width/2, height/2), size=(width, height));
+                         position = (self.width/2, self.height/2), size=(self.width, self.height));
                 # Add to the list of polies to be displayed:
                 newPolyList += [p]
 
