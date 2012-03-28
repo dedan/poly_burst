@@ -42,8 +42,8 @@ class PaintingFeedback(VisionEggFeedback):
         self.group_size = 6
         self.n_first_polies = 5
         self.n_bursts = 10
-        self.SOA = 300
-        self.ISI = 100
+        self.SOA = 0.3
+        self.ISI = 0.1
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0

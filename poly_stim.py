@@ -30,6 +30,7 @@ class Poly(VisionEgg.Core.Stimulus):
         'color':((1.0,1.0,1.0),
                  ve_types.AnyOf(ve_types.Sequence3(ve_types.Real),
                                 ve_types.Sequence4(ve_types.Real))),
+        'size': ((0., 0.), ve_types.Sequence2(ve_types.Real)),
         'orientation':(180.0,
                        ve_types.Real),
         'position' : ((0., 0.),
