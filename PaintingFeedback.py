@@ -42,6 +42,8 @@ class PaintingFeedback(VisionEggFeedback):
         self.group_size = 6
         self.n_first_polies = 5
         self.n_bursts = 10
+        self.SOA = 300
+        self.ISI = 100
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
@@ -178,7 +180,9 @@ class PaintingFeedback(VisionEggFeedback):
         self.set_stimuli(self.manyPoly)
         generator = self.preparePoly(burst_index)
         # Creating and running a stimulus sequence:
-        s = self.stimulus_sequence(generator, [0.33, 0.1], pre_stimulus_function=self.triggerOp)
+        s = self.stimulus_sequence(generator,
+                                   [self.SOA - self.ISI, self.ISI],
+                                   pre_stimulus_function=self.triggerOp)
         s.run()
 
     def run_display(self, correct, chosen):
