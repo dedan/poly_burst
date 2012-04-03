@@ -21,7 +21,8 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
     """ Base Class for our feedbacks
 
     Variables:
-        folderPath: indicate the path to the data folders
+        data_path: indicate the path to the data folders
+            ==> has to be set after initialization
         numTarget: which picture has been chosen as target
         numNonTarget: list of the non-target indeces
         bufferTrigger: this funny buffer is included to correct for some delay
@@ -41,16 +42,14 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             May refer to canvas and have been also inherited from superer classes.
     """
 
-    def __init__(self, data_path=None, **kw):
+    def __init__(self, **kw):
         """ initilization common for all our feedbacks
 
-        * set path to the data
         * initialize a blank polygon for blank screen presentation
         * initialize a polygon to draw in the corner for trigger synchronization
         """
 
         super(ImageCreatorFeedbackBase, self).__init__(**kw)
-        self.folderPath = data_path
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
@@ -84,13 +83,24 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         self.width = value[2]
         self.height = value[3]
 
+    @property
+    def data_path(self):
+        return self._data_path
+
+    @data_path.setter
+    def data_path(self, value):
+        l.info('loading data from: %s' % value)
+        self._data_path = value
+        self.dictImgNames = self.loadImageList()
+        self.polygonPool = self.loadPolygonPool()
+        l.info('loading finished')
 
     def loadImageList(self):
         """This function loads an ordered list with the names of the different
             pictures into a dictionary which maps the names of the different
             .png files alphabetically into numbers.
         """
-        listFiles = os.listdir(self.folderPath)
+        listFiles = os.listdir(self.data_path)
         listNames = [f for f in listFiles if f != 'README.txt' and f != '.DS_Store']
         nListNames = range(1,len(listNames)+1)
         dictImgNames = dict(zip(nListNames, listNames))
@@ -102,7 +112,7 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         """
         polyList = []
         for imgName in self.dictImgNames.values():
-            with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
+            with open(os.path.join(self.data_path, imgName, 'polies_.json'), 'r') as f:
                 polyList.append(list(reversed(json.load(f))))
         return polyList
 

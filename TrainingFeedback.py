@@ -48,13 +48,13 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
     """
 
 
-    def __init__(self, data_path=None, **kw):
+    def __init__(self, **kw):
         """sets up the current path from which the feedback operates
         (this path depends on from where the script is called and must be provided!).
         It also modifies some settings about the screen and initializes some
         internal variables of the object.
         """
-        super(TrainingFeedback, self).__init__(data_path=data_path, **kw)
+        super(TrainingFeedback, self).__init__(**kw)
 
         # Variables related to the stimuli:
         self.n_groups = 10
@@ -116,7 +116,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
                 self.prepareTarget()
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                      size=(self.pic_w, self.pic_h-1))
-                self.imgPath = os.path.join(self.folderPath,
+                self.imgPath = os.path.join(self.data_path,
                                             self.dictImgNames[self.numTarget],
                                             'image.png')
                 self.image.set_file(self.imgPath)
@@ -150,7 +150,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
                 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
         self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
-        info = json.load(open(os.path.join(self.folderPath,
+        info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
                                                'info.json')))
         self.pic_w = info['size'][0]
@@ -238,8 +238,9 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = '/Users/dedan/projects/bci/out1/260312_225755/'
-    a = TrainingFeedback(data_path=data_path)
+    data_path = '/Users/dedan/projects/bci/out1/270312_185758/'
+    a = TrainingFeedback()
+    a.data_path = data_path
     a.on_init()
     a.on_play()
 
