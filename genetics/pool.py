@@ -13,7 +13,7 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%m-%d %H:%M')
 
 
-def create_random_poly(width, height, n_points, local):
+def create_random_poly(width, height, n_points, local, alpha_mutations):
     """create a random polygon in the given range
 
         width, height -- size of the image in which the polygons reside
@@ -33,7 +33,10 @@ def create_random_poly(width, height, n_points, local):
             x = min(width, max(0, points[0][0] + randint(local*width)))
             y = min(height, max(0, points[0][1] + randint(local*height)))
             points.append((x,y))
-    color = (random(), random(), random(), uniform(0.3, 0.6))
+    if alpha_mutations:
+        color = (random(), random(), random(), uniform(0.3, 0.6))
+    else:
+        color = (random(), random(), random(), 1)
     return {"points": points, "color": color}
 
 def to_numpy(surf):
@@ -82,7 +85,8 @@ class Drawing(object):
             self.polies.append(create_random_poly(self.w,
                                                   self.h,
                                                   conf['min_poly_points'],
-                                                  conf['locality']))
+                                                  conf['locality'],
+                                                  conf['alpha_mutations']))
 
     def __getstate__(self):
         result = self.__dict__.copy()
@@ -109,7 +113,8 @@ class Drawing(object):
                 poly = create_random_poly(self.w,
                                           self.h,
                                           self.conf['min_poly_points'],
-                                          self.conf['locality'])
+                                          self.conf['locality'],
+                                          self.conf['alpha_mutations'])
                 self.polies.insert(rand_idx, poly)
 
         # remove polygons
@@ -156,7 +161,10 @@ class Drawing(object):
                         move = normal(0, self.conf['color_std'])
                         tmp[i] = min(1, max(0, poly['color'][i] + move))
                     move = normal(0, self.conf['color_std'])
-                    tmp[3] = min(0.6, max(0.3, poly['color'][3] + move))
+                    if self.conf['alpha_mutations']:
+                        tmp[3] = min(0.6, max(0.3, poly['color'][3] + move))
+                    else:
+                        tmp[3] = 1
                     poly['color'] = tuple(tmp)
 
     def evaluate(self):
