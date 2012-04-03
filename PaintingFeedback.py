@@ -299,9 +299,8 @@ class PaintingFeedback(VisionEggFeedback):
             toDraw = target_decomposition[burst_index]
             self.bufferTrigger += POLYGON_BASE * burst_index
         else:
-            random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1])-1)
-            toDraw = self.polygonPool[self.stimNumber-1][random_poly_index]
-            self.bufferTrigger += POLYGON_BASE * random_poly_index
+            toDraw = self.polygonPool[self.stimNumber-1][burst_index]
+            self.bufferTrigger += POLYGON_BASE * burst_index
 
         newPolyList = [];
         for pol in toDraw:
