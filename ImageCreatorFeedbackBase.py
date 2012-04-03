@@ -9,6 +9,9 @@ l.basicConfig(level=l.DEBUG,
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
 
+# TRIG_IMG, TARGET_BASE, NONTARGET_BASE, POLYGON_BASE are constants
+# which are used to encode target or non-target and the corresponding
+# polygon in the Triggers send to the EEG.
 TRIG_IMG = 200
 TARGET_BASE = 100
 NONTARGET_BASE = 0

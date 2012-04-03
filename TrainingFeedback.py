@@ -17,10 +17,6 @@
     The aim of this TrainingFeedback is to find a good working point in which
     the subject still recognizes a great fraction of the targets, but such
     that the targets are abstract enough.
-
-    TRIG_IMG, TARGET_BASE, NONTARGET_BASE, POLYGON_BASE are constants
-    which are used to encode target or non-target and the corresponding
-    polygon in the Triggers send to the EEG.
 """
 
 import random as rnd
@@ -38,15 +34,10 @@ from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
-from ImageCreatorFeedbackBase import ImageCreatorFeedbackBase
-
-TRIG_IMG = 200
-TARGET_BASE = 100
-NONTARGET_BASE = 0
-POLYGON_BASE = 10
+import ImageCreatorFeedbackBase as icfb
 
 
-class TrainingFeedback(ImageCreatorFeedbackBase):
+class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
     """TrainingFeedback class inherits VissionEggFeedback:
 
         This feedback class combines the presentation of images and polygons
@@ -154,7 +145,7 @@ class TrainingFeedback(ImageCreatorFeedbackBase):
         l.debug('Target Image: ' + str(self.numTarget) +
                 'Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
-        self.bufferTrigger = TRIG_IMG + self.numTarget
+        self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
         info = json.load(open(os.path.join(self.folderPath,
                                                self.dictImgNames[self.numTarget],
                                                'info.json')))
@@ -193,7 +184,7 @@ class TrainingFeedback(ImageCreatorFeedbackBase):
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
-                    self.bufferTrigger = TARGET_BASE + self.stimNumber
+                    self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
                     # don't present the same non-target twice in a row
                     tmp = rnd.choice(self.numNonTarget)
@@ -201,7 +192,7 @@ class TrainingFeedback(ImageCreatorFeedbackBase):
                         tmp = rnd.choice(self.numNonTarget)
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s selected for display. ", self.stimNumber)
-                    self.bufferTrigger = NONTARGET_BASE + self.stimNumber
+                    self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp()
                 yield
 
@@ -225,7 +216,7 @@ class TrainingFeedback(ImageCreatorFeedbackBase):
 
             random_poly_index = rnd.randint(0, min(self.n_first_polies,
                                                    len(self.polygonPool[self.stimNumber-1])))
-            self.bufferTrigger += POLYGON_BASE * random_poly_index
+            self.bufferTrigger += icfb.POLYGON_BASE * random_poly_index
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
                 rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)

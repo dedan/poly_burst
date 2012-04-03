@@ -10,21 +10,15 @@ l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
-from ImageCreatorFeedbackBase import ImageCreatorFeedbackBase
+import ImageCreatorFeedbackBase as icfb
 from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 
 debug = True
-
-TRIG_IMG = 200
-TARGET_BASE = 100
-NONTARGET_BASE = 0
-POLYGON_BASE = 10
-
 nMaxPolies = 10
 
-class PaintingFeedback(ImageCreatorFeedbackBase):
+class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
     """
     """
 
@@ -154,7 +148,7 @@ class PaintingFeedback(ImageCreatorFeedbackBase):
             if w==1:
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                      size=(self.pic_w, self.pic_h-1))
-                self.bufferTrigger = TRIG_IMG + self.numTarget
+                self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
                 self.imgPath = os.path.join(self.folderPath,
                                             self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
@@ -185,7 +179,7 @@ class PaintingFeedback(ImageCreatorFeedbackBase):
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
-                    self.bufferTrigger = TARGET_BASE + self.stimNumber
+                    self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
                     # don't present the same non-target twice in a row
                     tmp = rnd.choice(self.numNonTarget)
@@ -193,7 +187,7 @@ class PaintingFeedback(ImageCreatorFeedbackBase):
                         tmp = rnd.choice(self.numNonTarget)
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
-                    self.bufferTrigger = NONTARGET_BASE + self.stimNumber
+                    self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp(burst_index)
                 self.colapsePolies()
                 yield
@@ -221,10 +215,10 @@ class PaintingFeedback(ImageCreatorFeedbackBase):
         if self.stimNumber == self.numTarget:
             target_decomposition = self.polygonPool[self.stimNumber-1]
             toDraw = target_decomposition[burst_index]
-            self.bufferTrigger += POLYGON_BASE * burst_index
+            self.bufferTrigger += icfb.POLYGON_BASE * burst_index
         else:
             toDraw = self.polygonPool[self.stimNumber-1][burst_index]
-            self.bufferTrigger += POLYGON_BASE * burst_index
+            self.bufferTrigger += icfb.POLYGON_BASE * burst_index
 
         newPolyList = [];
         for pol in toDraw:
