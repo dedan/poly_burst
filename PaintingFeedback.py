@@ -33,8 +33,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         # Variables related to the stimuli:
         self.n_groups = 10
         self.group_size = 6
-        self.n_first_polies = 5
         self.n_bursts = 10
+        self.n_objects = 5
         self.SOA = 0.3
         self.ISI = 0.1
         l.debug("Painting Feedback object created and initialized. ")
@@ -49,44 +49,42 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
+        for object_index in range(self.n_objects):
 
-        self.send_parallel(marker.RUN_START)
-        l.debug("TRIGGER %s" % str(marker.RUN_START))
+            self.send_parallel(marker.RUN_START)
+            l.debug("TRIGGER %s" % str(marker.RUN_START))
 
-        self.prepare_target()
+            self.prepare_target()
 
-        self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
-                              for ii in range(nMaxPolies)]
-        for burst_index in range(nMaxPolies):
+            self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
+                                  for ii in range(nMaxPolies)]
+            for burst_index in range(nMaxPolies):
 
-            # burst starts:
-            self.send_parallel(marker.TRIAL_START)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_START))
-            l.debug("Selecting and presenting target image.")
-            self.runImg()
-            currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
-            self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
-            l.debug("Building and presenting polygonal stimuli.")
-            self.runPoly(burst_index)
-            self.send_parallel(marker.TRIAL_END)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_END))
+                # burst starts:
+                self.send_parallel(marker.TRIAL_START)
+                l.debug("TRIGGER %s" % str(marker.TRIAL_START))
+                l.debug("Selecting and presenting target image.")
+                self.runImg()
+                currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
+                self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
+                l.debug("Building and presenting polygonal stimuli.")
+                self.runPoly(burst_index)
+                self.send_parallel(marker.TRIAL_END)
+                l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
-            self.stimNumber = self.numTarget
-            self.preparePolyDecomp(burst_index)
-            self.bufferTrigger=0
+                self.stimNumber = self.numTarget
+                self.preparePolyDecomp(burst_index)
+                self.bufferTrigger=0
 
-            if debug:
-                self.on_control_event({u'cl_output': self.numTarget})
-            while not self.cl_output:
-                time.sleep(1)
-            self.run_display(burst_index, self.cl_output)
-            self.cl_output = None
+                if debug:
+                    self.on_control_event({u'cl_output': self.numTarget})
+                while not self.cl_output:
+                    time.sleep(1)
+                self.run_display(burst_index, self.cl_output)
+                self.cl_output = None
 
-        self.send_parallel(marker.RUN_END)
-        l.debug("TRIGGER %s" % str(marker.RUN_END))
+            self.send_parallel(marker.RUN_END)
+            l.debug("TRIGGER %s" % str(marker.RUN_END))
 
 
     def runPoly(self, burst_index):
