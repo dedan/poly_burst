@@ -151,7 +151,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         for w in range(3):
             if w==1:
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
-                                                     size=(self.pic_w, self.pic_h-1))
+                                                     size=(self.pic_w-1, self.pic_h-1))
                 self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
                 self.imgPath = os.path.join(self.data_path,
                                             self.dictImgNames[self.numTarget], 'image.png')
@@ -250,8 +250,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
                                                'info.json')))
-        self.pic_w = info['size'][0]
-        self.pic_h = info['size'][1]
+        self.pic_w = 2*info['size'][0]
+        self.pic_h = 2*info['size'][1]
 
 
     def colapsePolies(self, blank=False):

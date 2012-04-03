@@ -115,7 +115,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
             if w==1:
                 self.prepareTarget()
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
-                                                     size=(self.pic_w, self.pic_h-1))
+                                                     size=(self.pic_w-1, self.pic_h-1))
                 self.imgPath = os.path.join(self.data_path,
                                             self.dictImgNames[self.numTarget],
                                             'image.png')
@@ -123,7 +123,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
             else:
                 self.bufferTrigger = 0
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
-                                                     size=(self.width,self.height))
+                                                     size=(self.width-1,self.height-1))
                 imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
                 self.image.set_file(imgPath)
             yield
@@ -153,8 +153,8 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
                                                'info.json')))
-        self.pic_w = info['size'][0]
-        self.pic_h = info['size'][1]
+        self.pic_w = 2*info['size'][0]
+        self.pic_h = 2*info['size'][1]
 
 
     def preparePoly(self):
