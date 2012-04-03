@@ -19,15 +19,17 @@ end
 global TODAY_DIR
 acq_makeDataFolder;
 
+RUN_END= 255;
 
 %% Define some variables
 clear bbci_default
 bbci_default.source.acquire_fcn= @bbci_acquire_bv;
 bbci_default.source.acquire_param= {struct('fs', 100)};
 bbci_default.log.output= 'screen&file';
-bbci_default.control.fcn= @bbci_control_ImageCreator;
+bbci_default.log.classifier= 1;
+%bbci_default.control.fcn= @bbci_control_ImageCreator;
 bbci_default.feedback.receiver = 'pyff';
-bbci_default.quit_condition.marker= [255];
+bbci_default.quit_condition.marker= RUN_END;
 
 BC= [];
 BC.folder= TODAY_DIR;
@@ -35,8 +37,10 @@ BC.read_param= {'fs',100};
 BC.marker_fcn= @mrk_defineClasses;
 BC.marker_param= {{[101:200], [1:100]; 'target', 'nontarget'}};
 BC.save.file= 'bbci_classifier_ImageCreator';
-BC.fcn= @bbci_calibrate_ERP_Speller; 		% receive classification result after the whole burst
-% BC.fcn= @bbci_calibrate_ERP_Speller_binary  % receive classification after each stimulus
+BC.fcn= @bbci_calibrate_ERP_Speller;
+BC.settings= struct('nClasses', 6, ...
+                    'nSequences', 10, ...
+                    'cue_markers', cat(2, BC.marker_param{1}{1,:}));
 BC.save.figures=1;
 
 bbci= struct('calibrate', BC);
@@ -48,3 +52,4 @@ VP_SCREEN= [0 0 screen_pos(3:4)];
 bvr_sendcommand('viewsignals');
 
 fprintf(['run_' session_name '\n']);
+
