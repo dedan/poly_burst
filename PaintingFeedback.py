@@ -10,6 +10,7 @@ l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
             datefmt='%Y-%m-%d %H:%M:%S');
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
+from ImageCreatorFeedbackBase import ImageCreatorFeedbackBase
 from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
@@ -23,7 +24,7 @@ POLYGON_BASE = 10
 
 nMaxPolies = 10
 
-class PaintingFeedback(VisionEggFeedback):
+class PaintingFeedback(ImageCreatorFeedbackBase):
     """
     """
 
@@ -33,9 +34,7 @@ class PaintingFeedback(VisionEggFeedback):
         It also modifies some settings about the screen and initializes some
         internal variables of the object.
         """
-
-        VisionEggFeedback.__init__(self, **kw)
-        self.folderPath = data_path
+        super(PaintingFeedback, self).__init__(data_path=data_path, **kw)
 
         # Variables related to the stimuli:
         self.n_groups = 2
@@ -44,38 +43,8 @@ class PaintingFeedback(VisionEggFeedback):
         self.n_bursts = 10
         self.SOA = 0.3
         self.ISI = 0.1
+        l.debug("Painting Feedback object created and initialized. ")
 
-        # numTarget is a number between 0 (no target selected) and the number of images.
-        self.numTarget = 0
-        self.bufferTrigger = 0
-        self.cl_output = None
-
-        # add a blank and the synchronization polygon to the list of polygons
-        synchronization_poly = Poly(color = (0, 0, 0, 1.0),
-                                    points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                                    position = (0, 0),
-                                    size=(self.width, self.height))
-        blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
-                          points = [(-self.width, -self.height), (-self.width, self.height),
-                                    (self.width, self.height), (self.width, -self.height)],
-                          position = (self.width/2, self.height/2),
-                          size=(self.width, self.height))
-        self.manyPoly = ManyPoly([synchronization_poly, blank_poly], size=(self.width, self.height))
-
-        self.fullscreen = False
-        self.geometry = [0, 0, 640, 480]
-        l.debug("Feedback object created and initialized. ")
-
-    @property
-    def geometry(self):
-        """I'm the 'x' property."""
-        return self._geometry
-
-    @geometry.setter
-    def geometry(self, value):
-        self._geometry = value
-        self.width = value[2]
-        self.height = value[3]
 
     def run(self):
         """ This function implements the mainloop of this feedback.
@@ -86,31 +55,24 @@ class PaintingFeedback(VisionEggFeedback):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
-        # Run starts:
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
 
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
         self.prepare_target()
 
-        self.listOfPolies = [ManyPoly([], size=(self.width, self.height)) for ii in range(nMaxPolies)]
+        self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
+                              for ii in range(nMaxPolies)]
         for burst_index in range(nMaxPolies):
 
             # burst starts:
             self.send_parallel(marker.TRIAL_START)
             l.debug("TRIGGER %s" % str(marker.TRIAL_START))
-
             l.debug("Selecting and presenting target image.")
             self.runImg()
-
             currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
             self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
-
             l.debug("Building and presenting polygonal stimuli.")
             self.runPoly(burst_index)
-
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
@@ -120,55 +82,13 @@ class PaintingFeedback(VisionEggFeedback):
 
             if debug:
                 self.on_control_event({u'cl_output': self.numTarget})
-
             while not self.cl_output:
                 time.sleep(1)
-
             self.run_display(burst_index, self.cl_output)
             self.cl_output = None
 
-
-
-
-
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
-
-
-    def loadImageList(self):
-        """This function loads an ordered list with the names of the different
-            pictures into a dictionary which maps the names of the different
-            .png files alphabetically into numbers.
-        """
-        listFiles = os.listdir(self.folderPath)
-        listNames = [f for f in listFiles if f != 'README.txt' and f != '.DS_Store']
-        nListNames = range(1,len(listNames)+1)
-        dictImgNames = dict(zip(nListNames, listNames))
-        return dictImgNames
-
-
-    def loadPolygonPool(self):
-        """load the polygon decompositions stored in the corresponding files.
-        """
-        polyList = []
-        for imgName in self.dictImgNames.values():
-            with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
-                polyList.append(list(reversed(json.load(f))))
-        return polyList
-
-
-    def runImg(self):
-        """performs the task of displaying a random image.
-
-            This function creates the 'stimulus_sequence' and attaches to it
-            the corresponding generator (which yields a random image with some
-            neutrum grey background before and after it). The selection of which
-            image is to be displayed is left to this generator.
-        """
-        generator = self.prepareImg()
-        # Creating and running a stimulus sequence:
-        s = self.stimulus_sequence(generator, [1., 5., 1.], pre_stimulus_function=self.triggerOp)
-        s.run()
 
 
     def runPoly(self, burst_index):
@@ -187,9 +107,11 @@ class PaintingFeedback(VisionEggFeedback):
         s.run()
 
     def run_display(self, correct, chosen):
-        self.left_im = self.add_image_stimulus(position=(self.width/2-self.width/4, self.height/2),
+        self.left_im = self.add_image_stimulus(position=(self.width/2-self.width/4,
+                                                         self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
-        self.right_im = self.add_image_stimulus(position=(self.width/2+self.width/4, self.height/2),
+        self.right_im = self.add_image_stimulus(position=(self.width/2+self.width/4,
+                                                          self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
         self.add_text_stimulus('correct stimulus',
                                 position=(self.width/4, ((self.height + self.pic_h)/2)+20),
@@ -221,7 +143,8 @@ class PaintingFeedback(VisionEggFeedback):
 
 
     def prepareImg(self):
-        """ generator yields when the setting for a new image to be presented have been prepared.
+        """ generator yields when the setting for a new image to be presented
+            have been prepared.
 
             It just selects whether to display the target image or a neutrum
             background. The selection of the target image is left to the
@@ -232,7 +155,8 @@ class PaintingFeedback(VisionEggFeedback):
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                      size=(self.pic_w, self.pic_h-1))
                 self.bufferTrigger = TRIG_IMG + self.numTarget
-                self.imgPath = os.path.join(self.folderPath, self.dictImgNames[self.numTarget], 'image.png')
+                self.imgPath = os.path.join(self.folderPath,
+                                            self.dictImgNames[self.numTarget], 'image.png')
                 self.image.set_file(self.imgPath)
             else:
                 self.image = self.add_image_stimulus(position=(self.width/2, self.height/2),
@@ -345,33 +269,6 @@ class PaintingFeedback(VisionEggFeedback):
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
 
-
-
-    def triggerOp(self):
-        """ send information via parallel port before stimulus presentation
-
-            The generators which yield the corresponding images and polygons
-            operate with a lot of delay with respect to the stimulus presentation.
-            Luckily, the objects 'stimuli_sequence' allow to call a function just
-            before each stimulus is presented. This is the function called by the
-            stimuli of this feedback. Since this function is called right before
-            each stimulus is presented, this is used to send the information to
-            the parallel port. The information which is sent depends on each stimulus,
-            which is chosen by the corresponding generator (sending to parallel port
-            from generator implies a huge delay). The info which is to be displayed
-            will be stored in a buffer list 'self.bufferTrigger' and the
-            evalActivity(self, stim_ID, activity) elements will be sent one after
-            the other by this function.
-        """
-        self.send_parallel(self.bufferTrigger);
-        l.debug("TRIGGER %d" % self.bufferTrigger);
-
-    def on_control_event(self, data):
-        """get feedback from the classifier"""
-        self.logger.info("[CONTROL_EVENT] %s" % str(data))
-        if data.has_key(u'cl_output'):
-            # classification output was sent:
-            self.cl_output = data[u'cl_output']
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")

@@ -38,6 +38,7 @@ from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
+from ImageCreatorFeedbackBase import ImageCreatorFeedbackBase
 
 TRIG_IMG = 200
 TARGET_BASE = 100
@@ -45,7 +46,7 @@ NONTARGET_BASE = 0
 POLYGON_BASE = 10
 
 
-class TrainingFeedback(VisionEggFeedback):
+class TrainingFeedback(ImageCreatorFeedbackBase):
     """TrainingFeedback class inherits VissionEggFeedback:
 
         This feedback class combines the presentation of images and polygons
@@ -53,25 +54,6 @@ class TrainingFeedback(VisionEggFeedback):
         is inspired in the VisionEgg1 and poly_feedback, so some settings come
         directly from there and no further explanation about them is knwon.
         When this is the case, it is indicated.
-
-    Variables:
-        folderPath: indicate the path to the data folders
-        numTarget: which picture has been chosen as target
-        numNonTarget: list of the non-target indeces
-        bufferTrigger: this funny buffer is included to correct for some delay
-            between the stimulus selection and stimulus onset. The next stimulus
-            to be presented is already chosen before the previous one has been
-            withdrawn from the canvas. Conveying a message in that moment to
-            the parallel port would lead to huge and perhaps varying delays.
-            A function is used which is called just before each stimulus presentation.
-            For this function to be apropiate, it must be very quick and it is
-            handy to have ready all the info which will be conveyed. This is the
-            info stored in bufferTrigger, which is just the ID of the stimulus which
-            will be displayed.
-        polygonPool: list with lists, each one containing the polygonal decomposition
-            of one of the pictures. all file reading is done in the init.
-        fullscreen, geometry: variables inherited from poly_feedback (author Stephan).
-            May refer to canvas and have been also inherited from superer classes.
     """
 
 
@@ -81,14 +63,7 @@ class TrainingFeedback(VisionEggFeedback):
         It also modifies some settings about the screen and initializes some
         internal variables of the object.
         """
-
-        VisionEggFeedback.__init__(self, **kw)
-
-        # Setting up folder paths:
-        if not data_path:
-            self.folderPath = os.path.join(os.path.dirname(__file__), 'data')
-        else:
-            self.folderPath = data_path
+        super(TrainingFeedback, self).__init__(data_path=data_path, **kw)
 
         # Variables related to the stimuli:
         self.n_groups = 10
@@ -97,49 +72,24 @@ class TrainingFeedback(VisionEggFeedback):
         self.n_bursts = 10
         self.SOA = 0.3
         self.ISI = 0.1
+        l.debug("Training Feedback object created and initialized. ")
 
-        # numTarget is a number between 0 (no target selected) and the number of images.
-        self.numTarget = 0
-        self.bufferTrigger = 0
-
-        # after the super init I can overwrite one of the values set in there
-        self.fullscreen = False
-        self.geometry = [0, 0, 640, 480]
-        l.debug("Feedback object created and initialized. ")
-
-    @property
-    def geometry(self):
-        return self._geometry
-
-    @geometry.setter
-    def geometry(self, value):
-        self._geometry = value
-        self.width = value[2]
-        self.height = value[3]
 
     def run(self):
         """ mainloop of this feedback """
 
-        # Run starts:
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
-
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
 
         for burst_index in range(self.n_bursts):
 
             # burst starts:
             self.send_parallel(marker.TRIAL_START)
             l.debug("TRIGGER %s" % str(marker.TRIAL_START))
-
             l.debug("Selecting and presenting target image.")
             self.runImg()
-
             l.debug("Building and presenting polygonal stimuli.")
             self.runPoly()
-
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
@@ -147,66 +97,14 @@ class TrainingFeedback(VisionEggFeedback):
         l.debug("TRIGGER %s" % str(marker.RUN_END))
 
 
-    def loadImageList(self):
-        """This function loads an ordered list with the names of the different
-            pictures into a dictionary which maps the names of the different
-            .png files alphabetically into numbers.
-        """
-        listFiles = os.listdir(self.folderPath)
-        listNames = [f for f in listFiles if f != 'README.txt']
-        nListNames = range(1,len(listNames)+1)
-        dictImgNames = dict(zip(nListNames, listNames))
-        return dictImgNames
-
-
-    def loadPolygonPool(self):
-        """load the polygon decompositions stored in the corresponding files.
-        """
-        polyList = []
-        for imgName in self.dictImgNames.values():
-            with open(os.path.join(self.folderPath, imgName, 'polies_.json'), 'r') as f:
-                newPolyDecomp = json.load(f)
-            polyList += [newPolyDecomp]
-        return polyList
-
-
-    def runImg(self):
-        """ display an image selected by the prepareImg generator """
-
-        # Adding an image and the generator:
-        generator = self.prepareImg()
-        # Creating and running a stimulus sequence:
-        s = self.stimulus_sequence(generator, [1., 5., 1.], pre_stimulus_function=self.triggerOp)
-        s.run()
-
-
     def runPoly(self):
         """ display a polygon selected by the preparePoly generator """
-
-        # Creating ManyPoly objects to load the different polygons to be displayed:
-        listPoly = [Poly(color = (0, 0, 0, 1.0), # Set the target color (RGBA) black
-                         orientation = 0.0,
-                         points = [(10, 10), (20, 10), (20, 20), (10, 20)],
-                         position = (0, 0),
-                         size=(self.width, self.height)),
-                    Poly(color = (1.0, 1.0, 1.0, 1.0), # Set the target color (RGBA) black
-                         orientation = 0.0,
-                         points = [(-self.width, -self.height),
-                                   (-self.width, self.height),
-                                   (self.width, self.height),
-                                   (self.width, -self.height)],
-                         position = (self.width/2, self.height/2),
-                         size=(self.width, self.height))]
-        target = ManyPoly(listPoly, size=(self.width, self.height))
-        # Setting the polygons as stimuli and adding the corresponding generator:
-        self.manyPoly = target
-        self.set_stimuli(target)
+        self.set_stimuli(self.manyPoly)
         generator = self.preparePoly()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator,
                                    [self.SOA - self.ISI, self.ISI],
                                    pre_stimulus_function=self.triggerOp)
-        # Start the stimulus sequence
         s.run()
 
 
@@ -334,32 +232,13 @@ class TrainingFeedback(VisionEggFeedback):
                 p = Poly(color=rPol['color'],
                          orientation = 0.0,
                          points = rPol['points'],
-                         position = (self.width/2, self.height/2), size=(self.width, self.height));
+                         position = (self.width/2, self.height/2),
+                                     size=(self.width, self.height));
                 # Add to the list of polies to be displayed:
                 newPolyList += [p]
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
-
-
-    def triggerOp(self):
-        """ send information via parallel port before stimulus presentation
-
-            The generators which yield the corresponding images and polygons
-            operate with a lot of delay with respect to the stimulus presentation.
-            Luckily, the objects 'stimuli_sequence' allow to call a function just
-            before each stimulus is presented. This is the function called by the
-            stimuli of this feedback. Since this function is called right before
-            each stimulus is presented, this is used to send the information to
-            the parallel port. The information which is sent depends on each stimulus,
-            which is chosen by the corresponding generator (sending to parallel port
-            from generator implies a huge delay). The info which is to be displayed
-            will be stored in a buffer list 'self.bufferTrigger' and the
-            evalActivity(self, stim_ID, activity) elements will be sent one after
-            the other by this function.
-        """
-        self.send_parallel(self.bufferTrigger);
-        l.debug("TRIGGER %d" % self.bufferTrigger);
 
 
 if __name__=='__main__':
