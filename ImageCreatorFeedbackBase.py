@@ -101,7 +101,8 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             .png files alphabetically into numbers.
         """
         listFiles = os.listdir(self.data_path)
-        listNames = [f for f in listFiles if f != 'README.txt' and f != '.DS_Store']
+        exclude_files = ['.DS_Store', 'conf.json', 'README.txt']
+        listNames = [f for f in listFiles if f not in exclude_files]
         nListNames = range(1,len(listNames)+1)
         dictImgNames = dict(zip(nListNames, listNames))
         return dictImgNames

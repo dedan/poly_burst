@@ -144,7 +144,8 @@ def transDecomp(namesPath):
     """
 
     namesList = sub.os.listdir(namesPath)
-    namesList = [name for name in namesList if name != 'README.txt' and name != '.DS_Store']
+    exclude_files = ['.DS_Store', 'conf.json', 'README.txt']
+    namesList = [name for name in namesList if not name in exclude_files]
 
     for imgName in namesList:
         imgPath = os.path.join(namesPath, imgName)

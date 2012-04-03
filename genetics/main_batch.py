@@ -109,6 +109,10 @@ c_time = 0
 timestamp = time.strftime("%d%m%y_%H%M%S", time.localtime())
 outfolder = path.join(conf['outfolder'], timestamp)
 os.mkdir(outfolder)
+json.dump(conf,
+          open(path.join(outfolder, 'conf.json'), 'w'),
+          indent=2)
+
 
 for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
 
@@ -156,9 +160,6 @@ for image_file in glob.glob(path.join(conf['infolder'], '*.png')):
     plt.plot(np.diff(drawing.selections))
     plt.savefig(path.join(tmp_out, 'plot.png'))
     shutil.copyfile(image_file, path.join(tmp_out, 'image.png'))
-    json.dump(drawing.conf,
-              open(path.join(tmp_out, 'conf.json'), 'w'),
-              indent=2)
     pickle.dump(drawing,
                 open(path.join(tmp_out, 'drawing.pckl'), 'w'))
     drawing.evaluate()
