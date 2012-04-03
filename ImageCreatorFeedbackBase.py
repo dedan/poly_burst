@@ -58,10 +58,10 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
 
         # add a blank and the synchronization polygon to the list of polygons
         synchronization_poly = Poly(color = (0, 0, 0, 1.0),
-                                    points = [(-self.width/2 + 10, -self.height/2 + 10),
-                                              (-self.width/2 + 20, -self.height/2 + 10),
+                                    points = [(-self.width/2 + 10, -self.height/2 + 20),
                                               (-self.width/2 + 20, -self.height/2 + 20),
-                                              (-self.width/2 + 10, -self.height/2 + 20)],
+                                              (-self.width/2 + 20, -self.height/2 + 30),
+                                              (-self.width/2 + 10, -self.height/2 + 30)],
                                     position = (0, 0),
                                     size=(self.width, self.height))
         blank_poly = Poly(color = (1.0, 1.0, 1.0, 1.0),
