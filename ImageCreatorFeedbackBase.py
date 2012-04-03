@@ -35,7 +35,8 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             info stored in bufferTrigger, which is just the ID of the stimulus which
             will be displayed.
         polygonPool: list with lists, each one containing the polygonal decomposition
-            of one of the pictures. all file reading is done in the init.
+            of one of the pictures. has to be loaded later because correct data_path
+            is probably not known in the init
         fullscreen, geometry: variables inherited from poly_feedback (author Stephan).
             May refer to canvas and have been also inherited from superer classes.
     """
@@ -68,10 +69,6 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
                           size=(self.width, self.height))
         self.manyPoly = ManyPoly([synchronization_poly, blank_poly],
                                  size=(self.width, self.height))
-
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
 
         self.fullscreen = False
         self.geometry = [0, 0, 640, 480]

@@ -49,6 +49,10 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
+        # Load image list and polygon pool:
+        self.dictImgNames = self.loadImageList()
+        self.polygonPool = self.loadPolygonPool()
+
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
 
