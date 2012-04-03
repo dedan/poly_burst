@@ -33,7 +33,6 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         # Variables related to the stimuli:
         self.n_groups = 10
         self.group_size = 6
-        self.n_first_polies = 5
         self.n_bursts = 10
         self.SOA = 0.3
         self.ISI = 0.1
@@ -49,10 +48,6 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
-
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
 
