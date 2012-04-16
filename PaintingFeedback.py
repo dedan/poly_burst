@@ -49,29 +49,24 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             of the recognition task (i.e. the similarity between the
             original image and the polygonal stimuli).
         """
+        self.send_parallel(marker.RUN_START)
+        l.debug("TRIGGER %s" % str(marker.RUN_START))
+
         for object_index in range(self.n_objects):
 
-            self.send_parallel(marker.RUN_START)
-            l.debug("TRIGGER %s" % str(marker.RUN_START))
-
+            self.send_parallel(marker.TRIAL_START)
+            l.debug("TRIGGER %s" % str(marker.TRIAL_START))
             self.prepare_target()
-
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
                                   for ii in range(nMaxPolies)]
             for burst_index in range(nMaxPolies):
 
-                # burst starts:
-                self.send_parallel(marker.TRIAL_START)
-                l.debug("TRIGGER %s" % str(marker.TRIAL_START))
                 l.debug("Selecting and presenting target image.")
                 self.runImg()
                 currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
                 self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
                 l.debug("Building and presenting polygonal stimuli.")
                 self.runPoly(burst_index)
-                self.send_parallel(marker.TRIAL_END)
-                l.debug("TRIGGER %s" % str(marker.TRIAL_END))
-
                 self.stimNumber = self.numTarget
                 self.preparePolyDecomp(burst_index)
                 self.bufferTrigger=0
@@ -83,8 +78,11 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 self.run_display(burst_index, self.cl_output)
                 self.cl_output = None
 
-            self.send_parallel(marker.RUN_END)
-            l.debug("TRIGGER %s" % str(marker.RUN_END))
+            self.send_parallel(marker.TRIAL_END)
+            l.debug("TRIGGER %s" % str(marker.TRIAL_END))
+
+        self.send_parallel(marker.RUN_END)
+        l.debug("TRIGGER %s" % str(marker.RUN_END))
 
 
     def runPoly(self, burst_index):
