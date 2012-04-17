@@ -213,11 +213,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         mp is the element of self.listOfPolies which is being modified (i.e. where the
         currently varying stimulus is loaded).
         """
-        if self.stimNumber == self.numTarget:
-            target_decomposition = self.polygonPool[self.stimNumber-1]
-            toDraw = target_decomposition[polyIndex[self.stimNumber]]
-        else:
-            toDraw = self.polygonPool[self.stimNumber-1][polyIndex[self.stimNumber]]
+        
+        toDraw = self.polygonPool[self.stimNumber-1][polyIndex[self.stimNumber]]
 
         newPolyList = [];
         for pol in toDraw:
