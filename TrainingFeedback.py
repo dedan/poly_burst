@@ -165,12 +165,8 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
             (which is the object eventually displayed) is made by the function
             'self.preparePolyDecomp()', which is called from here.
             This function also stores the value of the trigger corresponding
-            to the current stimulus into two different queues: one queue to
-            prepare the trigger which is actually sent just before stimulus
-            presentation by 'self.triggerOP()', and another queue were the
-            values of the successive presented stimuli are stored until the
-            classifier calls the function 'self.evalActivity()'. Further info
-            about 'self.evalActivity' can be found in the corresponding function.
+            to the current stimulus so it can be sent to the classifier via 
+            self.triggerOP(). 
         """
 
         target_index = 0
@@ -220,7 +216,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
 
             random_poly_index = rnd.randint(0, min(self.n_first_polies,
                                                    len(self.polygonPool[self.stimNumber-1])))
-            self.bufferTrigger += icfb.POLYGON_BASE * random_poly_index
+            l.debug("Polygon %s selected for display. ", random_poly_index)
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
                 rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
