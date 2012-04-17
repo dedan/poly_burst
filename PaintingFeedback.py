@@ -59,7 +59,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             self.prepare_target()
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
                                   for ii in range(nMaxPolies)]
-            for burst_index in range(nMaxPolies):
+            for burst_index in range(len(self.polygonPool[self.numTarget-1])):
 
                 l.debug("Selecting and presenting target image.")
                 self.runImg()
@@ -68,14 +68,14 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 l.debug("Building and presenting polygonal stimuli.")
                 self.runPoly(burst_index)
                 self.stimNumber = self.numTarget
-                self.preparePolyDecomp(burst_index)
+                self.preparePolyDecomp(self.polyIndex)
                 self.bufferTrigger=0
 
                 if debug:
-                    self.on_control_event({u'cl_output': self.numTarget})
+                    self.on_control_event({u'cl_output': rnd.randint(1,6)})
                 while not self.cl_output:
                     time.sleep(1)
-                self.run_display(burst_index, self.cl_output)
+                self.run_display(self.cl_output, self.polyIndex)
                 self.cl_output = None
 
             self.send_parallel(marker.TRIAL_END)
@@ -100,7 +100,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                    pre_stimulus_function=self.triggerOp)
         s.run()
 
-    def run_display(self, correct, chosen):
+    def run_display(self, chosen, polyIndex):
         self.left_im = self.add_image_stimulus(position=(self.width/2-self.width/4,
                                                          self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
@@ -115,20 +115,20 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                 position=(3*self.width/4, ((self.height + self.pic_h)/2)+20),
                                 color=(0, 0, 0),
                                 font_size=16)
-        generator = self.prepare_display(correct, chosen)
+        generator = self.prepare_display(chosen, polyIndex)
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [5.], pre_stimulus_function=self.triggerOp)
         s.run()
 
-    def prepare_display(self, correct, chosen):
+    def prepare_display(self, chosen, polyIndex):
         correct_folder = self.dictImgNames[self.numTarget]
-        correct_string = 'only' + str(correct) + '.png'
+        correct_string = 'only' + str(polyIndex[self.numTarget]) + '.png'
         self.left_im.set_file(os.path.join(self.data_path,
                                            correct_folder,
                                            'decomp',
                                            correct_string))
-        chosen_folder = self.dictImgNames[chosen % 10]
-        chosen_string = 'only' + str((chosen % 100) / 10) + '.png'
+        chosen_folder = self.dictImgNames[chosen%100]  
+        chosen_string = 'only' + str(polyIndex[chosen%100]) + '.png'
         self.right_im.set_file(os.path.join(self.data_path,
                                             chosen_folder,
                                             'decomp',
@@ -166,6 +166,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         target_index = 0
         self.stimNumber = -1
+        self.polyIndex = self.preparePolyIndex(burst_index); 
         for group_index in range(self.n_groups):
 
             # make sure target is not presented twice in a row
@@ -188,7 +189,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
-                self.preparePolyDecomp(burst_index)
+                self.preparePolyDecomp(self.polyIndex)
                 self.colapsePolies()
                 yield
 
@@ -197,7 +198,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 yield
 
 
-    def preparePolyDecomp(self, burst_index):
+    def preparePolyDecomp(self, polyIndex):
         """ modifies the list of polygons saved in the objects of the self.listOfPolies.
 
         self.listOfPolies is a list of ManyPoly objects. It is initialized with an empty
@@ -214,11 +215,9 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         if self.stimNumber == self.numTarget:
             target_decomposition = self.polygonPool[self.stimNumber-1]
-            toDraw = target_decomposition[burst_index]
-            self.bufferTrigger += icfb.POLYGON_BASE * burst_index
+            toDraw = target_decomposition[polyIndex[self.stimNumber]]
         else:
-            toDraw = self.polygonPool[self.stimNumber-1][burst_index]
-            self.bufferTrigger += icfb.POLYGON_BASE * burst_index
+            toDraw = self.polygonPool[self.stimNumber-1][polyIndex[self.stimNumber]]
 
         newPolyList = [];
         for pol in toDraw:
@@ -234,6 +233,30 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.currentMp.listPoly = newPolyList
+        
+    def preparePolyIndex(self, burst_index):
+        """chose number of polygon to be displayed when non-target is chosen: 
+        
+            As not all stimuli have got the same number of polygons, we can not 
+        any longer let burst_index select what polygon is to be displayed from 
+        each polygon decomposition. So, burst_index selects the polygon only if 
+        the target is presented. If we have to present non-target, a random 
+        polygon from the decomposition of non-target is selected. This selection 
+        must remain the same during a whole burst. 
+            This function choses a random polygon for each non-target and returns 
+        a list containing the indices of the chosen polygons, so that the proper 
+        polygon can be displayed when required. 
+        
+        """
+        
+        polyIndex = []
+        for num in self.numNonTarget: 
+            polyIndex += [rnd.randint(0, len(self.polygonPool[num-1])-1)]
+            l.debug("Polygon %s selected for display. ", polyIndex[-1])
+        polyIndex=dict(zip(self.numNonTarget, polyIndex))
+        polyIndex.update({self.numTarget:burst_index})
+        
+        return polyIndex; 
 
 
     def prepare_target(self):
