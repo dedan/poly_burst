@@ -57,7 +57,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             l.debug("TRIGGER %s" % str(marker.TRIAL_START))
             self.prepare_target()
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
-                                  for ii in range(len(self.polygonPool[self.numTarget]))]
+                                  for ii in range(len(self.polygonPool[self.numTarget-1]))]
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
 
                 l.debug("Selecting and presenting target image.")
