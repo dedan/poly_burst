@@ -16,7 +16,6 @@ from poly_stim import Poly, ManyPoly
 import helper as H
 
 debug = True
-nMaxPolies = 10
 
 class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
     """
@@ -58,7 +57,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             l.debug("TRIGGER %s" % str(marker.TRIAL_START))
             self.prepare_target()
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
-                                  for ii in range(nMaxPolies)]
+                                  for ii in range(len(self.polygonPool[self.numTarget]))]
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
 
                 l.debug("Selecting and presenting target image.")
