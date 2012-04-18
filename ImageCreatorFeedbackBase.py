@@ -95,7 +95,10 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         l.info('loading data from: %s' % value)
         self._data_path = value
         self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
+        if hasattr(self, 'prune'):
+            self.polygonPool = self.loadPolygonPool(prune=self.prune)
+        else:
+            self.polygonPool = self.loadPolygonPool()
         l.info('loading finished')
 
     def loadImageList(self):
@@ -111,13 +114,20 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         return dictImgNames
 
 
-    def loadPolygonPool(self):
+    def loadPolygonPool(self, prune=0):
         """load the polygon decompositions stored in the corresponding files.
         """
         polyList = []
         for imgName in self.dictImgNames.values():
             with open(os.path.join(self.data_path, imgName, 'polies_.json'), 'r') as f:
-                polyList.append(list(reversed(json.load(f))))
+                poly_list = list(reversed(json.load(f)))
+            ssum = sum([p['error'] for p in poly_list[0]])
+            len_before = len(poly_list)
+            poly_list = [p for p in poly_list if (p[0]['error'] / float(ssum)) > prune]
+            if prune:
+                n_pruned = len_before - len(poly_list)
+                l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
+            polyList.append(poly_list)
         return polyList
 
 

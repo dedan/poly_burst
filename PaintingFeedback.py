@@ -32,8 +32,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         # Variables related to the stimuli:
         self.n_groups = 10
         self.group_size = 6
-        self.n_bursts = 10
         self.n_objects = 5
+        self.prune = 0.05   # prune polygons with relative error less than this value
         self.SOA = 0.3
         self.ISI = 0.1
         l.debug("Painting Feedback object created and initialized. ")

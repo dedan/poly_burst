@@ -61,6 +61,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.group_size = 6
         self.n_first_polies = 5
         self.n_bursts = 10
+        self.prune = 0.05   # prune polygons with relative error less than this value
         self.SOA = 0.3
         self.ISI = 0.1
         l.debug("Training Feedback object created and initialized. ")
