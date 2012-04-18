@@ -121,13 +121,13 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
     def prepare_display(self, chosen, polyIndex):
         correct_folder = self.dictImgNames[self.numTarget]
-        correct_string = 'only' + str(polyIndex[self.numTarget]) + '.png'
+        correct_string = 'decomp_' + str(polyIndex[self.numTarget]) + '.png'
         self.left_im.set_file(os.path.join(self.data_path,
                                            correct_folder,
                                            'decomp',
                                            correct_string))
         chosen_folder = self.dictImgNames[chosen%100]  
-        chosen_string = 'only' + str(polyIndex[chosen%100]) + '.png'
+        chosen_string = 'decomp_' + str(polyIndex[chosen%100]) + '.png'
         self.right_im.set_file(os.path.join(self.data_path,
                                             chosen_folder,
                                             'decomp',

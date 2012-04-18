@@ -201,15 +201,8 @@ class Drawing(object):
             for i, idex in enumerate(reversed(idx)):
                 draw_poly(self.context, self.polies[idex], on_black=True)
                 val = self.polies[idex]['error'] / float(ssum)
-                self.context.select_font_face("Courier",
-                                              cairo.FONT_SLANT_NORMAL,
-                                              cairo.FONT_WEIGHT_NORMAL)
-                self.context.set_font_size(12)
-                self.context.set_source_rgb(0, 0, 0)
-                self.context.move_to(5, self.h - 20)
-                self.context.show_text("error: %.3f" % val)
-                self.surface.write_to_png(os.path.join(write_to_disk,
-                                          "only%d.png" % i))
+                fname = 'decomp_%d.png' % i
+                self.surface.write_to_png(os.path.join(write_to_disk, fname))
         for i, poly in enumerate(self.polies):
             poly['position'] = i
         return [self.polies[i] for i in idx]
