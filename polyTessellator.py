@@ -20,11 +20,12 @@ def toTriangle(filePath='./'):
     with open(os.path.join(filePath, 'polies.json')) as f:
         polygonsList = json.load(f)
 
-    colors, positions = [], []
+    colors, positions, errors = [], [], []
     for indPoly, poly in enumerate(polygonsList):
 
         colors.append(poly['color'])
         positions.append(poly['position'])
+        errors.append(poly['error'])
         points = poly['points']
 
         # Prepare file and write:
@@ -40,7 +41,7 @@ def toTriangle(filePath='./'):
                     a = len(points)
                 f.write(str(indPoint+1)+' '+str(a)+' '+str(b)+'\n')
             f.write('0\n')                                  # Number of holes (always 0)!
-    return colors, positions
+    return colors, positions, errors
 
 
 def toFeedbackSingle(polyName, polyPath='./'):
@@ -107,7 +108,7 @@ def toFeedbackSingle(polyName, polyPath='./'):
     return poliesList;
 
 
-def toFeedbackMany(colorsList, positions_list, polyPath='./'):
+def toFeedbackMany(colorsList, positions_list, errors_list, polyPath='./'):
     """toFeedbackMany function:
 
         This function calls toFeedbackSingle() to
@@ -125,7 +126,8 @@ def toFeedbackMany(colorsList, positions_list, polyPath='./'):
         for newPoints in toFeedbackSingle('poly'+str(indColor), polyPath=polyPath):
             newPoly.append({'color': newColor,
                             'points': newPoints,
-                            'position': positions_list[indColor]})
+                            'position': positions_list[indColor],
+                            'error': errors_list[indColor]})
         listPolies.append(newPoly)
     return listPolies
 
@@ -151,14 +153,14 @@ def transDecomp(namesPath):
         imgPath = os.path.join(namesPath, imgName)
 
         ## 1: produce the files for Triangle:
-        colors, positions = toTriangle(filePath=imgPath);
+        colors, positions, errors = toTriangle(filePath=imgPath);
 
         ## 2: call Triangle from python:
         for indColor, color in enumerate(colors):
             sub.call(["triangle", "-p", imgPath+'poly'+str(indColor)+'.poly'])
 
         ## 3: Back to Feedback Format, which includes a loop over the colors itself:
-        newPoliesList = toFeedbackMany(colors, positions, polyPath=imgPath)
+        newPoliesList = toFeedbackMany(colors, positions, errors, polyPath=imgPath)
         with open(os.path.join(imgPath, 'polies_.json'), 'w') as f:
             json.dump(newPoliesList, f)
 
