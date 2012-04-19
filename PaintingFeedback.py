@@ -191,7 +191,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         target_index = 0
         self.stimNumber = -1
-        self.polyIndex = self.preparePolyIndex(burst_index); 
+        self.polyIndex = self.preparePolyIndex(burst_index)
+        nonTargetToDisplay = self.prepareNonTargetToDisplay()
         for group_index in range(self.n_groups):
 
             # make sure target is not presented twice in a row
@@ -207,10 +208,9 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
-                    # don't present the same non-target twice in a row
-                    tmp = rnd.choice(self.numNonTarget)
-                    while tmp == self.stimNumber:
-                        tmp = rnd.choice(self.numNonTarget)
+                    # Choose a polygon to display from those not presented yet among the chosen ones. 
+                    tmp = rnd.choice(nonTargetToDisplayBuffer)
+                    nonTargetToDisplayBuffer.pop(nonTargetToDisplayBuffer.index(tmp))
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
