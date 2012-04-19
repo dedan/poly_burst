@@ -198,11 +198,14 @@ class Drawing(object):
         idx = np.argsort([p['error'] for p in self.polies])
         if write_to_disk:
             ssum = sum([p['error'] for p in self.polies])
+            errors = []
             for i, idex in enumerate(reversed(idx)):
                 draw_poly(self.context, self.polies[idex], on_black=True)
                 val = self.polies[idex]['error'] / float(ssum)
+                errors.append(val)
                 fname = 'decomp_%d.png' % i
                 self.surface.write_to_png(os.path.join(write_to_disk, fname))
+            json.dump(errors, open(os.path.join(write_to_disk, 'errors.json'), 'w'))
         for i, poly in enumerate(self.polies):
             poly['position'] = i
         return [self.polies[i] for i in idx]
