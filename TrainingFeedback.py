@@ -214,9 +214,9 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
         if not blank:
-
+            
             random_poly_index = rnd.randint(0, min(self.n_first_polies,
-                                                   len(self.polygonPool[self.stimNumber-1])))
+                                                   len(self.polygonPool[self.stimNumber-1])-1))
             l.debug("Polygon %s selected for display. ", random_poly_index)
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
