@@ -211,8 +211,11 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 else:
                     # Choose a polygon to display from those not presented yet among the chosen ones. 
                     tmp = rnd.choice(nonTargetToDisplayBuffer)
+<<<<<<< HEAD
                     while (tmp==self.stimNumber):
                         tmp = rnd.choice(nonTargetToDisplayBuffer)
+=======
+>>>>>>> 29d1aa67bc17d49f33140caf0bc6050b073caf53
                     nonTargetToDisplayBuffer.pop(nonTargetToDisplayBuffer.index(tmp))
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
