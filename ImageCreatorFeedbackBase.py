@@ -121,15 +121,15 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         for imgName in self.dictImgNames.values():
             with open(os.path.join(self.data_path, imgName, 'polies_.json'), 'r') as f:
                 poly_list = list(reversed(json.load(f)))
-            ssum = sum([p['error'] for p in poly_list[0]])
-            len_before = len(poly_list)
-            poly_list = [p for p in poly_list if (p[0]['error'] / float(ssum)) > prune]
-            # fix position values
-            if len(poly_list) > 1:
-                poly_list.sort(key=lambda val: val[0]['position'])
-            for i, p in enumerate(poly_list):
-                p[0]['position'] = i
             if prune:
+                ssum = sum([p['error'] for p in poly_list[0]])
+                len_before = len(poly_list)
+                poly_list = [p for p in poly_list if (p[0]['error'] / float(ssum)) > prune]
+                # fix position values
+                if len(poly_list) > 1:
+                    poly_list.sort(key=lambda val: val[0]['position'])
+                for i, p in enumerate(poly_list):
+                    p[0]['position'] = i
                 n_pruned = len_before - len(poly_list)
                 l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
                 l.debug('remaining %d polygons' % len(poly_list))

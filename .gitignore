@@ -6,3 +6,6 @@ log
 *~
 examples*
 *.png
+scratch.py
+.project
+.pydevproject
