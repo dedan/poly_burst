@@ -191,7 +191,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         target_index = 0
         self.stimNumber = -1
-        self.polyIndex = self.preparePolyIndex(burst_index); 
+        self.polyIndex = self.preparePolyIndex(burst_index)
+        nonTargetToDisplay = self.prepareNonTargetToDisplay()
         for group_index in range(self.n_groups):
 
             # make sure target is not presented twice in a row
@@ -199,7 +200,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 target_index = rnd.randint(1, self.group_size-1)
             else:
                 target_index = rnd.randint(0, self.group_size-1)
-
+                
+            nonTargetToDisplayBuffer = [elem for elem in nonTargetToDisplay]
             for stimulus_index in range(self.group_size):
 
                 if stimulus_index == target_index:
@@ -207,10 +209,11 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
-                    # don't present the same non-target twice in a row
-                    tmp = rnd.choice(self.numNonTarget)
-                    while tmp == self.stimNumber:
-                        tmp = rnd.choice(self.numNonTarget)
+                    # Choose a polygon to display from those not presented yet among the chosen ones. 
+                    tmp = rnd.choice(nonTargetToDisplayBuffer)
+                    while (tmp==self.stimNumber):
+                        tmp = rnd.choice(nonTargetToDisplayBuffer)
+                    nonTargetToDisplayBuffer.pop(nonTargetToDisplayBuffer.index(tmp))
                     self.stimNumber = tmp
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
@@ -279,6 +282,22 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         polyIndex.update({self.numTarget:burst_index})
         
         return polyIndex; 
+        
+    def prepareNonTargetToDisplay(self): 
+        """ 
+        
+            Selects self.group_size-1 non-target stimuli to display. 
+        
+        """
+        
+        nonTargetToDisplay = []
+        numNonTargetBuffer = [elem for elem in self.numNonTarget]
+        while (len(nonTargetToDisplay)!=self.group_size-1): 
+            temp = rnd.choice(numNonTargetBuffer)
+            numNonTargetBuffer.pop(numNonTargetBuffer.index(temp))
+            nonTargetToDisplay += [temp]
+        
+        return nonTargetToDisplay
 
 
     def prepare_target(self):
