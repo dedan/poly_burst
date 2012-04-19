@@ -152,7 +152,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                            correct_folder,
                                            'decomp',
                                            correct_string))
-        chosen_folder = self.dictImgNames[chosen%100]  
+        chosen_folder = self.dictImgNames[chosen%100]
         chosen_string = 'decomp_' + str(polyIndex[chosen%100]) + '.png'
         self.right_im.set_file(os.path.join(self.data_path,
                                             chosen_folder,
@@ -200,7 +200,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 target_index = rnd.randint(1, self.group_size-1)
             else:
                 target_index = rnd.randint(0, self.group_size-1)
-                
+
             nonTargetToDisplayBuffer = [elem for elem in nonTargetToDisplay]
             for stimulus_index in range(self.group_size):
 
@@ -209,7 +209,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                     l.debug("TARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
-                    # Choose a polygon to display from those not presented yet among the chosen ones. 
+                    # Choose a polygon to display from those not presented yet among the chosen ones.
                     tmp = rnd.choice(nonTargetToDisplayBuffer)
                     while (tmp==self.stimNumber):
                         tmp = rnd.choice(nonTargetToDisplayBuffer)
@@ -241,7 +241,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         mp is the element of self.listOfPolies which is being modified (i.e. where the
         currently varying stimulus is loaded).
         """
-        
+
         toDraw = self.polygonPool[self.stimNumber-1][polyIndex[self.stimNumber]]
 
         newPolyList = [];
@@ -258,45 +258,45 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.currentMp.listPoly = newPolyList
-        
+
     def preparePolyIndex(self, burst_index):
-        """chose number of polygon to be displayed when non-target is chosen: 
-        
-            As not all stimuli have got the same number of polygons, we can not 
-        any longer let burst_index select what polygon is to be displayed from 
-        each polygon decomposition. So, burst_index selects the polygon only if 
-        the target is presented. If we have to present non-target, a random 
-        polygon from the decomposition of non-target is selected. This selection 
-        must remain the same during a whole burst. 
-            This function choses a random polygon for each non-target and returns 
-        a list containing the indices of the chosen polygons, so that the proper 
-        polygon can be displayed when required. 
-        
+        """chose number of polygon to be displayed when non-target is chosen:
+
+            As not all stimuli have got the same number of polygons, we can not
+        any longer let burst_index select what polygon is to be displayed from
+        each polygon decomposition. So, burst_index selects the polygon only if
+        the target is presented. If we have to present non-target, a random
+        polygon from the decomposition of non-target is selected. This selection
+        must remain the same during a whole burst.
+            This function choses a random polygon for each non-target and returns
+        a list containing the indices of the chosen polygons, so that the proper
+        polygon can be displayed when required.
+
         """
-        
+
         polyIndex = []
-        for num in self.numNonTarget: 
+        for num in self.numNonTarget:
             polyIndex += [rnd.randint(0, len(self.polygonPool[num-1])-1)]
             l.debug("Polygon %s selected for display. ", polyIndex[-1])
         polyIndex=dict(zip(self.numNonTarget, polyIndex))
         polyIndex.update({self.numTarget:burst_index})
-        
-        return polyIndex; 
-        
-    def prepareNonTargetToDisplay(self): 
-        """ 
-        
-            Selects self.group_size-1 non-target stimuli to display. 
-        
+
+        return polyIndex;
+
+    def prepareNonTargetToDisplay(self):
         """
-        
+
+            Selects self.group_size-1 non-target stimuli to display.
+
+        """
+
         nonTargetToDisplay = []
         numNonTargetBuffer = [elem for elem in self.numNonTarget]
-        while (len(nonTargetToDisplay)!=self.group_size-1): 
+        while (len(nonTargetToDisplay)!=self.group_size-1):
             temp = rnd.choice(numNonTargetBuffer)
             numNonTargetBuffer.pop(numNonTargetBuffer.index(temp))
             nonTargetToDisplay += [temp]
-        
+
         return nonTargetToDisplay
 
 
@@ -305,7 +305,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         self.numNonTarget = range(1,len(self.dictImgNames)+1)
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) +
-                'Name: ' + self.dictImgNames[self.numTarget])
+                ' Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
         info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
