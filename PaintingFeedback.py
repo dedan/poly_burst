@@ -81,8 +81,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
-            self.run_text('relax, take a break and press space when ready again')
-            self.wait_for_spacekey()
+            self.runBreak()
+
 
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
@@ -326,11 +326,37 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
+        
+    def runBreak(self): 
+        """
+        
+            This function displays the reconstruction of the last element while the 
+        takes a break. 
+        
+        """
+        generator = self.prepareBreak()
+        # Creating and running a stimulus sequence:
+        s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
+        s.run()
+        self.wait_for_spacekey()
+        
+    def prepareBreak(self): 
+        self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                               size=(self.width, self.height ))
+        self.imgPath = os.path.join(self.data_path,
+                                            self.dictImgNames[self.numTarget], 'final.png')
+        self.final_im.set_file(self.imgPath)
+        self.add_text_stimulus('Relax, take a break and press space when ready again. ',
+                                position=(self.width/2, self.height/2),
+                                color=(0, 0, 0),
+                                font_size=32)
+#        self.run_text('relax, take a break and press space when ready again')
+        yield
 
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = '/Users/dedan/projects/bci/out1/270312_185758/'
+    data_path = './data/190412_104946/'
     a = PaintingFeedback()
     a.data_path = data_path
     a.on_init()
