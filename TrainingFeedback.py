@@ -148,7 +148,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.numNonTarget = range(1,len(self.dictImgNames)+1)
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
         l.debug('Target Image: ' + str(self.numTarget) +
-                'Name: ' + self.dictImgNames[self.numTarget])
+                ' Name: ' + self.dictImgNames[self.numTarget])
         l.debug('NonTarget Images: ' + str(self.numNonTarget))
         self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
         info = json.load(open(os.path.join(self.data_path,

@@ -124,9 +124,18 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             ssum = sum([p['error'] for p in poly_list[0]])
             len_before = len(poly_list)
             poly_list = [p for p in poly_list if (p[0]['error'] / float(ssum)) > prune]
+            # fix position values
+            if len(poly_list) > 1:
+                poly_list.sort(key=lambda val: val[0]['position'])
+            for i, p in enumerate(poly_list):
+                p[0]['position'] = i
             if prune:
                 n_pruned = len_before - len(poly_list)
                 l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
+                if hasattr(self, 'n_first_polies') and len(poly_list) < self.n_first_polies:
+                    l.error('remaining %d polygons' % len(poly_list))
+                    l.error('this is less than n_first_polies')
+                    raise ValueError('Decompostion has not enough polygons for pruning with: %.2f' % prune)
             polyList.append(poly_list)
         return polyList
 
