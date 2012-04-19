@@ -130,6 +130,11 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
                     poly_list.sort(key=lambda val: val[0]['position'])
                 for i, p in enumerate(poly_list):
                     p[0]['position'] = i
+
+                # and sort back according to error (needed for later n_first_polies selction)
+                if len(poly_list) > 1:
+                    poly_list.sort(key=lambda val: val[0]['error'], reverse=True)
+
                 n_pruned = len_before - len(poly_list)
                 l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
                 l.debug('remaining %d polygons' % len(poly_list))
