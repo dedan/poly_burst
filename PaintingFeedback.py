@@ -326,21 +326,21 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
-        
-    def runBreak(self): 
+
+    def runBreak(self):
         """
-        
-            This function displays the reconstruction of the last element while the 
-        takes a break. 
-        
+
+            This function displays the reconstruction of the last element while the
+        takes a break.
+
         """
         generator = self.prepareBreak()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
         s.run()
         self.wait_for_spacekey()
-        
-    def prepareBreak(self): 
+
+    def prepareBreak(self):
         self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                size=(self.width, self.height ))
         self.imgPath = os.path.join(self.data_path,
