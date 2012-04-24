@@ -23,7 +23,7 @@ import random as rnd
 import os
 import json
 import datetime
-from time import sleep
+from time import sleep, time
 import OpenGL.GLU as glu
 import logging as l
 l.basicConfig(level=l.DEBUG,
@@ -35,6 +35,7 @@ from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
 import ImageCreatorFeedbackBase as icfb
+import pygame
 
 
 class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
@@ -76,6 +77,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.send_parallel(marker.RUN_START)
         l.debug("TRIGGER %s" % str(marker.RUN_START))
 
+        startTime = time()
         for burst_index in range(self.n_bursts):
 
             # burst starts:
@@ -87,6 +89,10 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
             self.runPoly()
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
+            
+            if (time()-startTime>300): 
+                self.runBreak()
+                startTime = time()
 
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
@@ -229,11 +235,44 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
+        
+    def runBreak(self): 
+        """
+        
+            This function displays the reconstruction of the last element while the 
+        takes a break. 
+        
+        """
+        generator = self.prepareBreak()
+        # Creating and running a stimulus sequence:
+        s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
+        s.run()
+        self.wait_for_spacekey()
+        
+    def prepareBreak(self): 
+        self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                               size=(self.width, self.height))
+        self.imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
+        self.add_text_stimulus('Relax, take a break and press space when ready again. ',
+                                position=(self.width/2, self.height/2),
+                                color=(0, 0, 0),
+                                font_size=32)
+        yield
+        
+    def wait_for_spacekey(self):
+        """stay in a loop until spacekey is pressed"""
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.locals.KEYDOWN:
+                    if event.key == pygame.locals.K_SPACE:
+                        l.debug('space pressed')
+                        waiting = False
 
 
 if __name__=='__main__':
     l.debug("Feedback executed as __main__. ")
-    data_path = '/Users/dedan/projects/bci/out1/270312_185758/'
+    data_path = './data/190412_145725/'
     a = TrainingFeedback()
     a.data_path = data_path
     a.on_init()
