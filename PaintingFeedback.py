@@ -8,7 +8,7 @@ import OpenGL.GLU as glu
 import logging as l
 l.basicConfig(level=l.DEBUG,
             format='%(asctime)s %(levelname)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S');
+            datefmt='%Y-%m-%d %H:%M:%S')
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 import ImageCreatorFeedbackBase as icfb
 from lib import marker
@@ -60,12 +60,15 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             self.prepare_target()
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
+            self.listOfPolies_ = [ManyPoly([], size=(self.width, self.height))
+                                  for ii in range(len(self.polygonPool[self.numTarget-1]))]
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
 
                 l.debug("Selecting and presenting target image.")
                 self.runImg()
                 currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
                 self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
+                self.storePreviousPolies(burst_index)
                 l.debug("Building and presenting polygonal stimuli.")
                 self.runPoly(burst_index)
                 self.stimNumber = self.numTarget
@@ -126,6 +129,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         s.run()
 
     def run_display(self, chosen, polyIndex):
+        self.background = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                               size=(self.width, self.height))
         self.left_im = self.add_image_stimulus(position=(self.width/2-self.width/4,
                                                          self.height/2),
                                                size=(self.pic_w/2, (self.pic_h/2)-1 ))
@@ -146,6 +151,9 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         s.run()
 
     def prepare_display(self, chosen, polyIndex):
+        self.background.set_file(os.path.join(os.path.dirname(__file__), 
+                                    'data', 
+                                    'background.jpg'))
         correct_folder = self.dictImgNames[self.numTarget]
         correct_string = 'decomp_' + str(polyIndex[self.numTarget]) + '.png'
         self.left_im.set_file(os.path.join(self.data_path,
@@ -218,10 +226,10 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                     l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp(self.polyIndex)
-                self.colapsePolies()
+                self.collapsePolies()
                 yield
 
-                self.colapsePolies(blank=True)
+                self.collapsePolies(blank=True)
                 self.bufferTrigger = 0
                 yield
 
@@ -244,7 +252,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         toDraw = self.polygonPool[self.stimNumber-1][polyIndex[self.stimNumber]]
 
-        newPolyList = [];
+        newPolyList = []
         for pol in toDraw:
             # Load and resize:
             rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
@@ -281,7 +289,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         polyIndex=dict(zip(self.numNonTarget, polyIndex))
         polyIndex.update({self.numTarget:burst_index})
 
-        return polyIndex;
+        return polyIndex
 
     def prepareNonTargetToDisplay(self):
         """
@@ -312,16 +320,38 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                                'info.json')))
         self.pic_w = 2*info['size'][0]
         self.pic_h = 2*info['size'][1]
+        
+    def storePreviousPolies(self, burst_index): 
+        """stores into self.listOfPolies_ the polygons which were previously displayed. 
+        This is the only way to get the polygons displayed in the right order and yet do 
+        not interfere with the polygons which are being currently displayed. 
+        """
+        
+        for ii in range(burst_index):
+            currentTargetPoly = self.polygonPool[self.numTarget-1][ii]
+            pList_ = []
+            for pol in currentTargetPoly: 
+                rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
+                p = Poly(color=rPol['color'],
+                         orientation = 0.0,
+                         points = rPol['points'],
+                         position = (self.width/2, self.height/2),
+                                     size=(self.width, self.height))
+                pList_ += [p]
+            self.listOfPolies_[currentTargetPoly[0]['position']].listPoly = pList_
+        return
 
-
-    def colapsePolies(self, blank=False):
+    def collapsePolies(self, blank=False):
         """collapses the polygon decomposition loaded in the list of ManyPoly objects
         into the outPoly, which is the object eventually displayed.
         """
 
         newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
-        if not blank:
-            for MP in self.listOfPolies:
+        if blank: 
+            for MP in self.listOfPolies_: 
+                newPolyList += MP.listPoly
+        else:
+            for MP in self.listOfPolies: 
                 newPolyList += MP.listPoly
 
         # Set the list of polies into the target object:
