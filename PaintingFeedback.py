@@ -326,23 +326,27 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
-
-    def runBreak(self):
+        
+    def runBreak(self): 
         """
-
-            This function displays the reconstruction of the last element while the
-        takes a break.
-
+        
+            This function displays the reconstruction of the last element while the 
+        takes a break. 
+        
         """
         generator = self.prepareBreak()
         # Creating and running a stimulus sequence:
         s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
         s.run()
         self.wait_for_spacekey()
-
-    def prepareBreak(self):
+        
+    def prepareBreak(self): 
         self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
-                                               size=(self.width, self.height ))
+                                               size=(self.width, self.height))
+        self.imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
+        yield
+        self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
+                                               size=(self.pic_w-1, self.pic_h-1))
         self.imgPath = os.path.join(self.data_path,
                                             self.dictImgNames[self.numTarget], 'final.png')
         self.final_im.set_file(self.imgPath)
@@ -350,7 +354,6 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                 position=(self.width/2, self.height/2),
                                 color=(0, 0, 0),
                                 font_size=32)
-#        self.run_text('relax, take a break and press space when ready again')
         yield
 
 
