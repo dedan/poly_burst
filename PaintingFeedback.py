@@ -16,8 +16,6 @@ from poly_stim import Poly, ManyPoly
 import helper as H
 reload(icfb)
 
-debug = True
-
 class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
     """
     """
@@ -37,6 +35,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         self.prune = 0.05   # prune polygons with relative error less than this value
         self.SOA = 0.3
         self.ISI = 0.1
+        self.debug = True
         l.debug("Painting Feedback object created and initialized. ")
 
 
@@ -74,7 +73,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 self.preparePolyDecomp(self.polyIndex)
                 self.bufferTrigger=0
 
-                if debug:
+                if self.debug:
                     self.on_control_event({u'cl_output': rnd.randint(1,6)})
                 while not self.cl_output:
                     time.sleep(1)
