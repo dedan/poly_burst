@@ -140,8 +140,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         s.run()
 
     def prepare_display(self, chosen, polyIndex):
-        self.background.set_file(os.path.join(os.path.dirname(__file__), 
-                                    'data', 
+        self.background.set_file(os.path.join(os.path.dirname(__file__),
+                                    'data',
                                     'background.jpg'))
         correct_folder = self.dictImgNames[self.numTarget]
         correct_string = 'decomp_' + str(polyIndex[self.numTarget]) + '.png'
@@ -309,17 +309,17 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                                'info.json')))
         self.pic_w = 2*info['size'][0]
         self.pic_h = 2*info['size'][1]
-        
-    def storePreviousPolies(self, burst_index): 
-        """stores into self.listOfPolies_ the polygons which were previously displayed. 
-        This is the only way to get the polygons displayed in the right order and yet do 
-        not interfere with the polygons which are being currently displayed. 
+
+    def storePreviousPolies(self, burst_index):
+        """stores into self.listOfPolies_ the polygons which were previously displayed.
+        This is the only way to get the polygons displayed in the right order and yet do
+        not interfere with the polygons which are being currently displayed.
         """
-        
+
         for ii in range(burst_index):
             currentTargetPoly = self.polygonPool[self.numTarget-1][ii]
             pList_ = []
-            for pol in currentTargetPoly: 
+            for pol in currentTargetPoly:
                 rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
                 p = Poly(color=rPol['color'],
                          orientation = 0.0,
@@ -334,13 +334,12 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """collapses the polygon decomposition loaded in the list of ManyPoly objects
         into the outPoly, which is the object eventually displayed.
         """
-
         newPolyList = [self.manyPoly.listPoly[1], self.manyPoly.listPoly[0]]
-        if blank: 
-            for MP in self.listOfPolies_: 
+        if blank:
+            for MP in self.listOfPolies_:
                 newPolyList += MP.listPoly
         else:
-            for MP in self.listOfPolies: 
+            for MP in self.listOfPolies:
                 newPolyList += MP.listPoly
 
         # Set the list of polies into the target object:
