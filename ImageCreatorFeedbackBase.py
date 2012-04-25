@@ -2,10 +2,7 @@
 import os
 import json
 import OpenGL.GLU as glu
-import logging as l
-l.basicConfig(level=l.DEBUG,
-            format='%(asctime)s %(levelname)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S');
+import logging
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
 import pygame
@@ -52,6 +49,15 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
 
         super(ImageCreatorFeedbackBase, self).__init__(**kw)
 
+        # create logger
+        self.l = logging.getLogger('poly_burst')
+        ch = logging.StreamHandler()
+        self.formatter = logging.Formatter(fmt='%(asctime)s %(levelname)s: %(message)s',
+                                           datefmt='%Y-%m-%d %H:%M:%S')
+        ch.setFormatter(self.formatter)
+        self.l.addHandler(ch)
+        self.l.setLevel(logging.DEBUG)
+
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
         self.bufferTrigger = 0
@@ -75,7 +81,19 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
 
         self.fullscreen = False
         self.geometry = [0, 0, 640, 480]
-        l.debug("ImageCreatorFeedbackBase object created and initialized. ")
+        self.l.debug("ImageCreatorFeedbackBase object created and initialized. ")
+
+    @property
+    def debug_path(self):
+        return self._debug_path
+
+    @debug_path.setter
+    def debug_path(self, value):
+        print 'add logfi'
+        self.l.debug('add logfile handler')
+        hdlr = logging.FileHandler(value)
+        hdlr.setFormatter(self.formatter)
+        self.l.addHandler(hdlr)
 
     @property
     def geometry(self):
@@ -93,14 +111,14 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
 
     @data_path.setter
     def data_path(self, value):
-        l.info('loading data from: %s' % value)
+        self.l.info('loading data from: %s' % value)
         self._data_path = value
         self.dictImgNames = self.loadImageList()
         if hasattr(self, 'prune'):
             self.polygonPool = self.loadPolygonPool(prune=self.prune)
         else:
             self.polygonPool = self.loadPolygonPool()
-        l.info('loading finished')
+        self.l.info('loading finished')
 
     def loadImageList(self):
         """This function loads an ordered list with the names of the different
@@ -137,8 +155,8 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
                     poly_list.sort(key=lambda val: val[0]['error'], reverse=True)
 
                 n_pruned = len_before - len(poly_list)
-                l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
-                l.debug('remaining %d polygons' % len(poly_list))
+                self.l.info('pruned %d polygons because error smaller than: %.2f' % (n_pruned, prune))
+                self.l.debug('remaining %d polygons' % len(poly_list))
                 if hasattr(self, 'n_first_polies') and len(poly_list) < self.n_first_polies:
                     l.error('this is less than n_first_polies')
                     raise ValueError('Decompostion has not enough polygons for pruning with: %.2f' % prune)
@@ -178,7 +196,7 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             the other by this function.
         """
         self.send_parallel(self.bufferTrigger);
-        l.debug("TRIGGER %d" % self.bufferTrigger);
+        self.l.debug("TRIGGER %d" % self.bufferTrigger);
 
     def on_control_event(self, data):
         """get feedback from the classifier"""
@@ -194,6 +212,6 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             for event in pygame.event.get():
                 if event.type == pygame.locals.KEYDOWN:
                     if event.key == pygame.locals.K_SPACE:
-                        l.debug('space pressed')
+                        self.l.debug('space pressed')
                         waiting = False
 

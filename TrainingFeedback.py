@@ -25,11 +25,6 @@ import json
 import datetime
 from time import sleep, time
 import OpenGL.GLU as glu
-import logging as l
-l.basicConfig(level=l.DEBUG,
-            format='%(asctime)s %(levelname)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S');
-
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from lib import marker
 from poly_stim import Poly, ManyPoly
@@ -64,7 +59,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.SOA = 0.3
         self.ISI = 0.1
         self.training_interval = 300  # time in seconds before break
-        l.debug("Training Feedback object created and initialized. ")
+        self.l.debug("Training Feedback object created and initialized. ")
 
 
     def run(self):
@@ -75,27 +70,27 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.polygonPool = self.loadPolygonPool()
 
         self.send_parallel(marker.RUN_START)
-        l.debug("TRIGGER %s" % str(marker.RUN_START))
+        self.l.debug("TRIGGER %s" % str(marker.RUN_START))
 
         startTime = time()
         for burst_index in range(self.n_bursts):
 
             # burst starts:
             self.send_parallel(marker.TRIAL_START)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_START))
-            l.debug("Selecting and presenting target image.")
+            self.l.debug("TRIGGER %s" % str(marker.TRIAL_START))
+            self.l.debug("Selecting and presenting target image.")
             self.runImg()
-            l.debug("Building and presenting polygonal stimuli.")
+            self.l.debug("Building and presenting polygonal stimuli.")
             self.runPoly()
             self.send_parallel(marker.TRIAL_END)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_END))
+            self.l.debug("TRIGGER %s" % str(marker.TRIAL_END))
 
             if (time()-startTime>self.training_interval):
                 self.runBreak()
                 startTime = time()
 
         self.send_parallel(marker.RUN_END)
-        l.debug("TRIGGER %s" % str(marker.RUN_END))
+        self.l.debug("TRIGGER %s" % str(marker.RUN_END))
 
 
     def runPoly(self):
@@ -152,9 +147,9 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
 
         self.numNonTarget = range(1,len(self.dictImgNames)+1)
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
-        l.debug('Target Image: ' + str(self.numTarget) +
+        self.l.debug('Target Image: ' + str(self.numTarget) +
                 ' Name: ' + self.dictImgNames[self.numTarget])
-        l.debug('NonTarget Images: ' + str(self.numNonTarget))
+        self.l.debug('NonTarget Images: ' + str(self.numNonTarget))
         self.bufferTrigger = icfb.TRIG_IMG + self.numTarget
         info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
@@ -189,7 +184,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
 
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
-                    l.debug("TARGET %s selected for display. ", self.stimNumber)
+                    self.l.debug("TARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
                     # don't present the same non-target twice in a row
@@ -197,7 +192,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
                     while tmp == self.stimNumber:
                         tmp = rnd.choice(self.numNonTarget)
                     self.stimNumber = tmp
-                    l.debug("NONTARGET %s selected for display. ", self.stimNumber)
+                    self.l.debug("NONTARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp()
                 yield
@@ -221,7 +216,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         if not blank:
 
             random_poly_index = rnd.randint(0, len(self.polygonPool[self.stimNumber-1])-1)
-            l.debug("Polygon %s selected for display. ", random_poly_index)
+            self.l.debug("Polygon %s selected for display. ", random_poly_index)
             for pol in self.polygonPool[self.stimNumber-1][random_poly_index]:
                 # Load and resize:
                 rPol = H.resizePol(pol, w=self.pic_w, h=self.pic_h)
@@ -247,8 +242,8 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         yield
 
 if __name__=='__main__':
-    l.debug("Feedback executed as __main__. ")
     data_path = './data/190412_145725/'
+    print("Feedback executed as __main__. ")
     a = TrainingFeedback()
     a.data_path = data_path
     a.on_init()

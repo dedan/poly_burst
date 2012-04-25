@@ -5,10 +5,6 @@ import random as rnd
 import os
 import json
 import OpenGL.GLU as glu
-import logging as l
-l.basicConfig(level=l.DEBUG,
-            format='%(asctime)s %(levelname)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S')
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 import ImageCreatorFeedbackBase as icfb
 from lib import marker
@@ -36,7 +32,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         self.SOA = 0.3
         self.ISI = 0.1
         self.debug = True
-        l.debug("Painting Feedback object created and initialized. ")
+        self.l.debug("Painting Feedback object created and initialized. ")
 
 
     def run(self):
@@ -49,12 +45,12 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
             original image and the polygonal stimuli).
         """
         self.send_parallel(marker.RUN_START)
-        l.debug("TRIGGER %s" % str(marker.RUN_START))
+        self.l.debug("TRIGGER %s" % str(marker.RUN_START))
 
         for object_index in range(self.n_objects):
 
             self.send_parallel(marker.TRIAL_START)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_START))
+            self.l.debug("TRIGGER %s" % str(marker.TRIAL_START))
             self.prepare_target()
             self.listOfPolies = [ManyPoly([], size=(self.width, self.height))
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
@@ -62,12 +58,12 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
 
-                l.debug("Selecting and presenting target image.")
+                self.l.debug("Selecting and presenting target image.")
                 self.runImg()
                 currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
                 self.currentMp = self.listOfPolies[currentTargetPoly[0]['position']]
                 self.storePreviousPolies(burst_index)
-                l.debug("Building and presenting polygonal stimuli.")
+                self.l.debug("Building and presenting polygonal stimuli.")
                 self.runPoly(burst_index)
                 self.stimNumber = self.numTarget
                 self.preparePolyDecomp(self.polyIndex)
@@ -81,12 +77,12 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 self.cl_output = None
 
             self.send_parallel(marker.TRIAL_END)
-            l.debug("TRIGGER %s" % str(marker.TRIAL_END))
+            self.l.debug("TRIGGER %s" % str(marker.TRIAL_END))
             self.runBreak()
 
 
         self.send_parallel(marker.RUN_END)
-        l.debug("TRIGGER %s" % str(marker.RUN_END))
+        self.l.debug("TRIGGER %s" % str(marker.RUN_END))
 
     def run_text(self, text):
         def prepare_text():
@@ -202,7 +198,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
                 if stimulus_index == target_index:
                     self.stimNumber = self.numTarget
-                    l.debug("TARGET %s selected for display. ", self.stimNumber)
+                    self.l.debug("TARGET %s selected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.TARGET_BASE + self.stimNumber
                 else:
                     # Choose a polygon to display from those not presented yet among the chosen ones.
@@ -211,7 +207,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                         tmp = rnd.choice(nonTargetToDisplayBuffer)
                     nonTargetToDisplayBuffer.pop(nonTargetToDisplayBuffer.index(tmp))
                     self.stimNumber = tmp
-                    l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
+                    self.l.debug("NONTARGET %s sselected for display. ", self.stimNumber)
                     self.bufferTrigger = icfb.NONTARGET_BASE + self.stimNumber
                 self.preparePolyDecomp(self.polyIndex)
                 self.collapsePolies()
@@ -273,7 +269,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         polyIndex = []
         for num in self.numNonTarget:
             polyIndex += [rnd.randint(0, len(self.polygonPool[num-1])-1)]
-            l.debug("Polygon %s selected for display. ", polyIndex[-1])
+            self.l.debug("Polygon %s selected for display. ", polyIndex[-1])
         polyIndex=dict(zip(self.numNonTarget, polyIndex))
         polyIndex.update({self.numTarget:burst_index})
 
@@ -300,9 +296,9 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """chose target and non-target stimuli"""
         self.numNonTarget = range(1,len(self.dictImgNames)+1)
         self.numTarget = self.numNonTarget.pop(rnd.randint(0,len(self.numNonTarget)-1))
-        l.debug('Target Image: ' + str(self.numTarget) +
+        self.l.debug('Target Image: ' + str(self.numTarget) +
                 ' Name: ' + self.dictImgNames[self.numTarget])
-        l.debug('NonTarget Images: ' + str(self.numNonTarget))
+        self.l.debug('NonTarget Images: ' + str(self.numNonTarget))
         info = json.load(open(os.path.join(self.data_path,
                                                self.dictImgNames[self.numTarget],
                                                'info.json')))
@@ -362,8 +358,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
 
 if __name__=='__main__':
-    l.debug("Feedback executed as __main__. ")
     data_path = './data/190412_104946/'
+    print("Feedback executed as __main__. ")
     a = PaintingFeedback()
     a.data_path = data_path
     a.on_init()
