@@ -63,6 +63,7 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
         self.prune = 0.05   # prune polygons with relative error less than this value
         self.SOA = 0.3
         self.ISI = 0.1
+        self.training_interval = 300  # time in seconds before break
         l.debug("Training Feedback object created and initialized. ")
 
 
@@ -88,8 +89,8 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
             self.runPoly()
             self.send_parallel(marker.TRIAL_END)
             l.debug("TRIGGER %s" % str(marker.TRIAL_END))
-            
-            if (time()-startTime>300): 
+
+            if (time()-startTime>self.training_interval):
                 self.runBreak()
                 startTime = time()
 
