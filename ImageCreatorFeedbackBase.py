@@ -8,6 +8,7 @@ l.basicConfig(level=l.DEBUG,
             datefmt='%Y-%m-%d %H:%M:%S');
 from FeedbackBase.VisionEggFeedback import VisionEggFeedback
 from poly_stim import Poly, ManyPoly
+import pygame
 
 # TRIG_IMG, TARGET_BASE, NONTARGET_BASE, POLYGON_BASE are constants
 # which are used to encode target or non-target and the corresponding
@@ -152,6 +153,13 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         s = self.stimulus_sequence(generator, [1., 5., 1.], pre_stimulus_function=self.triggerOp)
         s.run()
 
+    def runBreak(self):
+        """ display the reconstruction of the last element while during break. """
+        generator = self.prepareBreak()
+        # Creating and running a stimulus sequence:
+        s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
+        s.run()
+        self.wait_for_spacekey()
 
     def triggerOp(self):
         """ send information via parallel port before stimulus presentation
@@ -178,4 +186,14 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         if data.has_key(u'cl_output'):
             # classification output was sent:
             self.cl_output = data[u'cl_output']
+
+    def wait_for_spacekey(self):
+        """stay in a loop until spacekey is pressed"""
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.locals.KEYDOWN:
+                    if event.key == pygame.locals.K_SPACE:
+                        l.debug('space pressed')
+                        waiting = False
 

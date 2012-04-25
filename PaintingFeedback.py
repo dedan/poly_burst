@@ -14,7 +14,6 @@ import ImageCreatorFeedbackBase as icfb
 from lib import marker
 from poly_stim import Poly, ManyPoly
 import helper as H
-import pygame
 reload(icfb)
 
 debug = True
@@ -89,16 +88,6 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         self.send_parallel(marker.RUN_END)
         l.debug("TRIGGER %s" % str(marker.RUN_END))
-
-    def wait_for_spacekey(self):
-        """stay in a loop until spacekey is pressed"""
-        waiting = True
-        while waiting:
-            for event in pygame.event.get():
-                if event.type == pygame.locals.KEYDOWN:
-                    if event.key == pygame.locals.K_SPACE:
-                        l.debug('space pressed')
-                        waiting = False
 
     def run_text(self, text):
         def prepare_text():
@@ -356,21 +345,8 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         # Set the list of polies into the target object:
         self.manyPoly.listPoly = newPolyList
-        
-    def runBreak(self): 
-        """
-        
-            This function displays the reconstruction of the last element while the 
-        takes a break. 
-        
-        """
-        generator = self.prepareBreak()
-        # Creating and running a stimulus sequence:
-        s = self.stimulus_sequence(generator, [0.01,5.], pre_stimulus_function=self.triggerOp)
-        s.run()
-        self.wait_for_spacekey()
-        
-    def prepareBreak(self): 
+
+    def prepareBreak(self):
         self.final_im = self.add_image_stimulus(position=(self.width/2, self.height/2),
                                                size=(self.width, self.height))
         self.imgPath = os.path.join(os.path.dirname(__file__), 'data', 'background.jpg')
