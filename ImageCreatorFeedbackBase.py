@@ -123,7 +123,7 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
             with open(os.path.join(self.data_path, imgName, 'polies_.json'), 'r') as f:
                 poly_list = list(reversed(json.load(f)))
             if prune:
-                ssum = sum([p['error'] for p in poly_list[0]])
+                ssum = sum([p[0]['error'] for p in poly_list])
                 len_before = len(poly_list)
                 poly_list = [p for p in poly_list if (p[0]['error'] / float(ssum)) > prune]
                 # fix position values
