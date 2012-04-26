@@ -57,6 +57,7 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
         ch.setFormatter(self.formatter)
         self.l.addHandler(ch)
         self.l.setLevel(logging.DEBUG)
+        self.l.propagate = False
 
         # numTarget is a number between 0 (no target selected) and the number of images.
         self.numTarget = 0
