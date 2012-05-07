@@ -65,10 +65,6 @@ class TrainingFeedback(icfb.ImageCreatorFeedbackBase):
     def run(self):
         """ mainloop of this feedback """
 
-        # Load image list and polygon pool:
-        self.dictImgNames = self.loadImageList()
-        self.polygonPool = self.loadPolygonPool()
-
         self.send_parallel(marker.RUN_START)
         self.l.debug("TRIGGER %s" % str(marker.RUN_START))
 
