@@ -46,7 +46,10 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         self.send_parallel(marker.RUN_START)
         self.l.debug("TRIGGER %s" % str(marker.RUN_START))
-
+        
+        # Response matrix to store cross responses:
+        self.responseMatrix = [[0 for jj in range(len(self.polygonPool))] for ii in range(len(self.polygonPool))]
+        nClass=0
         for object_index in range(self.n_objects):
 
             self.send_parallel(marker.TRIAL_START)
@@ -56,8 +59,9 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
             self.listOfPolies_ = [ManyPoly([], size=(self.width, self.height))
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
+            nClass += len(self.polygonPool[self.numTarget-1])
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
-
+                
                 self.l.debug("Selecting and presenting target image.")
                 self.runImg()
                 currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
@@ -74,6 +78,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                 while not self.cl_output:
                     time.sleep(1)
                 self.run_display(self.cl_output, self.polyIndex)
+                self.responseMatrix[self.numTarget-1][self.cl_output-1] += 1
                 self.cl_output = None
 
             self.send_parallel(marker.TRIAL_END)
@@ -83,6 +88,12 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
 
         self.send_parallel(marker.RUN_END)
         self.l.debug("TRIGGER %s" % str(marker.RUN_END))
+        rightClass = 0
+        for ii in range(len(self.responseMatrix)): 
+            rightClass += self.responseMatrix[ii][ii]
+        print float(rightClass)/nClass
+        self.l.debug(str(self.responseMatrix))
+        self.l.debug("Frequency of correct classification: %s", str(float(rightClass)/nClass))
 
     def run_text(self, text):
         def prepare_text():
