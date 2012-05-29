@@ -46,7 +46,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         """
         self.send_parallel(marker.RUN_START)
         self.l.debug("TRIGGER %s" % str(marker.RUN_START))
-        
+
         # Response matrix to store cross responses:
         self.responseMatrix = [[0 for jj in range(len(self.polygonPool))] for ii in range(len(self.polygonPool))]
         nClass=0
@@ -61,7 +61,7 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
                                   for ii in range(len(self.polygonPool[self.numTarget-1]))]
             nClass += len(self.polygonPool[self.numTarget-1])
             for burst_index in range(len(self.polygonPool[self.numTarget-1])):
-                
+
                 self.l.debug("Selecting and presenting target image.")
                 self.runImg()
                 currentTargetPoly = self.polygonPool[self.numTarget-1][burst_index]
@@ -89,10 +89,14 @@ class PaintingFeedback(icfb.ImageCreatorFeedbackBase):
         self.send_parallel(marker.RUN_END)
         self.l.debug("TRIGGER %s" % str(marker.RUN_END))
         rightClass = 0
-        for ii in range(len(self.responseMatrix)): 
+        for ii in range(len(self.responseMatrix)):
             rightClass += self.responseMatrix[ii][ii]
         print float(rightClass)/nClass
-        self.l.debug(str(self.responseMatrix))
+        if hasattr(self, '_debug_path'):
+            with open(self._debug_path + 'response_matrix.txt', 'w')  as f:
+                json.dump(self.responseMatrix, f)
+        else:
+            self.l.debug(str(self.responseMatrix))
         self.l.debug("Frequency of correct classification: %s", str(float(rightClass)/nClass))
 
     def run_text(self, text):

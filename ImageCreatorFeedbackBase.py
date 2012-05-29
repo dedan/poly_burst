@@ -90,7 +90,7 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
 
     @debug_path.setter
     def debug_path(self, value):
-        print 'add logfi'
+        self._debug_path = value
         self.l.debug('add logfile handler')
         hdlr = logging.FileHandler(value)
         hdlr.setFormatter(self.formatter)
@@ -137,8 +137,10 @@ class ImageCreatorFeedbackBase(VisionEggFeedback):
     def loadPolygonPool(self, prune=0):
         """load the polygon decompositions stored in the corresponding files.
         """
+        self.l.info('load the polygon pool')
         polyList = []
         for imgName in self.dictImgNames.values():
+            self.l.info("loading: %s" % os.path.basename(imgName))
             with open(os.path.join(self.data_path, imgName, 'polies_.json'), 'r') as f:
                 poly_list = list(reversed(json.load(f)))
             if prune:
