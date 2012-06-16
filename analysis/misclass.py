@@ -33,16 +33,15 @@ object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
 burst_sep = re.compile('Building and presenting polygonal stimuli')
 polygon_selected = re.compile('Polygon (\d+) selected for display')
 
-objects, cur_burst, cur_obj = [], [], None
+objects, cur_burst = [], []
 obj_name = {}
 with open(os.path.join(current_path, log_name)) as f:
     for line in f.readlines():
 
         new_object = object_sep.search(line)
         if new_object:
-            if cur_obj:
-                objects.append(cur_obj)
             cur_obj = {"name": new_object.groups()[1], "bursts": []}
+            objects.append(cur_obj)
             obj_name[int(new_object.groups()[0])] = new_object.groups()[1]
 
         new_burst = burst_sep.search(line)
@@ -54,6 +53,7 @@ with open(os.path.join(current_path, log_name)) as f:
         new_poly = polygon_selected.search(line)
         if new_poly:
             cur_burst.append(new_poly.groups())
+    cur_obj["bursts"].append(cur_burst)
 
 
 # plot for each object each target and its classification
