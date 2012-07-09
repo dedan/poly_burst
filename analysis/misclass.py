@@ -46,7 +46,7 @@ with open(os.path.join(current_path, log_name)) as f:
 
         new_object = r_object_sep.search(line)
         if new_object:
-            cur_obj = {'name': new_object.groups(), 'polies': []}
+            cur_obj = {'name': new_object.groups(), 'polies': [], 'cl_outputs': []}
             objects.append(cur_obj)
             obj_to_name[int(new_object.groups()[0])] = new_object.groups()[1]
 
@@ -54,13 +54,20 @@ with open(os.path.join(current_path, log_name)) as f:
         if new_burst:
             cur_burst = []
             cur_obj['polies'].append(cur_burst)
-            cur_obj['cl_output'] = cl_output.pop()
+            cur_obj['cl_outputs'].append(cl_output.pop(0))
 
         new_poly = r_polygon_selected.search(line)
         if new_poly:
             cur_burst.append(int(new_poly.groups()[0]))
 
 assert not cl_output # must be empty in the end
+
+
+# percentage of correct classification
+correct = [[1 if out == int(obj['name'][0]) else 0 for out in obj['cl_outputs']]
+                                                   for obj in objects]
+correct_flat = sum(correct, [])
+print('correct classification: %.2f %%' % (sum(correct_flat) / float(len(correct_flat))))
 
 
 # plot for each object each target and its classification
