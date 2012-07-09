@@ -22,11 +22,6 @@ import glob
 data_folder = '/Users/dedan/Dropbox/bci_data/data/'
 out_folder = '/Users/dedan/Dropbox/bci_data/results/'
 stimuli_folder = '/Users/dedan/Dropbox/bci_data/decompositions/190412_145725/'
-VP_CODE = 'VP_nancy_12_06_13'
-log_name = 'paint_18_28.log'
-pruning = 0.03
-n_images = 9
-
 obj_to_name = dict((i, fname) for i, fname in enumerate(os.listdir(stimuli_folder))
                               if os.path.isdir(os.path.join(stimuli_folder, fname)))
 
@@ -87,7 +82,7 @@ for folder_name in os.listdir(data_folder):
 
     for i, obj in enumerate(objects):
 
-        non_targets = range(1, n_images+1)
+        non_targets = range(1, len(obj_to_name)+1)
         non_targets.remove(int(obj['name'][0]))
 
         idx = [l for l in range(len(obj['polies'])) if not correct[i][l]]
