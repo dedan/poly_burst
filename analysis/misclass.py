@@ -14,8 +14,7 @@ for each object
 
 """
 
-import os
-import re
+import os, re
 import numpy as np
 import pylab as plt
 
@@ -23,7 +22,6 @@ data_folder = '/Users/dedan/Dropbox/bci_data/data/'
 stimuli_folder = '/Users/dedan/Dropbox/bci_data/decompositions/190412_145725/'
 VP_CODE = 'VP_nancy_12_06_13'
 log_name = 'paint_18_28.log'
-# log_name = 'test.txt'
 pruning = 0.03
 n_images = 9
 current_path = os.path.join(data_folder, VP_CODE)
@@ -61,12 +59,13 @@ with open(os.path.join(current_path, log_name)) as f:
         if new_burst:
             cur_burst = []
             cur_obj['polies'].append(cur_burst)
+            cur_obj['cl_output'] = cl_output.pop()
 
         new_poly = r_polygon_selected.search(line)
         if new_poly:
             cur_burst.append(int(new_poly.groups()[0]))
 
-
+assert not cl_output # must be empty in the end
 
 
 # # plot for each object each target and its classification
