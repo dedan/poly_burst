@@ -23,56 +23,50 @@ data_folder = '/Users/dedan/Dropbox/bci_data/data/'
 stimuli_folder = '/Users/dedan/Dropbox/bci_data/decompositions/190412_145725/'
 VP_CODE = 'VP_nancy_12_06_13'
 log_name = 'paint_18_28.log'
+# log_name = 'test.txt'
 pruning = 0.03
 n_images = 9
 current_path = os.path.join(data_folder, VP_CODE)
 
-### first analysis: make a plot of pairs -> missclassified vs. correct stimulus
+### parsing of the log files
+
+# regular expressions for parsing
+r_cl_output = re.compile('i:cl_output=\d')
+r_object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
+r_non_targets = re.compile('NonTarget Images: \[(.*?)\]')
+r_burst_sep = re.compile('Building and presenting polygonal stimuli')
+r_polygon_selected = re.compile('Polygon (\d+) selected for display')
 
 # get classifier output from the bbci_apply_log.txt
-p = re.compile('i:cl_output=\d')
 with open(os.path.join(current_path, 'bbci_apply_log.txt')) as f:
-    res = p.findall(f.read())
+    res = r_cl_output.findall(f.read())
     cl_output = [int(r[-1]) for r in res]
 
-
-# log parsing
-object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
-burst_sep = re.compile('Building and presenting polygonal stimuli')
-polygon_selected = re.compile('Polygon (\d+) selected for display')
-stimulus_selected = re.compile('(TARGET|NONTARGET) (\d+) s?selected')
-
-objects, cur_burst, cur_stim = [], [], []
-obj_name = {}
+# get non_target to polygon mapping from feedback log
+objects, obj_to_name = [], {}
 with open(os.path.join(current_path, log_name)) as f:
     for line in f:
 
-        new_object = object_sep.search(line)
+        new_object = r_object_sep.search(line)
         if new_object:
-            cur_obj = {"name": new_object.groups(), "polies": [], "stims": []}
+            cur_obj = {'name': new_object.groups(), 'polies': []}
             objects.append(cur_obj)
-            obj_name[int(new_object.groups()[0])] = new_object.groups()[1]
+            obj_to_name[int(new_object.groups()[0])] = new_object.groups()[1]
 
-        new_burst = burst_sep.search(line)
+        new_non_targets = r_non_targets.search(line)
+        if new_non_targets:
+            cur_obj['non_targets'] = [int(nt) for nt in new_non_targets.groups()[0].split(',')]
+
+        new_burst = r_burst_sep.search(line)
         if new_burst:
-            if cur_burst:
-                cur_obj["polies"].append(cur_burst)
-                cur_burst = []
-                cur_obj["stims"].append(cur_stim)
-                cur_stim = []
+            cur_burst = []
+            cur_obj['polies'].append(cur_burst)
 
-
-        new_poly = polygon_selected.search(line)
+        new_poly = r_polygon_selected.search(line)
         if new_poly:
             cur_burst.append(int(new_poly.groups()[0]))
 
-        new_stim = stimulus_selected.search(line)
-        if new_stim:
-            print new_stim.groups()
-            cur_stim.append(int(new_stim.groups()[1]))
 
-    cur_obj["polies"].append(cur_burst)
-    cur_obj["stims"].append(cur_stim)
 
 
 # # plot for each object each target and its classification
