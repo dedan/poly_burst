@@ -22,15 +22,18 @@ import glob
 data_folder = '/Users/dedan/Dropbox/bci_data/data/'
 out_folder = '/Users/dedan/Dropbox/bci_data/results/'
 stimuli_folder = '/Users/dedan/Dropbox/bci_data/decompositions/190412_145725/'
+fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
 obj_to_name = dict((i, fname) for i, fname in enumerate(os.listdir(stimuli_folder))
                               if os.path.isdir(os.path.join(stimuli_folder, fname)))
 
+results = {}
 for folder_name in os.listdir(data_folder):
     subj_name = folder_name.split('_')[1]
     current_path = os.path.join(data_folder, folder_name)
     if not os.path.isdir(current_path):
         continue
     print 'working on: %s' % subj_name
+    results[subj_name] = {}
     # use latest logfile
     log_name = glob.glob(os.path.join(current_path, 'paint_*.log'))[-1]
 
@@ -68,18 +71,16 @@ for folder_name in os.listdir(data_folder):
                 cur_burst.append(int(new_poly.groups()[0]))
 
     assert not cl_output # must be empty in the end
-
+    results[subj_name]['objects'] = objects
 
     # percentage of correct classification
     correct = [[1 if out == int(obj['name'][0]) else 0 for out in obj['cl_outputs']]
                                                        for obj in objects]
     correct_flat = sum(correct, [])
     print('correct classification: %.2f %%' % (sum(correct_flat) / float(len(correct_flat))))
-
+    results[subj_name]['correct'] = correct
 
     # plot for each object each target and its classification
-    fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
-
     for i, obj in enumerate(objects):
 
         non_targets = range(1, len(obj_to_name)+1)
@@ -89,6 +90,7 @@ for folder_name in os.listdir(data_folder):
         if idx:
             plt.figure()
 
+            # TODO: show final correct object here
             for j, k in enumerate(idx):
                 plt.subplot(len(idx), 2, j*2 + 1)
                 fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(k)}
@@ -108,5 +110,27 @@ for folder_name in os.listdir(data_folder):
             plt.savefig(os.path.join(out_folder, '%s_obj%d.png' % (subj_name, i)))
 
 
+# compute the objects with highest missclassification rates
+
+
+
+
+
+
+
+# ideas for analysis
+# * select by hand: how often was the missclassification right in the sense
+#   that a similar polygon was chosen?
+
 ### second analysis: create overlay plot of how the painting would have looked
 ### like when we would have listened to the classifier. maybe overlay for several subjects
+
+# problem --> polygons are from images of different sizes
+
+
+
+
+
+
+
+
