@@ -1,23 +1,27 @@
 #!/usr/bin/env python
 # encoding: utf-8
 """
-what to do:
-for each object and for each of its polygons, show the real target and what
-the classifier selected.
+This file contains the analysis of the results of the eeg experiments
 
-I need to parse the following information
+The first part parses the information we need for analysis from different log files
+as we did not think about writing all this information to a reasonable data structure.
 
-for each object
-    * non_targets
-    for each burst
-        * non_target_image --> non_target_polygon mapping
+Analysis:
 
+    1. for each subject compute the percentage of correctly classified polygons
+
+    2. create plots of missclassifications against the correct image because
+       during the experiments we had the impression that *missclassifications*
+       are often not really wrong because the subject selected a polygon which
+       could also be used to reconstruct the original image
+
+    3. rank the objects according to their number of missclassifications. This
+       might help us to see which properties of an object make it easy to classify
 """
 
-import os, re
+import os, re, glob
 import numpy as np
 import pylab as plt
-import glob
 from collections import defaultdict
 
 data_folder = '/Users/dedan/Dropbox/bci_data/data/'
@@ -27,8 +31,15 @@ fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '
 obj_to_name = dict((i, fname) for i, fname in enumerate(os.listdir(stimuli_folder))
                               if os.path.isdir(os.path.join(stimuli_folder, fname)))
 
+# regular expressions for parsing
+r_cl_output = re.compile('i:cl_output=\d')
+r_object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
+r_burst_sep = re.compile('Building and presenting polygonal stimuli')
+r_polygon_selected = re.compile('Polygon (\d+) selected for display')
+
 results = {}
 for folder_name in os.listdir(data_folder):
+
     subj_name = folder_name.split('_')[1]
     current_path = os.path.join(data_folder, folder_name)
     if not os.path.isdir(current_path):
@@ -39,13 +50,6 @@ for folder_name in os.listdir(data_folder):
     log_name = glob.glob(os.path.join(current_path, 'paint_*.log'))[-1]
 
     ### parsing of the log files
-
-    # regular expressions for parsing
-    r_cl_output = re.compile('i:cl_output=\d')
-    r_object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
-    r_burst_sep = re.compile('Building and presenting polygonal stimuli')
-    r_polygon_selected = re.compile('Polygon (\d+) selected for display')
-
     # get classifier output from the bbci_apply_log.txt
     with open(os.path.join(current_path, 'bbci_apply_log.txt')) as f:
         res = r_cl_output.findall(f.read())
@@ -133,12 +137,6 @@ for i, (obj_name, rate) in enumerate(misclass_ranking):
     plt.ylabel('%.2f' % rate)
 plt.savefig(os.path.join(out_folder, 'misclass_ranking.png'))
 
-
-
-
-# ideas for analysis
-# * select by hand: how often was the missclassification right in the sense
-#   that a similar polygon was chosen?
 
 ### second analysis: create overlay plot of how the painting would have looked
 ### like when we would have listened to the classifier. maybe overlay for several subjects
