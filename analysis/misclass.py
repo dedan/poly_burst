@@ -27,6 +27,9 @@ pruning = 0.03
 n_images = 9
 current_path = os.path.join(data_folder, VP_CODE)
 
+obj_to_name = dict((i, fname) for i, fname in enumerate(os.listdir(stimuli_folder))
+                              if os.path.isdir(os.path.join(stimuli_folder, fname)))
+
 ### parsing of the log files
 
 # regular expressions for parsing
@@ -41,7 +44,7 @@ with open(os.path.join(current_path, 'bbci_apply_log.txt')) as f:
     cl_output = [int(r[-1]) for r in res]
 
 # get non_target to polygon mapping from feedback log
-objects, obj_to_name = [], {}
+objects = []
 with open(os.path.join(current_path, log_name)) as f:
     for line in f:
 
@@ -49,7 +52,6 @@ with open(os.path.join(current_path, log_name)) as f:
         if new_object:
             cur_obj = {'name': new_object.groups(), 'polies': [], 'cl_outputs': []}
             objects.append(cur_obj)
-            obj_to_name[int(new_object.groups()[0])] = new_object.groups()[1]
 
         new_burst = r_burst_sep.search(line)
         if new_burst:
@@ -74,7 +76,7 @@ print('correct classification: %.2f %%' % (sum(correct_flat) / float(len(correct
 # plot for each object each target and its classification
 fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
 
-for i, obj in enumerate([objects[0]]):
+for i, obj in enumerate(objects):
 
     non_targets = range(1, n_images+1)
     non_targets.remove(int(obj['name'][0]))
