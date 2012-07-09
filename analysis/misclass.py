@@ -19,6 +19,7 @@ import numpy as np
 import pylab as plt
 
 data_folder = '/Users/dedan/Dropbox/bci_data/data/'
+out_folder = '/Users/dedan/Dropbox/bci_data/results/'
 stimuli_folder = '/Users/dedan/Dropbox/bci_data/decompositions/190412_145725/'
 VP_CODE = 'VP_nancy_12_06_13'
 log_name = 'paint_18_28.log'
@@ -73,27 +74,32 @@ print('correct classification: %.2f %%' % (sum(correct_flat) / float(len(correct
 # plot for each object each target and its classification
 fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
 
-for obj in [objects[0]]:
+for i, obj in enumerate([objects[0]]):
 
     non_targets = range(1, n_images+1)
     non_targets.remove(int(obj['name'][0]))
 
-    for i, burst in enumerate(obj['polies']):
-        plt.figure()
-        plt.subplot(121)
-        fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
+    idx = [l for l in range(len(obj['polies'])) if not correct[i][l]]
+    print idx
+    plt.figure()
+
+    for j, k in enumerate(idx):
+        plt.subplot(len(idx), 2, j*2 + 1)
+        fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(k)}
         plt.imshow(plt.imread(fname))
+        plt.xticks([])
+        plt.yticks([])
+        plt.ylabel(k)
 
-        plt.subplot(122)
-        if cl_output[c] == int(obj['name'][0]):
-            fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
-        else:
-            fname = fname_pattern % {'stim': obj_name[cl_output[c]], 'poly': str(burst[''])}
-
-
-
-
-
+        plt.subplot(len(idx), 2, j*2 + 2)
+        burst = obj['polies'][k]
+        burst.insert(int(obj['name'][0])-1, -1)
+        fname = fname_pattern % {'stim': obj_to_name[obj['cl_outputs'][k]],
+                                 'poly': str(burst[obj['cl_outputs'][k]-1])}
+        plt.imshow(plt.imread(fname))
+        plt.xticks([])
+        plt.yticks([])
+    plt.savefig(os.path.join(out_folder, 'obj%d.png' % i))
 
 
 ### second analysis: create overlay plot of how the painting would have looked
