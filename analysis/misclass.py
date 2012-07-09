@@ -82,26 +82,26 @@ for i, obj in enumerate(objects):
     non_targets.remove(int(obj['name'][0]))
 
     idx = [l for l in range(len(obj['polies'])) if not correct[i][l]]
-    print idx
-    plt.figure()
+    if idx:
+        plt.figure()
 
-    for j, k in enumerate(idx):
-        plt.subplot(len(idx), 2, j*2 + 1)
-        fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(k)}
-        plt.imshow(plt.imread(fname))
-        plt.xticks([])
-        plt.yticks([])
-        plt.ylabel(k)
+        for j, k in enumerate(idx):
+            plt.subplot(len(idx), 2, j*2 + 1)
+            fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(k)}
+            plt.imshow(plt.imread(fname))
+            plt.xticks([])
+            plt.yticks([])
+            plt.ylabel(k)
 
-        plt.subplot(len(idx), 2, j*2 + 2)
-        burst = obj['polies'][k]
-        burst.insert(int(obj['name'][0])-1, -1)
-        fname = fname_pattern % {'stim': obj_to_name[obj['cl_outputs'][k]],
-                                 'poly': str(burst[obj['cl_outputs'][k]-1])}
-        plt.imshow(plt.imread(fname))
-        plt.xticks([])
-        plt.yticks([])
-    plt.savefig(os.path.join(out_folder, 'obj%d.png' % i))
+            plt.subplot(len(idx), 2, j*2 + 2)
+            burst = obj['polies'][k]
+            burst.insert(int(obj['name'][0])-1, -1)
+            fname = fname_pattern % {'stim': obj_to_name[obj['cl_outputs'][k]],
+                                     'poly': str(burst[obj['cl_outputs'][k]-1])}
+            plt.imshow(plt.imread(fname))
+            plt.xticks([])
+            plt.yticks([])
+        plt.savefig(os.path.join(out_folder, 'obj%d.png' % i))
 
 
 ### second analysis: create overlay plot of how the painting would have looked
