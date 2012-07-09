@@ -31,7 +31,6 @@ current_path = os.path.join(data_folder, VP_CODE)
 # regular expressions for parsing
 r_cl_output = re.compile('i:cl_output=\d')
 r_object_sep = re.compile('Target Image: (\d+) Name: (\d+)')
-r_non_targets = re.compile('NonTarget Images: \[(.*?)\]')
 r_burst_sep = re.compile('Building and presenting polygonal stimuli')
 r_polygon_selected = re.compile('Polygon (\d+) selected for display')
 
@@ -51,10 +50,6 @@ with open(os.path.join(current_path, log_name)) as f:
             objects.append(cur_obj)
             obj_to_name[int(new_object.groups()[0])] = new_object.groups()[1]
 
-        new_non_targets = r_non_targets.search(line)
-        if new_non_targets:
-            cur_obj['non_targets'] = [int(nt) for nt in new_non_targets.groups()[0].split(',')]
-
         new_burst = r_burst_sep.search(line)
         if new_burst:
             cur_burst = []
@@ -68,28 +63,25 @@ with open(os.path.join(current_path, log_name)) as f:
 assert not cl_output # must be empty in the end
 
 
-# # plot for each object each target and its classification
-# fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
-# c = 0
-# for obj in [objects[0]]:
+# plot for each object each target and its classification
+fname_pattern = os.path.join(stimuli_folder, '%(stim)s', 'decomp', 'decomp_' + '%(poly)s' + '.png')
 
-#     non_targets = range(1, n_images+1)
-#     non_targets.remove(int(obj['name'][0]))
+for obj in [objects[0]]:
 
-#     for i, burst in enumerate(obj['polies']):
-#         plt.figure()
-#         plt.subplot(121)
-#         fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
-#         plt.imshow(plt.imread(fname))
+    non_targets = range(1, n_images+1)
+    non_targets.remove(int(obj['name'][0]))
 
-#         plt.subplot(122)
-#         if cl_output[c] == int(obj['name'][0]):
-#             fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
-#         else:
-#             fname = fname_pattern % {'stim': obj_name[cl_output[c]], 'poly': str(burst[''])}
+    for i, burst in enumerate(obj['polies']):
+        plt.figure()
+        plt.subplot(121)
+        fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
+        plt.imshow(plt.imread(fname))
 
-
-#         c += 1
+        plt.subplot(122)
+        if cl_output[c] == int(obj['name'][0]):
+            fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(i)}
+        else:
+            fname = fname_pattern % {'stim': obj_name[cl_output[c]], 'poly': str(burst[''])}
 
 
 
