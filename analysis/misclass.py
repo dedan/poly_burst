@@ -116,35 +116,14 @@ for folder_name in os.listdir(data_folder):
 
 
 # compute the objects with highest missclassification rates
-misclass = defaultdict(list)
-for subj in results:
-    for i, obj in enumerate(results[subj]['objects']):
-        misclass[obj['name'][1]].append(results[subj]['correct'][i])
-
-misclass_ranking = []
-for obj_name in misclass:
-    correct_flat = sum(misclass[obj_name], [])
-    misclass_ranking.append((obj_name, sum(correct_flat) / float(len(correct_flat))))
-misclass_ranking.sort(key=lambda x: x[1])
-
 plt.figure()
-for i, (obj_name, rate) in enumerate(misclass_ranking):
-    plt.subplot(len(misclass_ranking), 1, i+1)
-    fname = os.path.join(stimuli_folder, obj_name, 'image.png')
-    plt.imshow(plt.imread(fname))
-    plt.xticks([])
-    plt.yticks([])
-    plt.ylabel('%.2f' % rate)
-plt.savefig(os.path.join(out_folder, 'misclass_ranking_mean.png'))
-
-
-# compute the objects with highest missclassification rates per subject
-plt.figure()
+misclass_mean = defaultdict(list)
 for i_subj, subj in enumerate(results):
 
     misclass = defaultdict(list)
     for i, obj in enumerate(results[subj]['objects']):
         misclass[obj['name'][1]].append(results[subj]['correct'][i])
+        misclass_mean[obj['name'][1]].append(results[subj]['correct'][i])
 
     misclass_ranking = []
     for obj_name in misclass:
@@ -153,13 +132,34 @@ for i_subj, subj in enumerate(results):
     misclass_ranking.sort(key=lambda x: x[1], reverse=True)
 
     for i, (obj_name, rate) in enumerate(misclass_ranking):
-        plt.subplot(len(obj_to_name), len(results), i*len(results) + i_subj + 1)
+        plt.subplot(len(obj_to_name), len(results)+1, i*(len(results) + 1) + i_subj + 1)
         fname = os.path.join(stimuli_folder, obj_name, 'image.png')
         plt.imshow(plt.imread(fname))
         plt.xticks([])
         plt.yticks([])
+        if i == 0:
+            plt.title(subj, fontsize=8)
         plt.ylabel('%.2f' % rate)
-    plt.savefig(os.path.join(out_folder, 'misclass_ranking_all.png'))
+
+misclass_ranking = []
+for obj_name in misclass_mean:
+    correct_flat = __builtin__.sum(misclass_mean[obj_name], [])
+    misclass_ranking.append((obj_name, sum(correct_flat) / float(len(correct_flat))))
+misclass_ranking.sort(key=lambda x: x[1], reverse=True)
+
+for i, (obj_name, rate) in enumerate(misclass_ranking):
+    print i*(len(results) + 1) + len(results) + 1
+    plt.subplot(len(obj_to_name), len(results)+1, i*(len(results) + 1) + len(results) + 1)
+    fname = os.path.join(stimuli_folder, obj_name, 'image.png')
+    plt.imshow(plt.imread(fname))
+    plt.xticks([])
+    plt.yticks([])
+    if i == 0:
+        plt.title('mean', fontsize=8)
+    plt.ylabel('%.2f' % rate)
+
+plt.savefig(os.path.join(out_folder, 'misclass_ranking_all.png'))
+
 
 ### second analysis: create overlay plot of how the painting would have looked
 ### like when we would have listened to the classifier. maybe overlay for several subjects
