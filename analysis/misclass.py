@@ -135,8 +135,31 @@ for i, (obj_name, rate) in enumerate(misclass_ranking):
     plt.xticks([])
     plt.yticks([])
     plt.ylabel('%.2f' % rate)
-plt.savefig(os.path.join(out_folder, 'misclass_ranking.png'))
+plt.savefig(os.path.join(out_folder, 'misclass_ranking_mean.png'))
 
+
+# compute the objects with highest missclassification rates per subject
+plt.figure()
+for i_subj, subj in enumerate(results):
+
+    misclass = defaultdict(list)
+    for i, obj in enumerate(results[subj]['objects']):
+        misclass[obj['name'][1]].append(results[subj]['correct'][i])
+
+    misclass_ranking = []
+    for obj_name in misclass:
+        correct_flat = __builtin__.sum(misclass[obj_name], [])
+        misclass_ranking.append((obj_name, sum(correct_flat) / float(len(correct_flat))))
+    misclass_ranking.sort(key=lambda x: x[1], reverse=True)
+
+    for i, (obj_name, rate) in enumerate(misclass_ranking):
+        plt.subplot(len(obj_to_name), len(results), i*len(results) + i_subj + 1)
+        fname = os.path.join(stimuli_folder, obj_name, 'image.png')
+        plt.imshow(plt.imread(fname))
+        plt.xticks([])
+        plt.yticks([])
+        plt.ylabel('%.2f' % rate)
+    plt.savefig(os.path.join(out_folder, 'misclass_ranking_all.png'))
 
 ### second analysis: create overlay plot of how the painting would have looked
 ### like when we would have listened to the classifier. maybe overlay for several subjects
