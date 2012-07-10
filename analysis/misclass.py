@@ -19,7 +19,7 @@ Analysis:
        might help us to see which properties of an object make it easy to classify
 """
 
-import os, re, glob
+import os, re, glob, json
 import numpy as np
 import pylab as plt
 from collections import defaultdict
@@ -160,6 +160,22 @@ for i, (obj_name, rate) in enumerate(misclass_ranking):
 
 plt.savefig(os.path.join(out_folder, 'misclass_ranking_all.png'))
 
+
+# does the misclassification depend on image/decomposition features?
+errors = {}
+for fname in os.listdir(stimuli_folder):
+    if os.path.isdir(os.path.join(stimuli_folder, fname)):
+        errors[fname] = json.load(open(os.path.join(stimuli_folder, fname, 'decomp', 'errors.json')))
+
+plt.figure()
+for i, (obj_name, rate) in enumerate(misclass_ranking):
+    plt.plot(rate, len(errors[obj_name]), '.b')
+
+    sel = [e for e in errors[obj_name] if e > 0.03]
+    plt.plot(rate, len(sel), '.r')
+    plt.xlabel('classification rate')
+    plt.ylabel('number of polygons')
+plt.savefig(os.path.join(out_folder, 'misclass_decomp_corr.png'))
 
 ### second analysis: create overlay plot of how the painting would have looked
 ### like when we would have listened to the classifier. maybe overlay for several subjects
