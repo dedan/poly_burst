@@ -85,34 +85,56 @@ for folder_name in os.listdir(data_folder):
     print('correct classification: %.2f %%' % (sum(correct_flat) / float(len(correct_flat))))
     results[subj_name]['correct'] = correct
 
-    # plot for each object each target and its classification
-    for i, obj in enumerate(objects):
+misclass_dict = defaultdict(lambda: defaultdict(list))
+for subj in results:
+    for i, obj in enumerate(results[subj]['objects']):
 
         non_targets = range(1, len(obj_to_name)+1)
         non_targets.remove(int(obj['name'][0]))
 
-        idx = [l for l in range(len(obj['polies'])) if not correct[i][l]]
-        if idx:
-            plt.figure()
+        idx = [l for l in range(len(obj['polies'])) if not results[subj]['correct'][i][l]]
 
-            # TODO: show final correct object here
-            for j, k in enumerate(idx):
-                plt.subplot(len(idx), 2, j*2 + 1)
-                fname = fname_pattern % {'stim': obj['name'][1], 'poly': str(k)}
-                plt.imshow(plt.imread(fname))
-                plt.xticks([])
-                plt.yticks([])
-                plt.ylabel(k)
+        for j in idx:
+            fname_correct = fname_pattern % {'stim': obj['name'][1], 'poly': str(j)}
+            burst = obj['polies'][j]
+            burst.insert(int(obj['name'][0])-1, -1)
+            fname_mis = fname_pattern % {'stim': obj_to_name[obj['cl_outputs'][j]],
+                                         'poly': str(burst[obj['cl_outputs'][j]-1])}
+            misclass_dict[obj['name'][1]][fname_correct].append(fname_mis)
 
-                plt.subplot(len(idx), 2, j*2 + 2)
-                burst = obj['polies'][k]
-                burst.insert(int(obj['name'][0])-1, -1)
-                fname = fname_pattern % {'stim': obj_to_name[obj['cl_outputs'][k]],
-                                         'poly': str(burst[obj['cl_outputs'][k]-1])}
-                plt.imshow(plt.imread(fname))
-                plt.xticks([])
-                plt.yticks([])
-            plt.savefig(os.path.join(out_folder, '%s_obj%d.png' % (subj_name, i)))
+
+for obj, dic in misclass_dict.iteritems():
+
+    sorted_dict = sorted(dic.iteritems(), key=lambda x: len(x[1]), reverse=True)
+    max_miss = np.max([len(set(l[1])) for l in sorted_dict])
+
+    plt.figure(figsize=(20,10))
+    plt.suptitle(obj)
+    plt.subplot(len(dic) + 1, max_miss + 1, 1)
+    orig = os.path.join(stimuli_folder, obj, 'final.png')
+    plt.imshow(plt.imread(orig))
+    plt.xticks([])
+    plt.yticks([])
+
+    for i, (fname, mislist) in enumerate(sorted_dict):
+
+        counted_mislist = [(mislist.count(name), name) for name in set(mislist)]
+        counted_mislist.sort(key=lambda x: x[0], reverse=True)
+
+        cor_ax = plt.subplot(len(dic) + 1, max_miss + 1, (i+1) * (max_miss+1) + 1)
+        cor_ax.imshow(plt.imread(fname))
+        cor_ax.set_xticks([])
+        cor_ax.set_yticks([])
+
+        for j, (count, fname_miss) in enumerate(counted_mislist):
+            plt.subplot(len(dic) + 1, max_miss + 1, (i+1) * (max_miss+1) + j + 2)
+            plt.imshow(plt.imread(fname_miss))
+            plt.ylabel(count, rotation='0')
+            plt.xticks([])
+            plt.yticks([])
+    cor_ax.set_xlabel('correct')
+    plt.subplots_adjust(hspace=0.35)
+    plt.savefig(os.path.join(out_folder, 'miss_%s.png' % obj))
 
 
 # compute the objects with highest missclassification rates
