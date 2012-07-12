@@ -19,7 +19,7 @@ Analysis:
        might help us to see which properties of an object make it easy to classify
 """
 
-import os, re, glob, json
+import os, re, glob, json, __builtin__
 import numpy as np
 import pylab as plt
 from collections import defaultdict
@@ -108,7 +108,7 @@ for obj, dic in misclass_dict.iteritems():
     sorted_dict = sorted(dic.iteritems(), key=lambda x: len(x[1]), reverse=True)
     max_miss = np.max([len(set(l[1])) for l in sorted_dict])
 
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(10, 5))
     plt.suptitle(obj)
     plt.subplot(len(dic) + 1, max_miss + 1, 1)
     orig = os.path.join(stimuli_folder, obj, 'final.png')
@@ -138,7 +138,7 @@ for obj, dic in misclass_dict.iteritems():
 
 
 # compute the objects with highest missclassification rates
-plt.figure()
+plt.figure(figsize=(10, 5))
 misclass_mean = defaultdict(list)
 for i_subj, subj in enumerate(results):
 
