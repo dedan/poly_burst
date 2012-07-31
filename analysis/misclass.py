@@ -128,14 +128,16 @@ for obj, dic in misclass_dict.iteritems():
 
         for j, (count, fname_miss) in enumerate(counted_mislist):
             plt.subplot(len(dic) + 1, max_miss + 1, (i+1) * (max_miss+1) + j + 2)
-            plt.imshow(plt.imread(fname_miss))
+            tmp = plt.imread(fname_miss)
+            if np.mean(tmp) > 0.999 and not np.mean(tmp) == 1.:
+                tmp[tmp == 1.] = 0.8
+            plt.imshow(tmp)
             plt.ylabel(count, rotation='0')
             plt.xticks([])
             plt.yticks([])
     cor_ax.set_xlabel('correct')
     plt.subplots_adjust(hspace=0.35)
     plt.savefig(os.path.join(out_folder, 'miss_%s.png' % obj))
-
 
 # compute the objects with highest missclassification rates
 plt.figure(figsize=(10, 5))
