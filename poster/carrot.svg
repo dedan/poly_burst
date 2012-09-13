@@ -65,71 +65,71 @@
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300">
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output500.png"
          id="image3121"
-         x="240"
-         y="132.36218" />
+         x="100"
+         y="-167.63782" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output1000.png"
          id="image3132"
-         x="520"
-         y="132.36218" />
+         x="660"
+         y="-167.63782" />
       <image
          inkscape:export-ydpi="300"
          inkscape:export-xdpi="300"
          inkscape:export-filename="/home/brigan/Research/BCI Image Reconstruction/Documents/poster/carrot.png"
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output1500.png"
          id="image3145"
-         x="-40"
-         y="332.36218" />
+         x="-460"
+         y="232.36218" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output2500.png"
          id="image3156"
-         x="240"
-         y="332.36218" />
+         x="100"
+         y="232.36218" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output3000.png"
          id="image3167"
-         x="520"
-         y="332.36218" />
+         x="660"
+         y="232.36218" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output10000.png"
          id="image3178"
-         x="-40"
-         y="532.36218" />
+         x="-460"
+         y="632.36218" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output20000.png"
          id="image3189"
-         x="240"
-         y="532.36218" />
+         x="100"
+         y="632.36218" />
       <image
-         width="280"
-         height="200"
+         width="560"
+         height="400"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/evol/output43500.png"
          id="image3211"
-         x="520"
-         y="532.36218" />
+         x="660"
+         y="632.36218" />
       <image
-         y="132.36218"
-         x="-40"
+         y="-167.63782"
+         x="-460"
          id="image3001"
          xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/image.png"
-         height="200"
-         width="280"
+         height="400"
+         width="560"
          inkscape:export-xdpi="300"
          inkscape:export-ydpi="300" />
     </g>
