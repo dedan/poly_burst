@@ -1,0 +1,11 @@
+*.log
+*.pyc
+*.DS_Store
+log
+.ropeproject*
+*~
+examples*
+*.png
+scratch.py
+.project
+.pydevproject
