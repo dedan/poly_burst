@@ -29,15 +29,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
-     inkscape:cx="375"
+     inkscape:cx="822.14286"
      inkscape:cy="520"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="501"
+     inkscape:window-width="700"
      inkscape:window-height="465"
-     inkscape:window-x="426"
-     inkscape:window-y="468"
+     inkscape:window-x="528"
+     inkscape:window-y="485"
      inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
@@ -86,7 +86,10 @@
        id="image3329"
        xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/decomp/decomp_3.png"
        height="200"
-       width="280" />
+       width="280"
+       inkscape:export-filename="/home/brigan/Research/BCI Image Reconstruction/Documents/poster/pieces.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
     <image
        y="492.36218"
        x="200"
