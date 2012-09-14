@@ -5,7 +5,6 @@ log
 .ropeproject*
 *~
 examples*
-*.png
 scratch.py
 .project
 .pydevproject
