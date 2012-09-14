@@ -15,7 +15,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="trial.svg">
+   sodipodi:docname="trial.svg"
+   inkscape:export-filename="/home/brigan/Desktop/Research/BCI Image Reconstruction/Documents/poster/trial.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
   <defs
      id="defs4">
     <marker
@@ -52,18 +55,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.32"
-     inkscape:cx="497.46543"
-     inkscape:cy="513.46104"
+     inkscape:zoom="0.26586914"
+     inkscape:cx="169.21457"
+     inkscape:cy="625.9673"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-to-guides="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="744"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-width="658"
+     inkscape:window-height="441"
+     inkscape:window-x="581"
+     inkscape:window-y="40"
+     inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
        id="grid7178" />
@@ -76,7 +79,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -84,158 +87,173 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
-    <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#00fd00;stroke-width:1.72495723;stroke-opacity:0.98630138"
-       id="rect2985"
-       width="2080"
-       height="1230"
-       x="-800"
-       y="-257.63782" />
-    <path
-       style="fill:none;stroke:#000000;stroke-width:17.31671333;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mend);marker-end:url(#Arrow1Mend)"
-       d="M 0.04989188,768.25734 845.45286,225.11548"
-       id="path6429"
-       inkscape:connector-curvature="0" />
     <g
-       id="g3900">
-      <rect
-         y="126.99633"
-         x="305.17239"
-         height="220.00002"
-         width="300"
-         id="rect7239"
-         style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649234999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="289.65518"
-         height="209.26831"
-         xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/016/decomp/decomp_1.png"
-         id="image7199"
-         x="310.34482"
-         y="132.36218" />
-    </g>
-    <g
-       id="g3879">
-      <rect
-         y="91.630493"
-         x="149.99998"
-         height="219.99998"
-         width="300"
-         id="rect7268"
-         style="fill:#550000;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216000000053;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="289.65518"
-         height="209.5238"
-         xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/066/decomp/decomp_0.png"
-         id="image7188"
-         x="155.17241"
-         y="96.868584" />
-    </g>
-    <g
-       id="g3894">
-      <rect
-         y="261.63049"
-         x="79.999985"
-         height="220"
-         width="320"
-         id="rect7251"
-         style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.88204192999999975;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="308.96552"
-         height="209.26828"
-         xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/decomp/decomp_1.png"
-         id="image7232"
-         x="85.517227"
-         y="266.99634" />
-    </g>
-    <g
-       id="g3885">
-      <rect
-         y="321.63049"
-         x="-2e-06"
-         height="220"
-         width="300"
-         id="rect7237"
-         style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649234999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="289.65518"
-         height="209.26828"
-         xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/decomp/decomp_6.png"
-         id="image7210"
-         x="5.1724119"
-         y="326.99634"
-         style="fill:#550000;fill-opacity:1" />
-    </g>
-    <g
-       id="g3875">
-      <rect
-         y="492.36215"
-         x="-260"
-         height="219.99998"
-         width="300"
-         id="rect7235"
-         style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216000000053;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="289.65518"
-         height="209.5238"
-         xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/066/image.png"
-         id="image7175"
-         x="-254.82759"
-         y="497.60025" />
-    </g>
-    <g
-       id="g3866">
-      <rect
-         y="42.362183"
-         x="-760"
-         height="170"
-         width="880"
-         id="rect3821"
-         style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:13.41528796999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
-      <image
-         width="880"
-         height="170"
-         xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/target.png"
-         id="image3021"
-         x="-760"
-         y="42.362183" />
-    </g>
-    <rect
-       style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:15.85649966999999982;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect3827"
-       width="880"
-       height="175"
-       x="320"
-       y="612.36218" />
-    <image
-       y="612.36218"
-       x="320"
-       id="image3032"
-       xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/nonTarget.png"
-       height="175"
-       width="880" />
+       id="g3018"
+       transform="matrix(1,0,0,0.7112362,0,-27.638303)">
+      <path
+         inkscape:connector-curvature="0"
+         id="path6429"
+         d="M 0.04989188,768.25734 845.45286,225.11548"
+         style="fill:none;stroke:#000000;stroke-width:17.31671333;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mend);marker-end:url(#Arrow1Mend)" />
+      <g
+         id="g3900">
+        <rect
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649235;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect7239"
+           width="300"
+           height="220.00002"
+           x="305.17239"
+           y="126.99633" />
+        <image
+           y="132.36218"
+           x="310.34482"
+           id="image7199"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/016/decomp/decomp_1.png"
+           height="209.26831"
+           width="289.65518" />
+      </g>
+      <g
+         id="g3879">
+        <rect
+           style="fill:#550000;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect7268"
+           width="300"
+           height="219.99998"
+           x="149.99998"
+           y="91.630493" />
+        <image
+           y="96.868584"
+           x="155.17241"
+           id="image7188"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/066/decomp/decomp_0.png"
+           height="209.5238"
+           width="289.65518" />
+      </g>
+      <g
+         id="g3894">
+        <rect
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.88204193;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect7251"
+           width="320"
+           height="220"
+           x="79.999985"
+           y="261.63049" />
+        <image
+           y="266.99634"
+           x="85.517227"
+           id="image7232"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/decomp/decomp_1.png"
+           height="209.26828"
+           width="308.96552" />
+      </g>
+      <g
+         id="g3885">
+        <rect
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649235;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect7237"
+           width="300"
+           height="220"
+           x="-2e-06"
+           y="321.63049" />
+        <image
+           style="fill:#550000;fill-opacity:1"
+           y="326.99634"
+           x="5.1724119"
+           id="image7210"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/048/decomp/decomp_6.png"
+           height="209.26828"
+           width="289.65518" />
+      </g>
+      <g
+         id="g3875">
+        <rect
+           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect7235"
+           width="300"
+           height="219.99998"
+           x="-260"
+           y="492.36215" />
+        <image
+           y="497.60025"
+           x="-254.82759"
+           id="image7175"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/066/image.png"
+           height="209.5238"
+           width="289.65518" />
+      </g>
+      <g
+         id="g3866">
+        <rect
+           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:13.41528797;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3821"
+           width="880"
+           height="170"
+           x="-760"
+           y="42.362183" />
+        <image
+           y="42.362183"
+           x="-760"
+           id="image3021"
+           xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/target.png"
+           height="170"
+           width="880" />
+      </g>
+      <g
+         id="g3156">
+        <rect
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:15.85649967;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3827"
+           width="880"
+           height="175"
+           x="320"
+           y="612.36218" />
+        <image
+           y="612.36218"
+           x="320"
+           id="image3032"
+           xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/nonTarget.png"
+           height="175"
+           width="880" />
+      </g>
+      <flowRoot
+         transform="translate(-320,16.562267)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3829"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3831"><rect
+             y="-103.88782"
+             x="-200"
+             height="115.625"
+             width="518.75"
+             id="rect3833" /></flowRegion><flowPara
+           style="font-size:100px;fill:#ff0000"
+           id="flowPara3835">TARGET</flowPara></flowRoot>      <flowRoot
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3829-1"
+         xml:space="preserve"
+         transform="translate(680,576.56227)"><flowRegion
+           id="flowRegion3831-2"><rect
+             y="-103.88782"
+             x="-200"
+             height="139.68773"
+             width="1000"
+             id="rect3833-1" /></flowRegion><flowPara
+           style="font-size:100px;fill:#0000ff"
+           id="flowPara3835-3">NON-TARGET</flowPara></flowRoot>    </g>
     <flowRoot
        xml:space="preserve"
-       id="flowRoot3829"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       transform="translate(-320,16.562267)"><flowRegion
-         id="flowRegion3831"><rect
-           id="rect3833"
-           width="518.75"
-           height="115.625"
-           x="-200"
-           y="-103.88782" /></flowRegion><flowPara
-         id="flowPara3835"
-         style="font-size:100px;fill:#ff0000">TARGET</flowPara></flowRoot>    <flowRoot
-       transform="translate(680,576.56227)"
-       xml:space="preserve"
-       id="flowRoot3829-1"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
-         id="flowRegion3831-2"><rect
-           id="rect3833-1"
-           width="1000"
-           height="139.68773"
-           x="-200"
-           y="-103.88782" /></flowRegion><flowPara
-         id="flowPara3835-3"
-         style="font-size:100px;fill:#0000ff">NON-TARGET</flowPara></flowRoot>  </g>
+       id="flowRoot3018"
+       style="font-size:55px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(3.59375,-251.50778)"><flowRegion
+         id="flowRegion3020"><rect
+           id="rect3022"
+           width="1963.5798"
+           height="268.34973"
+           x="-763.5799"
+           y="864.01245"
+           style="font-size:55px" /></flowRegion><flowPara
+         id="flowPara3024"
+         style="font-size:30px;text-align:justify;text-anchor:start"><flowSpan
+   style="font-size:30px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
+   id="flowSpan3026">Illustration of a burst during training phase</flowSpan>: Target polygons should elicit ERPs and non-target should not. Polygons in this part of the experiment were selected to largely contribute to target image so that clear ERPs were generated and fed to the classifier for training. </flowPara></flowRoot>  </g>
 </svg>
