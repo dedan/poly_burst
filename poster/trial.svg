@@ -55,9 +55,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.16"
-     inkscape:cx="485.38224"
-     inkscape:cy="327.89678"
+     inkscape:zoom="0.20625"
+     inkscape:cx="467.38812"
+     inkscape:cy="568.25363"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -79,7 +79,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -88,7 +88,8 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g3018">
+       id="g3018"
+       transform="matrix(1,0,0,0.86607491,0,-29.552447)">
       <path
          inkscape:connector-curvature="0"
          id="path6429"
@@ -97,7 +98,7 @@
       <g
          id="g3900">
         <rect
-           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649234999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649235;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect7239"
            width="300"
            height="220.00002"
@@ -114,7 +115,7 @@
       <g
          id="g3879">
         <rect
-           style="fill:#550000;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216000000053;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#550000;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect7268"
            width="300"
            height="219.99998"
@@ -131,7 +132,7 @@
       <g
          id="g3894">
         <rect
-           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.88204192999999975;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.88204193;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect7251"
            width="320"
            height="220"
@@ -148,7 +149,7 @@
       <g
          id="g3885">
         <rect
-           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649234999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:10.53649235;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect7237"
            width="300"
            height="220"
@@ -166,7 +167,7 @@
       <g
          id="g3875">
         <rect
-           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216000000053;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:10.41030216;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect7235"
            width="300"
            height="219.99998"
@@ -183,7 +184,7 @@
       <g
          id="g3866">
         <rect
-           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:13.41528796999999962;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#00ff00;fill-opacity:1;stroke:#c80000;stroke-width:13.41528797;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect3821"
            width="880"
            height="170"
@@ -200,7 +201,7 @@
       <g
          id="g3156">
         <rect
-           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:15.85649966999999982;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           style="fill:#550000;fill-opacity:1;stroke:#00ff00;stroke-width:15.85649967;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
            id="rect3827"
            width="880"
            height="175"
@@ -239,5 +240,20 @@
              id="rect3833-1" /></flowRegion><flowPara
            style="font-size:100px;fill:#0000ff"
            id="flowPara3835-3">NON-TARGET</flowPara></flowRoot>    </g>
-  </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3018"
+       style="font-size:55px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(3.59375,-146.45902)"><flowRegion
+         id="flowRegion3020"><rect
+           id="rect3022"
+           width="1963.5798"
+           height="268.34973"
+           x="-763.5799"
+           y="864.01245"
+           style="font-size:55px" /></flowRegion><flowPara
+         id="flowPara3024"
+         style="font-size:55px;text-align:justify;text-anchor:start"><flowSpan
+   style="font-size:55px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
+   id="flowSpan3026">Illustration of a burst during training phase</flowSpan>: Target polygons should elicit ERPs and non-target should not. Polygons in this part of the experiment were selected to largely contribute to target image so that clear ERPs were generated and fed to the classifier for training. </flowPara></flowRoot>  </g>
 </svg>
