@@ -55,17 +55,17 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.20625"
-     inkscape:cx="467.38812"
-     inkscape:cy="568.25363"
+     inkscape:zoom="0.26586914"
+     inkscape:cx="169.21457"
+     inkscape:cy="625.9673"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-to-guides="false"
      inkscape:window-width="658"
      inkscape:window-height="441"
-     inkscape:window-x="446"
-     inkscape:window-y="24"
+     inkscape:window-x="581"
+     inkscape:window-y="40"
      inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
@@ -89,7 +89,7 @@
      id="layer1">
     <g
        id="g3018"
-       transform="matrix(1,0,0,0.86607491,0,-29.552447)">
+       transform="matrix(1,0,0,0.7112362,0,-27.638303)">
       <path
          inkscape:connector-curvature="0"
          id="path6429"
@@ -244,7 +244,7 @@
        xml:space="preserve"
        id="flowRoot3018"
        style="font-size:55px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       transform="translate(3.59375,-146.45902)"><flowRegion
+       transform="translate(3.59375,-251.50778)"><flowRegion
          id="flowRegion3020"><rect
            id="rect3022"
            width="1963.5798"
@@ -253,7 +253,7 @@
            y="864.01245"
            style="font-size:55px" /></flowRegion><flowPara
          id="flowPara3024"
-         style="font-size:55px;text-align:justify;text-anchor:start"><flowSpan
-   style="font-size:55px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
+         style="font-size:30px;text-align:justify;text-anchor:start"><flowSpan
+   style="font-size:30px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
    id="flowSpan3026">Illustration of a burst during training phase</flowSpan>: Target polygons should elicit ERPs and non-target should not. Polygons in this part of the experiment were selected to largely contribute to target image so that clear ERPs were generated and fed to the classifier for training. </flowPara></flowRoot>  </g>
 </svg>
