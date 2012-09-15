@@ -2826,18 +2826,19 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.30830078"
-     inkscape:cx="-72.635899"
-     inkscape:cy="473.22132"
+     inkscape:zoom="0.78640785"
+     inkscape:cx="756.26905"
+     inkscape:cy="533.46474"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
-     inkscape:window-width="694"
-     inkscape:window-height="562"
-     inkscape:window-x="33"
-     inkscape:window-y="52"
-     inkscape:window-maximized="0"
-     showguides="true">
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:snap-to-guides="false">
     <inkscape:grid
        type="xygrid"
        id="grid30662" />
@@ -2850,7 +2851,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -27567,7 +27568,7 @@
       </g>
     </g>
     <g
-       transform="matrix(1.2644157,0,0,-1.2355212,238.86203,892.36218)"
+       transform="matrix(1.2644156,0,0,-1.2355212,238.86203,892.36218)"
        inkscape:label="ink_ext_XXXXXX"
        id="g30691">
       <g

@@ -2164,16 +2164,16 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.2298694"
-     inkscape:cx="2205.7277"
-     inkscape:cy="1957.8398"
+     inkscape:zoom="0.07329332"
+     inkscape:cx="6279.1838"
+     inkscape:cy="394.86627"
      inkscape:document-units="px"
      inkscape:current-layer="svg2"
      showgrid="true"
      inkscape:snap-grids="true"
      inkscape:snap-page="false"
-     inkscape:window-width="1280"
-     inkscape:window-height="1000"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
      inkscape:window-x="0"
      inkscape:window-y="24"
      inkscape:window-maximized="1"
@@ -2194,7 +2194,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2792,7 +2792,7 @@
          x="123.20551"
          y="612.03131" /></flowRegion><flowPara
        style="font-size:40px;text-align:justify;text-anchor:start"
-       id="flowPara6015"></flowPara><flowPara
+       id="flowPara6015" /><flowPara
        style="font-size:40px;text-align:justify;text-anchor:start"
        id="flowPara6023"> ● We have implemented a Brain Computer Interface (BCI) for image reconstruction based on Rapid Serial Visual Presentations (RSPVs) of polygons, that act as primitives for images. </flowPara><flowPara
        style="font-size:20px;text-align:justify;text-anchor:start"
@@ -2838,22 +2838,22 @@
          y="671.45886" />
     </g>
     <flowRoot
-       transform="translate(1368,-208.84401)"
+       transform="translate(1338,-208.84401)"
        style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot5629-1-1"
        xml:space="preserve"><flowRegion
          id="flowRegion5631-0-5"><rect
            y="892.04382"
            x="322.01437"
-           height="249.82489"
-           width="879.9856"
+           height="249.79237"
+           width="889.9856"
            id="rect5633-9-0"
            style="font-size:60px" /></flowRegion><flowPara
          id="flowPara5635-1-3"><flowSpan
    id="flowSpan6212"
-   style="font-size:60px;fill:#ff0000">Data Analysis</flowSpan> and <flowSpan
+   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Data Analysis</flowSpan> and <flowSpan
    id="flowSpan6210"
-   style="font-size:60px;fill:#ff0000">Results</flowSpan>: </flowPara></flowRoot>  </g>
+   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Results</flowSpan>: </flowPara></flowRoot>  </g>
   <g
      id="g6419">
     <g
