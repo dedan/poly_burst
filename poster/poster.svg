@@ -16,8 +16,8 @@
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
    inkscape:export-filename="/home/brigan/Research/BCI Image Reconstruction/Documents/poster/poster.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
    sodipodi:docname="poster.svg">
   <defs
      id="defs4">
@@ -2164,9 +2164,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.07329332"
-     inkscape:cx="6279.1838"
-     inkscape:cy="394.86627"
+     inkscape:zoom="0.046738807"
+     inkscape:cx="8327.744"
+     inkscape:cy="-1327.8505"
      inkscape:document-units="px"
      inkscape:current-layer="svg2"
      showgrid="true"
@@ -2194,7 +2194,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -2617,55 +2617,9 @@
      y="1652.9922" />
   <flowRoot
      xml:space="preserve"
-     id="flowRoot4520"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
-     transform="translate(0,-99.877779)"><flowRegion
-       id="flowRegion4522"><rect
-         style="fill:#0261ff;fill-opacity:1"
-         id="rect4524"
-         width="820"
-         height="799.87781"
-         x="1320"
-         y="1772.9922" /></flowRegion><flowPara
-       id="flowPara4622"><flowSpan
-         style="font-style:italic;fill:#008000;fill-opacity:1;-inkscape-font-specification:Sans Italic"
-         id="flowSpan4548">ERP</flowSpan><flowSpan
-         style="fill:#008000"
-         id="flowSpan6216"> analysis</flowSpan><flowSpan
-         id="flowSpan5012"
-         style="fill:#000000">: </flowSpan></flowPara><flowPara
-       style="font-size:15px;fill:#000000;fill-opacity:1"
-       id="flowPara4552">    </flowPara><flowPara
-       id="flowPara4530"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ● High pass filter to reduce drifts. </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara4566">    </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara5920">    ● Epochs: </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara4564">        ► -200 to 1000 ms. </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara5928">        ► Baseline substraction. </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara4554">    </flowPara><flowPara
-       id="flowPara4538"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ● Artifact rejection. </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara4558">    </flowPara><flowPara
-       id="flowPara4540"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ● Signed point-biserial correlation </flowPara><flowPara
-       id="flowPara4542"
-       style="font-size:30px;fill:#000000;fill-opacity:1">       coefficient (r<flowSpan
-   style="font-size:65.00091553%;baseline-shift:super;fill:#000000;fill-opacity:1"
-   id="flowSpan4560">2</flowSpan>): </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara4544">        ► Discriminative intervals for plot and </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara4546">           classification. </flowPara></flowRoot>  <flowRoot
-     xml:space="preserve"
      id="flowRoot4577"
      style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
-     transform="translate(76.34375,-102.06528)"><flowRegion
+     transform="translate(-803.65625,-102.06528)"><flowRegion
        id="flowRegion4579"><rect
          style="fill:#0261ff;fill-opacity:1"
          id="rect4581"
@@ -2688,33 +2642,14 @@
        style="font-size:30px;fill:#000000;fill-opacity:1">    ● Correct hits: 68,0±3,4 %. </flowPara><flowPara
        style="font-size:10px;fill:#000000;fill-opacity:1"
        id="flowPara4605">    </flowPara><flowPara
-       id="flowPara4593"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ● Correct miss: 75.0±3.4 %. </flowPara><flowPara
+       style="font-size:30px;fill:#000000;fill-opacity:1"
+       id="flowPara55318">    ● Correct miss: 75.0±3.4 %. </flowPara><flowPara
        style="font-size:15px;fill:#000000;fill-opacity:1"
        id="flowPara4607">    </flowPara><flowPara
        style="fill:#000000"
        id="flowPara4236" /><flowPara
-       id="flowPara4597"><flowSpan
-   style="font-style:italic;fill:#0261ff;fill-opacity:1;-inkscape-font-specification:Sans Italic"
-   id="flowSpan4599">Copy Painting</flowSpan> results<flowSpan
-   id="flowSpan5020"
-   style="fill:#000000">: </flowSpan></flowPara><flowPara
-       style="font-size:15px;fill:#000000;fill-opacity:1"
-       id="flowPara3853">    </flowPara><flowPara
-       id="flowPara4663"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ● Copy performance: </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara3859">    </flowPara><flowPara
-       id="flowPara3849"
-       style="font-size:30px;fill:#000000;fill-opacity:1"><flowSpan
-   style="font-size:40px;fill:#ff0000;fill-opacity:1"
-   id="flowSpan3857">              76.4±5.7 %</flowSpan>. </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara3855">    </flowPara><flowPara
-       id="flowPara3847"
-       style="font-size:30px;fill:#000000;fill-opacity:1">        ► Worst performance: 68.6 %. </flowPara><flowPara
        id="flowPara3851"
-       style="font-size:30px;fill:#000000;fill-opacity:1">        ► Best performance: 84.3%. </flowPara></flowRoot>  <flowRoot
+       style="font-size:30px;fill:#000000;fill-opacity:1" /></flowRoot>  <flowRoot
      xml:space="preserve"
      id="flowRoot5085"
      style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
@@ -3003,4 +2938,37 @@
          id="flowPara5635-1-3-2-2"><flowSpan
    style="font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold;font-size:60px"
    id="flowSpan6298-2">Extracting Primitives from pictures</flowSpan>: </flowPara></flowRoot>  </g>
-</svg>
+  <image
+     y="1992.9922"
+     x="1480"
+     id="image55233"
+     xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Documents/poster/manySubs.png"
+     height="202.5"
+     width="1240" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot55288"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(838.8125,8.8722211)"><flowRegion
+       id="flowRegion55290"><rect
+         id="rect55292"
+         width="711.40027"
+         height="406.51443"
+         x="1321.172"
+         y="1664.2535"
+         style="fill:#0261ff;fill-opacity:1" /></flowRegion><flowPara
+       id="flowPara55310">Copy Painting<flowSpan
+   style="fill:#000000"
+   id="flowSpan55314"> results: </flowSpan></flowPara><flowPara
+       id="flowPara55322"
+       style="font-size:15px">    </flowPara><flowPara
+       id="flowPara55298"
+       style="font-size:30px;fill:#000000">    ● Copy performance: </flowPara><flowPara
+       id="flowPara55302"
+       style="font-size:30px;fill:#000000">        76.4±5.7 %.     </flowPara><flowPara
+       id="flowPara55304"
+       style="font-size:10px;fill:#000000">    </flowPara><flowPara
+       id="flowPara55306"
+       style="font-size:30px;fill:#000000">        ► Worst performance: 68.6 %. </flowPara><flowPara
+       id="flowPara55308"
+       style="font-size:30px;fill:#000000">        ► Best performance: 84.3%. </flowPara></flowRoot></svg>

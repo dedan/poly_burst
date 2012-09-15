@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg3925"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="New document 2">
+  <defs
+     id="defs3927" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="472"
+     inkscape:window-height="347"
+     inkscape:window-x="476"
+     inkscape:window-y="199"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata3930">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4520"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-1269.0527,-1463.6661)"><flowRegion
+         id="flowRegion4522"><rect
+           style="fill:#0261ff;fill-opacity:1"
+           id="rect4524"
+           width="820"
+           height="799.87781"
+           x="1320"
+           y="1772.9922" /></flowRegion><flowPara
+         id="flowPara4622"><flowSpan
+           style="font-style:italic;fill:#008000;fill-opacity:1;-inkscape-font-specification:Sans Italic"
+           id="flowSpan4548">ERP</flowSpan><flowSpan
+           style="fill:#008000"
+           id="flowSpan6216"> analysis</flowSpan><flowSpan
+           id="flowSpan5012"
+           style="fill:#000000">: </flowSpan></flowPara><flowPara
+         style="font-size:15px;fill:#000000;fill-opacity:1"
+         id="flowPara4552">    </flowPara><flowPara
+         id="flowPara4530"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● High pass filter to reduce drifts. </flowPara><flowPara
+         style="font-size:10px;fill:#000000;fill-opacity:1"
+         id="flowPara4566">    </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara5920">    ● Epochs: </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara4564">        ► -200 to 1000 ms. </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara5928">        ► Baseline substraction. </flowPara><flowPara
+         style="font-size:10px;fill:#000000;fill-opacity:1"
+         id="flowPara4554">    </flowPara><flowPara
+         id="flowPara4538"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● Artifact rejection. </flowPara><flowPara
+         style="font-size:10px;fill:#000000;fill-opacity:1"
+         id="flowPara4558">    </flowPara><flowPara
+         id="flowPara4540"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● Signed point-biserial correlation </flowPara><flowPara
+         id="flowPara4542"
+         style="font-size:30px;fill:#000000;fill-opacity:1">       coefficient (r<flowSpan
+   style="font-size:65.00091553%;baseline-shift:super;fill:#000000;fill-opacity:1"
+   id="flowSpan4560">2</flowSpan>): </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara4544">        ► Discriminative intervals for plot and </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara4546">           classification. </flowPara></flowRoot>  </g>
+</svg>
