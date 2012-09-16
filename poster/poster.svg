@@ -2164,9 +2164,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.046738807"
-     inkscape:cx="8327.744"
-     inkscape:cy="-1327.8505"
+     inkscape:zoom="0.45254834"
+     inkscape:cx="2190.8142"
+     inkscape:cy="3454.5151"
      inkscape:document-units="px"
      inkscape:current-layer="svg2"
      showgrid="true"
@@ -2194,17 +2194,10 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <rect
-     style="fill:#ffffff;stroke:#ffffff"
-     id="rect57264"
-     width="2840"
-     height="4080"
-     x="80"
-     y="52.992188" />
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
@@ -2241,7 +2234,7 @@
          style="font-size:70px"
          id="flowSpan57308">Seoane L F </flowSpan><flowSpan
          style="font-size:35px;baseline-shift:super"
-         id="flowSpan57296">1,2,3</flowSpan><flowSpan
+         id="flowSpan57296">1,2,3,†</flowSpan><flowSpan
          id="flowSpan6147"
          style="font-size:70px">, Gabler S</flowSpan><flowSpan
          style="font-size:35px;baseline-shift:super"
@@ -2253,32 +2246,19 @@
        style="font-size:10px;text-align:start;text-anchor:start"
        id="flowPara15568">        </flowPara><flowPara
        style="font-size:20px;text-align:start;text-anchor:start"
-       id="flowPara15570"><flowSpan
+       id="flowPara6036"><flowSpan
    style="font-size:20px;baseline-shift:super"
-   id="flowSpan15574">1</flowSpan> Bernstein Center for Computational Neuroscience, Berlin, Germany. </flowPara><flowPara
-       style="font-size:20px;text-align:start;text-anchor:start"
-       id="flowPara15572"><flowSpan
+   id="flowSpan15574">1</flowSpan> Bernstein Center for Computational Neuroscience, Berlin, Germany. <flowSpan
    style="font-size:20px;baseline-shift:super"
-   id="flowSpan15594">2</flowSpan> ICREA-Complex Systems Lab, Universitat Pompeu Fabra, Barcelona, Spain. </flowPara><flowPara
-       style="font-size:20px;text-align:start;text-anchor:start"
-       id="flowPara15582"><flowSpan
+   id="flowSpan15594">2</flowSpan> ICREA-Complex Systems Lab, Universitat Pompeu Fabra, Barcelona, Spain. <flowSpan
    style="font-size:20px;baseline-shift:super"
-   id="flowSpan15590">3</flowSpan> Institut de Biologia Evolutiva, UPF-CSIC, Barcelona, Spain. </flowPara><flowPara
-       style="font-size:20px;text-align:start;text-anchor:start"
-       id="flowPara15584"><flowSpan
+   id="flowSpan15590">3</flowSpan> Institut de Biologia Evolutiva, UPF-CSIC, Barcelona, Spain. <flowSpan
    style="font-size:20px;baseline-shift:super"
-   id="flowSpan15586">4</flowSpan> Neurotechnology Group, Berlin Institute of Technology, Germany. </flowPara><flowPara
+   id="flowSpan15586">4</flowSpan> Neurotechnology Group, Berlin Institute of Technology, Germany. † The author acknowledges ﬁnancial support of Fundación P. Barrié de la Maza. </flowPara><flowPara
        style="font-size:90px"
        id="flowPara57288" /><flowPara
        style="font-size:170px"
        id="flowPara57276" /></flowRoot>  <rect
-     style="fill:#ffffff;stroke:#ffffff"
-     id="rect57343"
-     width="2840"
-     height="1160"
-     x="80"
-     y="2972.9922" />
-  <rect
      style="fill:#ffffff;stroke:#ffffff;stroke-width:0.86279744000000003;stroke-opacity:0.98630138000000001"
      id="rect15664"
      width="920"
@@ -2338,126 +2318,13 @@
        id="flowPara15703"
        style="font-size:30px;fill:#000000;fill-opacity:1">            ♦ Browse a hierarchy of images? </flowPara><flowPara
        style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6581">            ♦ Impact on performance? </flowPara></flowRoot>  <flowRoot
-     xml:space="preserve"
-     id="flowRoot15589"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-     transform="translate(120,194.40347)"><flowRegion
-       id="flowRegion15591"><rect
-         id="rect15593"
-         width="805.71429"
-         height="1120"
-         x="80"
-         y="3018.7065" /></flowRegion><flowPara
-       id="flowPara15595"
-       style="font-size:40px;text-align:start;text-anchor:start"><flowSpan
-   style="font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold"
-   id="flowSpan4179">Genetic Algorithm</flowSpan> (GA): </flowPara><flowPara
-       style="font-size:40px;text-align:start;text-anchor:start"
-       id="flowPara6483">    Evolve a population of polygons </flowPara><flowPara
-       style="font-size:40px;text-align:start;text-anchor:start"
-       id="flowPara6485">to extract primitives: </flowPara><flowPara
-       style="font-size:15px"
-       id="flowPara15597">    </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15611" /><flowPara
-       style="font-size:30px"
-       id="flowPara15601">    ● Mutations: </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15614">        ► Change color of <flowSpan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
-   id="flowSpan6487">polygon</flowSpan>. </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15622">        ► Insert/remove/swap <flowSpan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
-   id="flowSpan6489">polygons</flowSpan>. </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15650">        ► Insert/remove/change <flowSpan
-   style="font-style:italic;-inkscape-font-specification:Sans Italic"
-   id="flowSpan6491">vertex</flowSpan>. </flowPara><flowPara
-       style="font-size:10px"
-       id="flowPara15644">    </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15646">    ● Only solid polygons: </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15638">        ► Avoid gestalt-like interactions. </flowPara><flowPara
-       style="font-size:10px"
-       id="flowPara15660">    </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15652">    ● Low number of polygons: </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15658">        ► Maximaze info. per polygon. </flowPara><flowPara
-       style="font-size:30px"
-       id="flowPara15664">        ► Spureous polygons are dismissed. </flowPara><flowPara
-       style="font-size:10px"
-       id="flowPara15624">    </flowPara><flowPara
-       style="font-size:10px"
-       id="flowPara6502" /><flowPara
-       style="font-size:10px"
-       id="flowPara6504" /><flowPara
-       style="font-size:40px"
-       id="flowPara15626"><flowSpan
-         style="font-size:30px"
-         id="flowSpan4153">    ● </flowSpan><flowSpan
-         style="font-size:25px;fill:#0000ff;stroke:#0000ff"
-         id="flowSpan15628">http://rogeralsing.com/2008/12/07/genetic-</flowSpan></flowPara><flowPara
-       style="font-size:25px;fill:#0000ff;stroke:#0000ff"
-       id="flowPara15630">          programming-evolution-of-mona-lisa/</flowPara></flowRoot>  <flowRoot
-     xml:space="preserve"
-     id="flowRoot3686"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-     transform="translate(41.0625,181.1197)"><flowRegion
-       id="flowRegion3688"><rect
-         id="rect3690"
-         width="919.99713"
-         height="239.93987"
-         x="958.94037"
-         y="3571.9326" /></flowRegion><flowPara
-       id="flowPara3692"
-       style="font-size:20px;text-align:justify;text-anchor:start"><flowSpan
-   style="font-size:20px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
-   id="flowSpan3694">Genetic algorithm at work</flowSpan>: (a) GA evolves a population of polygons to extract significative primiteves of a carrot. (b) Pieces shown to subjects for carrot reconstruction. </flowPara></flowRoot>  <g
-     id="g4213"
-     transform="matrix(0.95833333,0,0,1,80.000003,-40)">
-    <image
-       width="960"
-       height="600"
-       xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Documents/poster/carrot.png"
-       id="image15663"
-       x="960"
-       y="3132.9922" />
-    <image
-       width="960"
-       height="360"
-       xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Documents/poster/pieces.png"
-       id="image15757"
-       x="960"
-       y="3852.9922" />
-    <text
-       sodipodi:linespacing="125%"
-       id="text3696"
-       y="3172.9922"
-       x="960"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:50px;font-weight:bold;-inkscape-font-specification:Sans Bold"
-         y="3172.9922"
-         x="960"
-         id="tspan3698"
-         sodipodi:role="line">a</tspan></text>
-    <text
-       sodipodi:linespacing="125%"
-       id="text3700"
-       y="3892.9922"
-       x="960"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       xml:space="preserve"><tspan
-         style="font-size:50px;font-weight:bold;-inkscape-font-specification:Sans Bold"
-         y="3892.9922"
-         x="960"
-         id="tspan3702"
-         sodipodi:role="line">b</tspan></text>
-  </g>
+       id="flowPara6581">            ♦ Impact on performance? </flowPara></flowRoot>  <image
+     y="3452.9922"
+     x="84.117432"
+     id="image15663"
+     xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Documents/poster/carrot.png"
+     height="720"
+     width="1115.8826" />
   <image
      y="1172.9922"
      x="80"
@@ -2536,12 +2403,12 @@
      id="image15611"
      xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/trial_b.png"
      height="440"
-     width="1120" />
+     width="1120"
+     style="stroke:#000000;stroke-opacity:1" />
   <g
-     id="g6118"
-     transform="translate(0,-180.00003)">
+     id="g5956">
     <flowRoot
-       transform="matrix(1,0,0,1.0000011,0.59375,1399.2445)"
+       transform="matrix(1,0,0,1.0000011,0.59375,1219.2445)"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot3712-5"
        xml:space="preserve"><flowRegion
@@ -2567,7 +2434,7 @@
          style="font-size:30px">        ► ~36 minutes. </flowPara><flowPara
          style="font-size:30px"
          id="flowPara4413">        ► Voluntary pauses. </flowPara></flowRoot>    <flowRoot
-       transform="matrix(1,0,0,1.0000011,600.59375,1399.2445)"
+       transform="matrix(1,0,0,1.0000011,600.59375,1219.2445)"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot3712-7-2"
        xml:space="preserve"><flowRegion
@@ -2609,7 +2476,7 @@
      x="1280"
      y="2392.9922" />
   <rect
-     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:10.06153869999999984;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:10.0615387;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
      id="rect4480"
      width="1640"
      height="740"
@@ -2702,7 +2569,7 @@
        id="rect5643"
        style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:8.60857868;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     <flowRoot
-       transform="translate(38,131.31224)"
+       transform="translate(18,131.31224)"
        style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot5629"
        xml:space="preserve"><flowRegion
@@ -2714,8 +2581,8 @@
            id="rect5633"
            style="font-size:60px" /></flowRegion><flowPara
          id="flowPara5635"><flowSpan
-   id="flowSpan5637"
-   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Training the classifier</flowSpan>: </flowPara></flowRoot>  </g>
+           id="flowSpan5637"
+           style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Training the classifier</flowSpan></flowPara></flowRoot>  </g>
   <flowRoot
      xml:space="preserve"
      id="flowRoot5943"
@@ -2736,17 +2603,16 @@
        id="flowPara6021"> ● An LDA classifier was trained to discriminate brain activity and retrieve correct pieces from given pictures.  </flowPara><flowPara
        style="font-size:40px;text-align:justify;text-anchor:start"
        id="flowPara6009" /></flowRoot>  <g
-     id="g5959-7"
-     transform="translate(0,969.96749)">
+     id="g4883">
     <rect
-       y="1031.4589"
+       y="2001.4264"
        x="120"
        height="88.929153"
        width="1080"
        id="rect5643-7"
-       style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:8.60857868;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+       style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:8.60857868000000082;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     <flowRoot
-       transform="translate(-2,151.1885)"
+       transform="translate(18,1121.156)"
        style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        id="flowRoot5629-1"
        xml:space="preserve"><flowRegion
@@ -2757,9 +2623,8 @@
            width="691.63092"
            id="rect5633-9"
            style="font-size:60px" /></flowRegion><flowPara
-         id="flowPara5635-1"><flowSpan
-   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold"
-   id="flowSpan6003">Copy painting task</flowSpan>: </flowPara></flowRoot>  </g>
+         style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold"
+         id="flowPara5635-1">Copy painting task </flowPara></flowRoot>  </g>
   <g
      id="g6246">
     <g
@@ -2786,9 +2651,9 @@
            style="font-size:60px" /></flowRegion><flowPara
          id="flowPara5635-1-3"><flowSpan
    id="flowSpan6212"
-   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Data Analysis</flowSpan> and <flowSpan
+   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Data Analysis</flowSpan> and <flowSpan
    id="flowSpan6210"
-   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Results</flowSpan>: </flowPara></flowRoot>  </g>
+   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Results</flowSpan></flowPara></flowRoot>  </g>
   <g
      id="g6419">
     <g
@@ -2815,8 +2680,8 @@
            id="rect5633-9-0-0"
            style="font-size:60px" /></flowRegion><flowPara
          id="flowPara5635-1-3-2"><flowSpan
-   style="font-size:60px;font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold"
-   id="flowSpan6298">Discussion</flowSpan>: </flowPara></flowRoot>  </g>
+           style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold"
+           id="flowSpan6298">Discussion</flowSpan></flowPara></flowRoot>  </g>
   <flowRoot
      xml:space="preserve"
      id="flowRoot6309"
@@ -2908,37 +2773,7 @@
        style="font-size:30px"
        id="flowPara6413">    ● Develope actual applications. </flowPara><flowPara
        style="font-size:30px"
-       id="flowPara6411" /></flowRoot>  <g
-     id="g6474"
-     transform="translate(0,-120.00002)">
-    <g
-       style="fill:#666666;stroke:#666666"
-       transform="matrix(1.7297297,0,0,1,-2112.4324,2440)"
-       id="g6222-5-5">
-      <rect
-         style="fill:#666666;fill-opacity:1;stroke:#666666;stroke-width:10.07744503;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         id="rect5643-7-2-1-5"
-         width="1480"
-         height="88.929153"
-         x="1360"
-         y="671.45886" />
-    </g>
-    <flowRoot
-       transform="translate(638,2231.1235)"
-       style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       id="flowRoot5629-1-1-3-2"
-       xml:space="preserve"><flowRegion
-         id="flowRegion5631-0-5-1-4"><rect
-           y="892.04382"
-           x="322.01437"
-           height="129.82486"
-           width="1359.9856"
-           id="rect5633-9-0-0-2"
-           style="font-size:60px" /></flowRegion><flowPara
-         id="flowPara5635-1-3-2-2"><flowSpan
-   style="font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold;font-size:60px"
-   id="flowSpan6298-2">Extracting Primitives from pictures</flowSpan>: </flowPara></flowRoot>  </g>
-  <image
+       id="flowPara6411" /></flowRoot>  <image
      y="1992.9922"
      x="1480"
      id="image55233"
@@ -2971,4 +2806,85 @@
        id="flowPara55306"
        style="font-size:30px;fill:#000000">        ► Worst performance: 68.6 %. </flowPara><flowPara
        id="flowPara55308"
-       style="font-size:30px;fill:#000000">        ► Best performance: 84.3%. </flowPara></flowRoot></svg>
+       style="font-size:30px;fill:#000000">        ► Best performance: 84.3%. </flowPara></flowRoot>  <rect
+     style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:8.60857868;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="rect5643-7-1"
+     width="1080"
+     height="88.929153"
+     x="120"
+     y="2932.9922" />
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot5629-1-4"
+     style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(-22,2051.156)"><flowRegion
+       id="flowRegion5631-0-7"><rect
+         style="font-size:60px"
+         id="rect5633-9-5"
+         width="759.9856"
+         height="148.22656"
+         x="322.01437"
+         y="892.04382" /></flowRegion><flowPara
+       id="flowPara5635-1-6"
+       style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Extracting primitives </flowPara></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot5848"
+     style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
+       id="flowRegion5850"><rect
+         id="rect5852"
+         width="1122.4126"
+         height="119.61621"
+         x="77.587349"
+         y="3053.376"
+         style="text-align:center;text-anchor:middle;fill:#0261ff;fill-opacity:1" /></flowRegion><flowPara
+       id="flowPara5854">Genetic Algrithm<flowSpan
+   style="fill:#000000"
+   id="flowSpan5856"> to evolve a population of polygons and extract image primitives: </flowSpan></flowPara></flowRoot>  <flowRoot
+     xml:space="preserve"
+     id="flowRoot5866"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+     transform="translate(1.875,2.2772127)"><flowRegion
+       id="flowRegion5868"><rect
+         id="rect5870"
+         width="601.875"
+         height="422.1875"
+         x="78.125"
+         y="3170.8047" /></flowRegion><flowPara
+       id="flowPara5872"
+       style="font-size:30px">    ● Pixel color distance as fitness </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5874">       function. </flowPara><flowPara
+       style="font-size:10px"
+       id="flowPara6007">    </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5878">    ● Mutations: </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5882">        ► Change color of polygon. </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5884">        ► Insert/remove/swap polygons. </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5886">        ► Insert/remove/change vertex.</flowPara></flowRoot>  <flowRoot
+     transform="translate(601.875,2.2772127)"
+     xml:space="preserve"
+     id="flowRoot5866-3"
+     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
+       id="flowRegion5868-7"><rect
+         id="rect5870-7"
+         width="580"
+         height="429.91028"
+         x="78.125"
+         y="3170.8047" /></flowRegion><flowPara
+       style="font-size:30px"
+       id="flowPara5986">    ● Using only solid colors avoid </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara6003">       interactions between tones. </flowPara><flowPara
+       style="font-size:10px"
+       id="flowPara6010">    </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5886-9">    ● Low number of polygons: </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5997">        ► Maximize info. per polygon. </flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara5999">        ► Spureous components are</flowPara><flowPara
+       style="font-size:30px"
+       id="flowPara6005">           dismissed. </flowPara></flowRoot></svg>

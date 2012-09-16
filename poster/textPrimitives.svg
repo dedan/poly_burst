@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg5748"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="New document 11">
+  <defs
+     id="defs5750" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="375"
+     inkscape:cy="520"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="472"
+     inkscape:window-height="367"
+     inkscape:window-x="626"
+     inkscape:window-y="182"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5753">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot15589"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-114.23549,-2801.5128)"><flowRegion
+         id="flowRegion15591"><rect
+           id="rect15593"
+           width="805.71429"
+           height="1120"
+           x="80"
+           y="3018.7065" /></flowRegion><flowPara
+         id="flowPara15595"
+         style="font-size:40px;text-align:start;text-anchor:start"><flowSpan
+   style="font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold"
+   id="flowSpan4179">Genetic Algorithm</flowSpan> (GA): </flowPara><flowPara
+         style="font-size:40px;text-align:start;text-anchor:start"
+         id="flowPara6483">    Evolve a population of polygons </flowPara><flowPara
+         style="font-size:40px;text-align:start;text-anchor:start"
+         id="flowPara6485">to extract primitives: </flowPara><flowPara
+         style="font-size:15px"
+         id="flowPara15597">    </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15611" /><flowPara
+         style="font-size:30px"
+         id="flowPara15601">    ● Mutations: </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15614">        ► Change color of <flowSpan
+   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   id="flowSpan6487">polygon</flowSpan>. </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15622">        ► Insert/remove/swap <flowSpan
+   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   id="flowSpan6489">polygons</flowSpan>. </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15650">        ► Insert/remove/change <flowSpan
+   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   id="flowSpan6491">vertex</flowSpan>. </flowPara><flowPara
+         style="font-size:10px"
+         id="flowPara15644">    </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15646">    ● Only solid polygons: </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15638">        ► Avoid gestalt-like interactions. </flowPara><flowPara
+         style="font-size:10px"
+         id="flowPara15660">    </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15652">    ● Low number of polygons: </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15658">        ► Maximaze info. per polygon. </flowPara><flowPara
+         style="font-size:30px"
+         id="flowPara15664">        ► Spureous polygons are dismissed. </flowPara><flowPara
+         style="font-size:10px"
+         id="flowPara15624">    </flowPara><flowPara
+         style="font-size:10px"
+         id="flowPara6502" /><flowPara
+         style="font-size:10px"
+         id="flowPara6504" /><flowPara
+         style="font-size:40px"
+         id="flowPara15626"><flowSpan
+           style="font-size:30px"
+           id="flowSpan4153">    ● </flowSpan><flowSpan
+           style="font-size:25px;fill:#0000ff;stroke:#0000ff"
+           id="flowSpan15628">http://rogeralsing.com/2008/12/07/genetic-</flowSpan></flowPara><flowPara
+         style="font-size:25px;fill:#0000ff;stroke:#0000ff"
+         id="flowPara15630">          programming-evolution-of-mona-lisa/</flowPara></flowRoot>  </g>
+</svg>
