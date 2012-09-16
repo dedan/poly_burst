@@ -141,18 +141,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.12374369"
-     inkscape:cx="196.42992"
-     inkscape:cy="160.97497"
+     inkscape:zoom="0.37306685"
+     inkscape:cx="132.85161"
+     inkscape:cy="1181.7246"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-to-guides="true"
-     inkscape:window-width="475"
-     inkscape:window-height="367"
-     inkscape:window-x="684"
-     inkscape:window-y="244"
-     inkscape:window-maximized="0">
+     inkscape:window-width="1280"
+     inkscape:window-height="1000"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
        id="grid3237" />
@@ -165,7 +165,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -486,32 +486,14 @@
              id="tspan4578-2"
              x="1150"
              y="-77.637817">Feedback </tspan></text>
-        <flowRoot
-           xml:space="preserve"
-           id="flowRoot4601"
-           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
-             id="flowRegion4603"><rect
-               id="rect4605"
-               width="277.92859"
-               height="278.01031"
-               x="1002.0714"
-               y="454.35187" /></flowRegion><flowPara
-             id="flowPara4607"
-             style="text-align:justify;text-anchor:start">New polygons complement older ones. </flowPara></flowRoot>      </g>
+      </g>
     </g>
-    <flowRoot
-       xml:space="preserve"
-       id="flowRoot3145"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       transform="translate(-1.0625,-160.13278)"><flowRegion
-         id="flowRegion3147"><rect
-           id="rect3149"
-           width="2240.0083"
-           height="406.20221"
-           x="-1118.9458"
-           y="772.62573" /></flowRegion><flowPara
-         id="flowPara3151"
-         style="font-size:30px;text-align:justify;text-anchor:start"><flowSpan
-   style="font-size:30px;font-weight:bold;text-align:justify;text-anchor:start;-inkscape-font-specification:Sans Bold"
-   id="flowSpan3153">Illustration of the copy-painting feedback</flowSpan>: Bursts are initially similar to those from the training phase. At the end of each burst, correct stimulus is shown together with the stimulus chosen by the classifier. In successive bursts, correct polygons remain in the displayarea so that new polygons build upon them to reconstruct the original picture.  </flowPara></flowRoot>  </g>
+    <rect
+       style="fill:none;stroke:#e6e6e6;stroke-width:9.91341782;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3053"
+       width="2280"
+       height="760"
+       x="-1160"
+       y="-147.63782" />
+  </g>
 </svg>
