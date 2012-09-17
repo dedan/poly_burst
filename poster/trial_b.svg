@@ -141,9 +141,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.95161193"
-     inkscape:cx="132.85161"
-     inkscape:cy="1181.7246"
+     inkscape:zoom="0.14706307"
+     inkscape:cx="-885.74488"
+     inkscape:cy="1363.7989"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -174,18 +174,17 @@
      inkscape:groupmode="layer"
      id="layer1">
     <g
-       id="g3086"
-       transform="matrix(1,0,0,0.80770456,-314.97095,-20.374727)">
+       id="g3176">
       <g
-         id="g4240">
+         id="g3148">
         <path
-           style="fill:none;stroke:#000000;stroke-width:16.57830048;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mend);marker-end:url(#Arrow1Mend)"
-           d="M -541.98205,684.3549 280.00001,172.36218"
+           style="fill:none;stroke:#000000;stroke-width:14.89931393;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mend);marker-end:url(#Arrow1Mend)"
+           d="M -856.953,532.38185 -34.97094,118.84299"
            id="path6429"
            inkscape:connector-curvature="0" />
         <g
            id="g4231"
-           transform="translate(840,220)">
+           transform="matrix(1,0,0,0.80770456,525.02905,157.32028)">
           <rect
              y="-272.5755"
              x="-885.02911"
@@ -233,7 +232,7 @@
                sodipodi:role="line">chosen </tspan></text>
         </g>
         <g
-           transform="matrix(0.97229614,0,0,0.9426501,-542.03056,-39.842956)"
+           transform="matrix(0.97229614,0,0,0.76138278,-857.00151,-52.556064)"
            id="g3900">
           <rect
              y="126.99633"
@@ -251,7 +250,7 @@
              y="132.36218" />
         </g>
         <g
-           transform="matrix(0.97229614,0,0,0.9426501,-542.03056,-39.842956)"
+           transform="matrix(0.97229614,0,0,0.76138278,-857.00151,-52.556064)"
            id="g3879">
           <rect
              y="91.630493"
@@ -269,7 +268,8 @@
              y="96.868584" />
         </g>
         <g
-           id="g3399">
+           id="g3399"
+           transform="matrix(1,0,0,0.80770456,-314.97095,-20.374727)">
           <rect
              y="206.78305"
              x="-464.24689"
@@ -286,7 +286,7 @@
              y="211.84117" />
         </g>
         <g
-           transform="matrix(0.97229614,0,0,0.9426501,-542.03056,-39.842956)"
+           transform="matrix(0.97229614,0,0,0.76138278,-857.00151,-52.556064)"
            id="g3885">
           <rect
              y="321.63049"
@@ -305,7 +305,7 @@
              style="fill:#550000;fill-opacity:1" />
         </g>
         <g
-           transform="matrix(0.97229614,0,0,0.9426501,-542.03056,-39.842956)"
+           transform="matrix(0.97229614,0,0,0.76138278,-857.00151,-52.556064)"
            id="g3875">
           <rect
              y="492.36215"
@@ -322,19 +322,21 @@
              x="-254.82759"
              y="497.60025" />
         </g>
+        <text
+           xml:space="preserve"
+           style="font-size:35.94895554px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           x="-274.08466"
+           y="-92.445686"
+           id="text4576"
+           sodipodi:linespacing="125%"
+           transform="scale(1.1126888,0.89872385)"><tspan
+             sodipodi:role="line"
+             id="tspan4578"
+             x="-274.08466"
+             y="-92.445686">Feedback </tspan></text>
       </g>
-      <text
-         sodipodi:linespacing="125%"
-         id="text4576"
-         y="-77.637817"
-         x="10"
-         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-         xml:space="preserve"><tspan
-           y="-77.637817"
-           x="10"
-           id="tspan4578"
-           sodipodi:role="line">Feedback </tspan></text>
       <g
+         transform="matrix(1,0,0,0.80770456,-314.97095,-20.374727)"
          id="g3055">
         <path
            style="fill:none;stroke:#000000;stroke-width:16.57830048;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#Arrow1Mend);marker-end:url(#Arrow1Mend)"
@@ -487,13 +489,13 @@
              x="1150"
              y="-77.637817">Feedback </tspan></text>
       </g>
+      <rect
+         y="-147.63782"
+         x="-1160"
+         height="760"
+         width="2280"
+         id="rect3053"
+         style="fill:none;stroke:#ffffff;stroke-width:9.91341781999999938;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
     </g>
-    <rect
-       style="fill:none;stroke:#ffffff;stroke-width:9.91341781999999938;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       id="rect3053"
-       width="2280"
-       height="760"
-       x="-1160"
-       y="-147.63782" />
   </g>
 </svg>

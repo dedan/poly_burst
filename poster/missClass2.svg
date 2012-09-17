@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg3243"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="missClass2.svg"
+   inkscape:export-filename="/home/brigan/Desktop/Research/BCI Image Reconstruction/Documents/poster/missClass2.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300">
+  <defs
+     id="defs3245">
+    <marker
+       inkscape:stockid="SquareS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="SquareS"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path4469"
+         d="M -5,-5 -5,5 5,5 5,-5 -5,-5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.2,0.2)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Mend"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3952"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="SquareS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3121"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3123"
+         d="M -5,-5 -5,5 5,5 5,-5 -5,-5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.2,0.2)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3125"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3127"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="SquareS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3129"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3131"
+         d="M -5,-5 -5,5 5,5 5,-5 -5,-5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="scale(0.2,0.2)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Mend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3133"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3135"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.4,0,0,-0.4,-4,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.40885851"
+     inkscape:cx="1057.3883"
+     inkscape:cy="286.92254"
+     inkscape:document-units="px"
+     inkscape:current-layer="g3054-6"
+     showgrid="true"
+     inkscape:window-width="1366"
+     inkscape:window-height="744"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3492" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata3248">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3134">
+      <rect
+         y="-513.01141"
+         x="400.39731"
+         height="800"
+         width="1119.6027"
+         id="rect3382"
+         style="fill:#ececec;fill-opacity:1;stroke:#808000;stroke-width:12.46997833;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <flowRoot
+         transform="translate(90.241117,-53.68632)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3384"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3386"><rect
+             y="-399.00211"
+             x="390.1517"
+             height="665.0506"
+             width="879.60718"
+             id="rect3388" /></flowRegion><flowPara
+           style="font-size:100px"
+           id="flowPara3390"><flowSpan
+   id="flowSpan3775"
+   style="font-weight:bold;fill:#ff6600;-inkscape-font-specification:Sans Bold">Target</flowSpan> polygons</flowPara><flowPara
+           id="flowPara3396"
+           style="font-size:100px" /></flowRoot>      <g
+         transform="translate(-295,-145)"
+         id="g3759">
+        <rect
+           style="fill:#0000ff;fill-opacity:1;stroke:#0000ff;stroke-width:10.42832661;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3271-4-39"
+           width="210"
+           height="290"
+           x="-42.637817"
+           y="-1545"
+           transform="matrix(0,1,-1,0,0,0)" />
+        <image
+           y="-37.637817"
+           x="1260"
+           id="image3693"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/decomp/decomp_3.png"
+           height="200"
+           width="280" />
+      </g>
+      <g
+         transform="translate(-15,-255)"
+         id="g3763">
+        <rect
+           style="fill:#0000ff;fill-opacity:1;stroke:#0000ff;stroke-width:10.42832661;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3271-4-3"
+           width="210"
+           height="290"
+           x="187.36218"
+           y="-1340"
+           transform="matrix(0,1,-1,0,0,0)" />
+        <image
+           y="192.36218"
+           x="1055"
+           id="image3682"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/decomp/decomp_1.png"
+           height="195"
+           width="280" />
+      </g>
+      <g
+         transform="translate(-285,-445)"
+         id="g3741">
+        <rect
+           style="fill:#0000ff;fill-opacity:1;stroke:#0000ff;stroke-width:10.42832661;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3271-4"
+           width="210"
+           height="290"
+           x="412.36218"
+           y="-1370"
+           transform="matrix(0,1,-1,0,0,0)" />
+        <image
+           y="417.36218"
+           x="1085"
+           id="image3671"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/decomp/decomp_0.png"
+           height="200"
+           width="280" />
+      </g>
+    </g>
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:37.5;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3193"
+       width="825"
+       height="1125"
+       x="-634.48859"
+       y="-407.10263"
+       transform="matrix(0,-1,1,0,0,0)" />
+    <image
+       y="-152.63782"
+       x="-375"
+       id="image3502"
+       xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/135/image.png"
+       height="750"
+       width="1060" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3263"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ff0000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(3.75,0,0,3.75,-929.375,-1124.5721)"><flowRegion
+         id="flowRegion3265"><rect
+           id="rect3267"
+           width="154.6875"
+           height="45.3125"
+           x="162.5"
+           y="263.29968"
+           style="fill:#ff0000" /></flowRegion><flowPara
+         id="flowPara3269"
+         style="font-weight:bold;fill:#ff0000;-inkscape-font-specification:Sans Bold">Target</flowPara></flowRoot>    <g
+       id="g3152">
+      <rect
+         y="1452.3622"
+         x="1054.9683"
+         height="640"
+         width="945.03162"
+         id="rect3108-3"
+         style="fill:#cccccc;fill-opacity:1;stroke:#000080;stroke-width:10;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <flowRoot
+         transform="translate(80,3120)"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3420-9"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3422-4"><rect
+             y="-1631.8815"
+             x="1295.3036"
+             height="475.98508"
+             width="694.47003"
+             id="rect3424-3" /></flowRegion><flowPara
+           style="font-size:90px;font-weight:bold;fill:#800000;-inkscape-font-specification:Sans Bold"
+           id="flowPara3426-7">Non-target</flowPara></flowRoot>      <g
+         transform="translate(-460,637)"
+         id="g3981">
+        <rect
+           style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:10;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3193-9-2"
+           width="220"
+           height="300"
+           x="-942.36218"
+           y="1450"
+           transform="matrix(0,-1,1,0,0,0)" />
+        <image
+           y="735.36218"
+           x="1459"
+           id="image3952"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/016/image.png"
+           height="197"
+           width="281" />
+      </g>
+      <g
+         transform="translate(-625,2180)"
+         id="g3846">
+        <rect
+           style="fill:#808080;fill-opacity:1;stroke:#4d4d4d;stroke-width:9.29320335;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3455-5-1-4"
+           width="200"
+           height="285"
+           x="-367.63782"
+           y="-2145"
+           transform="matrix(0,1,-1,0,0,0)" />
+        <image
+           y="-367.63782"
+           x="1860"
+           id="image3806"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/016/decomp/decomp_3.png"
+           height="200"
+           width="285" />
+      </g>
+      <g
+         transform="translate(-440,2560)"
+         id="g3850">
+        <rect
+           style="fill:#808080;fill-opacity:1;stroke:#4d4d4d;stroke-width:9.21132374;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+           id="rect3455-5-1"
+           width="200"
+           height="280"
+           x="-827.63782"
+           y="-2120"
+           transform="matrix(0,1,-1,0,0,0)" />
+        <image
+           y="-827.63782"
+           x="1840"
+           id="image3795"
+           xlink:href="file:///home/brigan/Research/BCI%20Image%20Reconstruction/Code/Pyff/src/Feedbacks/TrainingFeedback/data/190412_145725/016/decomp/decomp_0.png"
+           height="200"
+           width="280" />
+      </g>
+    </g>
+    <g
+       id="g3168">
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path6429-5"
+         d="M -399.99996,612.36216 C -520,1172.3622 640,1852.3622 1120,1812.3622"
+         style="fill:none;stroke:#000000;stroke-width:19.50000000000000000;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:78.09999847000000273;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#SquareS);marker-end:url(#Arrow1Mend)" />
+      <rect
+         y="572.36218"
+         x="-440"
+         height="80.000031"
+         width="80"
+         id="rect5249"
+         style="fill:#0000ff;fill-opacity:1;stroke:#000080;stroke-width:19.50000000000000000;stroke-miterlimit:78.09999847000000273;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g3126">
+      <g
+         transform="translate(-160,-79.999983)"
+         id="g3054">
+        <rect
+           style="fill:#cccccc;fill-opacity:1;stroke:#000080;stroke-width:18.79067039;stroke-miterlimit:78.09999847;stroke-opacity:1;stroke-dasharray:none"
+           id="rect5259"
+           width="720"
+           height="520"
+           x="120"
+           y="1132.3622" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot5251"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           transform="translate(832.1875,1786.7185)"><flowRegion
+             id="flowRegion5253"><rect
+               id="rect5255"
+               width="632.19623"
+               height="726.39362"
+               x="-672.19623"
+               y="-594.03143" /></flowRegion><flowPara
+             id="flowPara5257"
+             style="font-size:100px">Often retrieved by the lemon</flowPara></flowRoot>      </g>
+    </g>
+    <g
+       id="g3172">
+      <path
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0"
+         id="path6429"
+         d="M 2000,1452.3622 C 2431.351,95.065079 1760,172.36218 1440,92.362183"
+         style="fill:none;stroke:#000000;stroke-width:19.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:78.09999847;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#SquareS);marker-end:url(#Arrow1Mend)" />
+      <rect
+         y="1412.3622"
+         x="1960"
+         height="80.000031"
+         width="80"
+         id="rect5249-7"
+         style="fill:#ffff00;fill-opacity:1;stroke:#808000;stroke-width:19.50000000000000000;stroke-miterlimit:78.09999847000000273;stroke-opacity:1;stroke-dasharray:none" />
+    </g>
+    <g
+       id="g3054-6"
+       transform="matrix(1.2222222,0,0,1.1538461,1453.3333,-934.2095)">
+      <g
+         id="g3119">
+        <rect
+           style="fill:#ececec;fill-opacity:1;stroke:#808000;stroke-width:18.79067038999999895;stroke-miterlimit:78.09999847000000273;stroke-opacity:1;stroke-dasharray:none"
+           id="rect5259-8"
+           width="720"
+           height="520"
+           x="54.545494"
+           y="1167.0288" />
+        <flowRoot
+           xml:space="preserve"
+           id="flowRoot5251-9"
+           style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+           transform="translate(832.1875,1786.7185)"><flowRegion
+             id="flowRegion5253-7"><rect
+               id="rect5255-2"
+               width="614.5542"
+               height="667.67517"
+               x="-672.19623"
+               y="-594.03143" /></flowRegion><flowPara
+             id="flowPara5257-8"
+             style="font-size:100px">Usually, errors are mutual. </flowPara></flowRoot>      </g>
+    </g>
+  </g>
+</svg>

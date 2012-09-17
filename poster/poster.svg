@@ -2204,12 +2204,12 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.27974912"
-     inkscape:cx="1409.1088"
-     inkscape:cy="3663.0169"
+     inkscape:zoom="0.18690675"
+     inkscape:cx="2450.3091"
+     inkscape:cy="4292.9107"
      inkscape:document-units="px"
      inkscape:current-layer="svg2"
-     showgrid="true"
+     showgrid="false"
      inkscape:snap-grids="true"
      inkscape:snap-page="false"
      inkscape:window-width="1366"
@@ -2234,23 +2234,22 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:#808000;stroke-width:10;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+     id="rect3890"
+     width="3322.5125"
+     height="4403.2656"
+     x="-160.50784"
+     y="-93.968422" />
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,3160.6299)">
-    <image
-       y="-2027.6377"
-       x="1320"
-       id="image15612"
-       xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/ERP.png"
-       height="880"
-       width="1619.9211" />
-  </g>
+     transform="translate(0,3160.6299)" />
   <flowRoot
      xml:space="preserve"
      id="flowRoot57266"
@@ -2311,45 +2310,9 @@
          y="3012.9309"
          style="fill:#0261ff;fill-opacity:1" /></flowRegion><flowPara
        style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6581" /></flowRoot>  <flowRoot
-     xml:space="preserve"
-     id="flowRoot4577"
-     style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-     transform="translate(-803.65625,277.93472)"><flowRegion
-       id="flowRegion4579"><rect
-         style="fill:#000000;fill-opacity:1"
-         id="rect4581"
-         width="720.1134"
-         height="673.86761"
-         x="2163.6436"
-         y="1775.177" /></flowRegion><flowPara
-       id="flowPara4583">Classification performance: </flowPara><flowPara
-       id="flowPara6119"
-       style="font-size:15px">    </flowPara><flowPara
-       id="flowPara4589"
-       style="font-size:30px;fill:#000000;fill-opacity:1">    ●Training: </flowPara><flowPara
-       id="flowPara4591"
-       style="font-size:30px;fill:#000000;fill-opacity:1">        ► ROC loss: 22.4±4.2 %. </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara55318">        ► Correct hits: 68,0±3,4 %. </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6139">        ► Correct miss: 75.0±3.4 %. </flowPara><flowPara
-       style="font-size:10px;fill:#000000;fill-opacity:1"
-       id="flowPara4607">    </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6146">    ● Copy painting: </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6148">        ► Average performance: 76.4±5.7 %.</flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6150">        ► Worst performance: 68.6 %. </flowPara><flowPara
-       style="font-size:30px;fill:#000000;fill-opacity:1"
-       id="flowPara6152">        ► Best performance: 84.3%.</flowPara><flowPara
-       style="fill:#000000"
-       id="flowPara4236" /><flowPara
-       id="flowPara3851"
-       style="font-size:30px;fill:#000000;fill-opacity:1" /></flowRoot>  <g
+       id="flowPara6581" /></flowRoot>  <g
      id="g4005"
-     transform="translate(0,-58.466674)">
+     transform="translate(0,-100)">
     <image
        width="1120"
        height="520"
@@ -2465,8 +2428,7 @@
        id="flowPara4351">    </flowPara><flowPara
        style="font-size:40px;text-align:start;text-anchor:start"
        id="flowPara4349">    ■ Subjects had a high success probability when reconstructing a set of given pictures. </flowPara></flowRoot>  <g
-     id="g3970"
-     transform="translate(0,-28.434204)">
+     id="g4035">
     <image
        style="stroke:#000000;stroke-opacity:1"
        width="1120"
@@ -2474,8 +2436,9 @@
        xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/trial_b.png"
        id="image15611"
        x="80"
-       y="2092.9922" />
+       y="2032.9922" />
     <g
+       transform="translate(0,-60.000012)"
        id="g5956">
       <flowRoot
          xml:space="preserve"
@@ -2489,17 +2452,15 @@
              x="79.40625"
              y="1323.8374" /></flowRegion><flowPara
            style="font-size:30px"
-           id="flowPara3782-1">    ● 10 blocks/burst. </flowPara><flowPara
+           id="flowPara3782-1">    ● 6 polygons/block (1 target). </flowPara><flowPara
            style="font-size:10px"
            id="flowPara3766-6">    </flowPara><flowPara
            id="flowPara4409"
-           style="font-size:30px">    ● 6 polygons/block (1 target). </flowPara><flowPara
+           style="font-size:30px">    ● 10 blocks/burst. </flowPara><flowPara
            id="flowPara5418"
            style="font-size:9.99999428px">    </flowPara><flowPara
-           style="font-size:30px"
-           id="flowPara3784-2">    ● 15 random pictures are </flowPara><flowPara
            id="flowPara6145"
-           style="font-size:30px">        reconstructed:  </flowPara><flowPara
+           style="font-size:30px">    ● 15 random pictures are reconstructed:  </flowPara><flowPara
            style="font-size:30px"
            id="flowPara3802-84">        ► ~36 minutes. </flowPara><flowPara
            id="flowPara4413"
@@ -2537,6 +2498,7 @@
            id="flowPara6115"
            style="font-size:30px">        ► Small details added later. </flowPara></flowRoot>    </g>
     <g
+       transform="translate(0,-60.000012)"
        id="g4883">
       <rect
          style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:8.60857868;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
@@ -2561,38 +2523,8 @@
            style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Copy painting task </flowPara></flowRoot>    </g>
   </g>
   <g
-     id="g6246"
-     transform="translate(-5,342.60417)">
-    <g
-       id="g6222">
-      <rect
-         style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:10.07744503;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         id="rect5643-7-2"
-         width="1480"
-         height="88.929153"
-         x="1360"
-         y="671.45886" />
-    </g>
-    <flowRoot
-       transform="translate(1338,-208.84401)"
-       style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
-       id="flowRoot5629-1-1"
-       xml:space="preserve"><flowRegion
-         id="flowRegion5631-0-5"><rect
-           y="892.04382"
-           x="322.01437"
-           height="249.79237"
-           width="889.9856"
-           id="rect5633-9-0"
-           style="font-size:60px" /></flowRegion><flowPara
-         id="flowPara5635-1-3"><flowSpan
-   id="flowSpan6212"
-   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Data Analysis</flowSpan> and <flowSpan
-   id="flowSpan6210"
-   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Results</flowSpan></flowPara></flowRoot>  </g>
-  <g
      id="g4164"
-     transform="translate(0,280)">
+     transform="translate(0,260)">
     <flowRoot
        transform="translate(39.0625,82.278471)"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#0261ff;fill-opacity:1;stroke:none;font-family:Sans"
@@ -2741,9 +2673,11 @@
    id="flowSpan6491"
    style="font-weight:bold;fill:#000000;fill-opacity:1;-inkscape-font-specification:Sans Bold">Current polygons</flowSpan> work just fine, but: </flowPara><flowPara
          id="flowPara6475"
-         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Local primitives for each picture. </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► <flowSpan
+   style="font-style:italic;-inkscape-font-specification:Sans Italic"
+   id="flowSpan4074">Local</flowSpan> primitives for each picture. </flowPara><flowPara
          id="flowPara6477"
-         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Only given images can be constructed. </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Only given images can be retrieved. </flowPara><flowPara
          id="flowPara6479"
          style="font-size:30px;fill:#000000;fill-opacity:1">        ► Polygons might not be optimal. </flowPara><flowPara
          id="flowPara6493"
@@ -2801,7 +2735,7 @@
        id="flowPara6357"
        style="font-size:30px;text-align:center;text-anchor:middle;fill:#000000" /></flowRoot>  <g
      id="g3933"
-     transform="translate(0,-40)">
+     transform="translate(0,-70.000012)">
     <image
        width="1115.8826"
        height="720"
@@ -2847,7 +2781,7 @@
            id="flowSpan6117"
            style="fill:#000000"><flowSpan
    style="font-weight:bold;-inkscape-font-specification:Sans Bold"
-   id="flowSpan3968">Genetic Algrithm</flowSpan> to evolve a population of polygons and extract image primitives: </flowSpan></flowPara></flowRoot>    <g
+   id="flowSpan3968">Genetic Algrithm</flowSpan> to evolve a population of polygons and extract image primitives [2]: </flowSpan></flowPara></flowRoot>    <g
        id="g3911">
       <flowRoot
          xml:space="preserve"
@@ -2885,9 +2819,7 @@
              x="78.125"
              y="3170.8047" /></flowRegion><flowPara
            style="font-size:30px"
-           id="flowPara5986">    ● Using only solid colors avoid </flowPara><flowPara
-           style="font-size:30px"
-           id="flowPara6003">       interactions between tones. </flowPara><flowPara
+           id="flowPara6003">    ● Solid colors avoid interactions between tones. </flowPara><flowPara
            style="font-size:10px"
            id="flowPara6010">    </flowPara><flowPara
            style="font-size:30px"
@@ -2940,26 +2872,32 @@
            height="606.63507"
            width="1488.7836"
            id="rect4255" /></flowRegion><flowPara
-         style="font-size:30px"
+         style="font-size:20px"
          id="flowPara4269">    [1] Blankertz B, Lemm S, Treder M S, and Haufe K R. Single-trial analysis and classification of ERP components - a tutorial. <flowSpan
    id="flowSpan4275"
-   style="font-size:30px;font-style:italic;-inkscape-font-specification:Sans Italic">Neuroimage </flowSpan><flowSpan
+   style="font-size:20px;font-style:italic;-inkscape-font-specification:Sans Italic">Neuroimage </flowSpan><flowSpan
    id="flowSpan4277"
-   style="font-size:30px;font-weight:bold;-inkscape-font-specification:Sans Bold">56</flowSpan>, 814-825 (2011). </flowPara><flowPara
-         style="font-size:30px"
+   style="font-size:20px;font-weight:bold;-inkscape-font-specification:Sans Bold">56</flowSpan>, 814-825 (2011). </flowPara><flowPara
+         style="font-size:20px"
          id="flowPara4279">    [2] http://rogeralsing.com/2008/12/07/genetic-programming-evolution-of-mona-lisa/</flowPara><flowPara
+         style="font-size:20px"
+         id="flowPara3932">    [3] Sajda P, Gerson A, and Parra L. &quot;High-throughput image search via single-trial event detection in a rapid serial visual presentation task” in  </flowPara><flowPara
+         style="font-size:20px"
+         id="flowPara3934">Proc. 1st Inter. IEEE EMBS Conf. on Neural Engineering, Capri Island, Italy, 2003. </flowPara><flowPara
+         style="font-size:20px"
+         id="flowPara3936">    [4] Gerson A, Parra L, and Sajda P, Cortically-coupled computer vision for rapid image search, IEEE Trans. Neural Systems Rehabil Eng. 14(2), 174-179 (2006).</flowPara><flowPara
          id="flowPara4281"
-         style="font-size:30px">    [3] Bigdely-Shamlo N, Vankov A, Ramírez R R, Makeig S. Brain activity based image classification from rapid serial visual presentation. <flowSpan
+         style="font-size:20px">    [5] Bigdely-Shamlo N, Vankov A, Ramírez R R, Makeig S. Brain activity based image classification from rapid serial visual presentation. <flowSpan
    id="flowSpan4287"
-   style="font-style:italic;-inkscape-font-specification:Sans Italic">IEEE Trans. Neural Systems Rehabil Eng.</flowSpan><flowSpan
+   style="font-size:20px;font-style:italic;-inkscape-font-specification:Sans Italic">IEEE Trans. Neural Systems Rehabil Eng.</flowSpan><flowSpan
    id="flowSpan4285"
-   style="font-weight:bold;-inkscape-font-specification:Sans Bold"> 16</flowSpan>(5), 432-441 (2008). </flowPara><flowPara
-         id="flowPara4289"
-         style="font-size:30px">    [4] Bigdely-Shamlo N, Makeig S.  Mind-Mirror: EEG-Guided Image Evolution. <flowSpan
+   style="font-size:20px;font-weight:bold;-inkscape-font-specification:Sans Bold"> 16</flowSpan>(5), 432-441 (2008). </flowPara><flowPara
+         style="font-size:20px"
+         id="flowPara3903">    [6] Bigdely-Shamlo N, Makeig S.  Mind-Mirror: EEG-Guided Image Evolution. <flowSpan
    id="flowSpan4291"
-   style="font-style:italic;-inkscape-font-specification:Sans Italic">Human-Computer Interaction 2009, Lecture Notes in Computer Science</flowSpan><flowSpan
+   style="font-size:20px;font-style:italic;-inkscape-font-specification:Sans Italic">Human-Computer Interaction 2009, Lecture Notes in Computer Science</flowSpan><flowSpan
    id="flowSpan4293"
-   style="font-weight:bold;-inkscape-font-specification:Sans Bold"> 5611</flowSpan>, 569-578 (2009). </flowPara></flowRoot>  </g>
+   style="font-size:20px;font-weight:bold;-inkscape-font-specification:Sans Bold"> 5611</flowSpan>, 569-578 (2009). </flowPara></flowRoot>  </g>
   <image
      y="92.992188"
      x="2523"
@@ -2986,4 +2924,115 @@
      xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/bccn-logo-berlin.png"
      height="233.57159"
      width="343.79642" />
+  <image
+     y="1091.9214"
+     x="1320"
+     id="image15612"
+     xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/ERP.png"
+     height="880"
+     width="1619.9211" />
+  <g
+     id="g6246"
+     transform="translate(-5,301.53332)">
+    <g
+       id="g6222">
+      <rect
+         style="fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:10.07744503;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         id="rect5643-7-2"
+         width="1480"
+         height="88.929153"
+         x="1360"
+         y="671.45886" />
+    </g>
+    <flowRoot
+       transform="translate(1338,-208.84401)"
+       style="font-size:60px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="flowRoot5629-1-1"
+       xml:space="preserve"><flowRegion
+         id="flowRegion5631-0-5"><rect
+           y="892.04382"
+           x="322.01437"
+           height="249.79237"
+           width="889.9856"
+           id="rect5633-9-0"
+           style="font-size:60px" /></flowRegion><flowPara
+         id="flowPara5635-1-3"><flowSpan
+   id="flowSpan6212"
+   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Data Analysis</flowSpan> and <flowSpan
+   id="flowSpan6210"
+   style="font-size:60px;font-weight:bold;fill:#000000;-inkscape-font-specification:Sans Bold">Results</flowSpan></flowPara></flowRoot>  </g>
+  <g
+     id="g3973"
+     transform="translate(0,41.070841)">
+    <flowRoot
+       transform="translate(-803.65625,236.86388)"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       id="flowRoot4577"
+       xml:space="preserve"><flowRegion
+         id="flowRegion4579"><rect
+           y="1775.177"
+           x="2163.6436"
+           height="673.86761"
+           width="720.1134"
+           id="rect4581"
+           style="fill:#000000;fill-opacity:1" /></flowRegion><flowPara
+         id="flowPara4583">Classification performance: </flowPara><flowPara
+         style="font-size:15px"
+         id="flowPara6119">    </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara4589">    ●Training: </flowPara><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara4591">        ► ROC loss: 22.4±4.2 %. </flowPara><flowPara
+         id="flowPara55318"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Correct hits: 68,0±3,4 %. </flowPara><flowPara
+         id="flowPara6139"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Correct miss: 75.0±3.4 %. </flowPara><flowPara
+         id="flowPara4607"
+         style="font-size:10px;fill:#000000;fill-opacity:1">    </flowPara><flowPara
+         id="flowPara6146"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● Copy painting: </flowPara><flowPara
+         id="flowPara6148"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Average performance: 76.4±5.7 %.</flowPara><flowPara
+         id="flowPara6150"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Worst performance: 68.6 %. </flowPara><flowPara
+         id="flowPara6152"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Best performance: 84.3%.</flowPara><flowPara
+         id="flowPara3878"
+         style="font-size:30px;fill:#000000;fill-opacity:1" /><flowPara
+         id="flowPara3880"
+         style="font-size:40px;fill:#000000;fill-opacity:1">Interesting <flowSpan
+   id="flowSpan3882"
+   style="font-size:40px;font-style:italic;-inkscape-font-specification:Sans Italic">missclassifications</flowSpan>: </flowPara><flowPara
+         id="flowPara3884"
+         style="font-size:15px;fill:#000000;fill-opacity:1">    </flowPara><flowPara
+         id="flowPara3886"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● Non-target might resemble target picture. </flowPara><flowPara
+         id="flowPara3894"
+         style="font-size:10px;fill:#000000;fill-opacity:1">    </flowPara><flowPara
+         id="flowPara3888"
+         style="font-size:30px;fill:#000000;fill-opacity:1">    ● Classification scored as <flowSpan
+   id="flowSpan3890"
+   style="font-style:italic;-inkscape-font-specification:Sans Italic">miss</flowSpan>: </flowPara><flowPara
+         id="flowPara3892"
+         style="font-size:30px;fill:#000000;fill-opacity:1">        ► Still, non-target is a valid piece. </flowPara><flowPara
+         id="flowPara4236"
+         style="fill:#000000" /><flowPara
+         style="font-size:30px;fill:#000000;fill-opacity:1"
+         id="flowPara3851" /></flowRoot>    <image
+       inkscape:transform-center-x="-3.0517577e-05"
+       inkscape:transform-center-y="1658.9175"
+       width="387.72003"
+       height="640.66498"
+       xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/missClass.png"
+       id="image4471"
+       x="2120"
+       y="2031.9214" />
+    <image
+       width="357.63751"
+       height="327.07501"
+       xlink:href="file:///home/brigan/Desktop/Research/BCI%20Image%20Reconstruction/Documents/poster/missClass2.png"
+       id="image4482"
+       x="2560"
+       y="2171.9214" />
+  </g>
 </svg>
